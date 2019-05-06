@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Security\Listeners;
+namespace HBM\BasicsBundle\Security\Listeners;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Util\Wording;
+namespace HBM\BasicsBundle\Util\Wording;
 
 class EntityDeletionHelper extends EntityHelper {
 

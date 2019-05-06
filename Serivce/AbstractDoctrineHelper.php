@@ -1,11 +1,11 @@
 <?php
 
-namespace HBM\Basics\Service;
+namespace HBM\BasicsBundle\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-class AbstractDoctrineHelper {
+abstract class AbstractDoctrineHelper {
 
   /**
    * @var RegistryInterface

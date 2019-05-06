@@ -1,9 +1,11 @@
 <?php
 
-namespace HBM\Basics\Controller;
+namespace HBM\BasicsBundle\Controller;
 
-use HBM\Basics\Entity\Interfaces\Addressable;
-use HBM\Basics\Util\Result\Result;
+use HBM\BasicsBundle\Entity\Interfaces\Addressable;
+use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
+use HBM\BasicsBundle\Service\AbstractServiceHelper;
+use HBM\BasicsBundle\Util\Result\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -11,6 +13,16 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
 
 abstract class AbstractController extends BaseController {
+
+  /**
+   * @var AbstractServiceHelper
+   */
+  protected $sh;
+
+  /**
+   * @var AbstractDoctrineHelper
+   */
+  protected $dh;
 
   /****************************************************************************/
   /* MESSAGES                                                                 */
@@ -20,7 +32,11 @@ abstract class AbstractController extends BaseController {
    * @param string $type
    * @param string $message
    */
-  abstract protected function addFlashMessage(string $type, string $message) : void;
+  protected function addFlashMessage(string $type, string $message) : void {
+    if ($session = $this->sh->session()) {
+      $session->getFlashBag()->add($type, $message);
+    }
+  }
 
   /**
    * @param Result $result

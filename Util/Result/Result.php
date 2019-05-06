@@ -1,8 +1,8 @@
 <?php
 
-namespace HBM\Basics\Util\Result;
+namespace HBM\BasicsBundle\Util\Result;
 
-use HBM\Basics\Entity\Interfaces\NoticeInterface;
+use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
 
 class Result {
 

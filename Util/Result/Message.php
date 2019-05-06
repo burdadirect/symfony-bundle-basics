@@ -1,10 +1,10 @@
 <?php
 
-namespace HBM\Basics\Util\Result;
+namespace HBM\BasicsBundle\Util\Result;
 
-use HBM\Basics\Entity\Interfaces\Uuidable;
-use HBM\Basics\Entity\Traits\UuidableTrait;
-use HBM\Basics\Util\Data\Level;
+use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
+use HBM\BasicsBundle\Entity\Traits\UuidableTrait;
+use HBM\BasicsBundle\Util\Data\Level;
 
 class Message implements Uuidable {
 

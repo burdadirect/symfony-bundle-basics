@@ -1,8 +1,8 @@
 <?php
 
-namespace HBM\Basics\Entity;
+namespace HBM\BasicsBundle\Entity;
 
-use HBM\Basics\Util\Data\SettingVarType;
+use HBM\BasicsBundle\Util\Data\SettingVarType;
 
 class Setting extends Entity {
 

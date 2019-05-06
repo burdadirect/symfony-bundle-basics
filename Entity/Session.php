@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Entity;
+namespace HBM\BasicsBundle\Entity;
 
 /**
  * Dummy file for database-stored Sessions.

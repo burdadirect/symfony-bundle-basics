@@ -1,11 +1,11 @@
 <?php
 
-namespace HBM\Basics\Entity;
+namespace HBM\BasicsBundle\Entity;
 
-use HBM\Basics\Entity\Interfaces\Timestampable;
-use HBM\Basics\Entity\Interfaces\Uuidable;
-use HBM\Basics\Entity\Traits\TimestampableTrait;
-use HBM\Basics\Entity\Traits\UuidableTrait;
+use HBM\BasicsBundle\Entity\Interfaces\Timestampable;
+use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
+use HBM\BasicsBundle\Entity\Traits\TimestampableTrait;
+use HBM\BasicsBundle\Entity\Traits\UuidableTrait;
 
 class Entity implements Uuidable, Timestampable {
 

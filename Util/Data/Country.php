@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Util\Data;
+namespace HBM\BasicsBundle\Util\Data;
 
 class Country extends AbstractData {
 

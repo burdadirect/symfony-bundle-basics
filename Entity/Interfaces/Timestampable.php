@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Entity\Interfaces;
+namespace HBM\BasicsBundle\Entity\Interfaces;
 
 interface Timestampable extends Addressable {
 

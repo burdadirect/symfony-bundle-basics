@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Entity\Traits;
+namespace HBM\BasicsBundle\Entity\Traits;
 
 trait UuidableTrait {
 

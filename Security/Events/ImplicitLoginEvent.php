@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Security\Events;
+namespace HBM\BasicsBundle\Security\Events;
 
 use \Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 

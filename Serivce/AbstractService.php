@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Service;
+namespace HBM\BasicsBundle\Service;
 
 abstract class AbstractService {
 
@@ -13,10 +13,5 @@ abstract class AbstractService {
    * @var AbstractDoctrineHelper
    */
   protected $dh;
-
-  public function __construct(AbstractServiceHelper $serviceHelper, AbstractDoctrineHelper $doctrineHelper) {
-    $this->sh = $serviceHelper;
-    $this->dh = $doctrineHelper;
-  }
 
 }

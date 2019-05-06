@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics\Service;
+namespace HBM\BasicsBundle\Service;
 
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
-class AbstractServiceHelper {
+abstract class AbstractServiceHelper {
 
   /**
    * @var ContainerInterface

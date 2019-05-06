@@ -1,10 +1,10 @@
 <?php
 
-namespace HBM\Basics\Service;
+namespace HBM\BasicsBundle\Service;
 
-use HBM\Basics\Entity\Entity;
+use HBM\BasicsBundle\Entity\Entity;
 
-class AbstractDeletionHelper extends AbstractService {
+abstract class AbstractDeletionHelper extends AbstractService {
 
   /**
    * @param $items

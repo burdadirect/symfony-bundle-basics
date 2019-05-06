@@ -24,6 +24,17 @@ abstract class AbstractController extends BaseController {
    */
   protected $dh;
 
+  /**
+   * AbstractDeletionHelper constructor.
+   *
+   * @param AbstractServiceHelper $serviceHelper
+   * @param AbstractDoctrineHelper $doctrineHelper
+   */
+  public function __construct(AbstractServiceHelper $serviceHelper, AbstractDoctrineHelper $doctrineHelper) {
+    $this->sh = $serviceHelper;
+    $this->dh = $doctrineHelper;
+  }
+
   /****************************************************************************/
   /* MESSAGES                                                                 */
   /****************************************************************************/

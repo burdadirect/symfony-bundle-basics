@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\Basics;
+namespace HBM\BasicsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

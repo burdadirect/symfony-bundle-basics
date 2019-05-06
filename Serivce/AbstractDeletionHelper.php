@@ -4,7 +4,22 @@ namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\Entity;
 
-abstract class AbstractDeletionHelper extends AbstractService {
+abstract class AbstractDeletionHelper {
+
+  /**
+   * @var AbstractServiceHelper
+   */
+  protected $sh;
+
+  /**
+   * @var AbstractDoctrineHelper
+   */
+  protected $dh;
+
+  public function __construct(AbstractServiceHelper $serviceHelper, AbstractDoctrineHelper $doctrineHelper) {
+    $this->sh = $serviceHelper;
+    $this->dh = $doctrineHelper;
+  }
 
   /**
    * @param $items

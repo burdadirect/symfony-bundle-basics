@@ -27,8 +27,10 @@ class Configuration implements ConfigurationInterface {
     $rootNode
       ->children()
         ->arrayNode('confirm')->addDefaultsIfNotSet()
-          ->scalarNode('template')->defaultValue('partials/confirm.html.twig')->end()
-          ->scalarNode('navi')->defaultValue('default')->end()
+          ->children()
+            ->scalarNode('template')->defaultValue('partials/confirm.html.twig')->end()
+            ->scalarNode('navi')->defaultValue('default')->end()
+          ->end()
         ->end()
       ->end();
 

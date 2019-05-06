@@ -1,0 +1,22 @@
+<table class="table table-hover table-bordered table-sm">
+  <thead>
+  <tr class="small active">
+    <th>{{ title }}</th>
+    <th>{{ title2 is defined ? title2 : "Anzahl" }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for key, value in values %}
+    {% if value is null %}
+      <tr style="background-color:#FCFCFC;">
+        <td colspan="2"></td>
+      </tr>
+    {% else %}
+      <tr>
+        <td>{{ key|raw }}</td>
+        <td>{{ value|raw }}</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+  </tbody>
+</table>

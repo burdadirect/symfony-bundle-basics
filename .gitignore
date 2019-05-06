@@ -1,0 +1,7 @@
+# COMPOSER
+/composer.phar
+/vendor/
+
+
+# PHPSTORM
+/.idea/*

@@ -1,0 +1,68 @@
+{% macro messages(items, class = 'alert-info') %}
+
+  {% if items|length > 0 %}
+    <ul class="hbm-alerts">
+      {% for item in items %}
+        <li class="alert {{ class }}">{{ item|raw }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}
+
+{% macro list(items, class = 'hbm-list') %}
+
+  {% if items|length > 0 %}
+    <ul class="{{ class }}">
+      {% for item in items %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}
+
+{% macro listByKey(items, template, key, class = 'hbm-list') %}
+
+  {% if items|length > 0 %}
+    <ul class="{{ class }}">
+      {% for item in items %}
+        <li>
+          {% include template with { (key): item } only %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}
+
+{% macro rowKeyValue(key, value, discard = false, class = '') %}
+
+  {% if not (value is empty and discard) %}
+    <tr class="{{ class }}">
+      <th>{{ key|trans }}</th>
+      <td>{{ value }}</td>
+    </tr>
+  {% endif %}
+
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}
+
+{% macro activeNavi(val_current, val_check, index = 0, class = 'active') %}
+  {% if val_current is iterable %}
+    {% if (val_current[index] == val_check) %}{{ class }}{% endif %}
+  {% elseif val_check is iterable %}
+    {% if val_current in val_check %}{{ class }}{% endif %}
+  {% else %}
+    {% if (val_current == val_check) %}{{ class }}{% endif %}
+  {% endif %}
+{% endmacro %}
+
+{# -------------------------------------------------------------------------- #}

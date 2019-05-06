@@ -1,0 +1,22 @@
+<table class="table table-hover table-bordered table-sm">
+  <thead>
+  <tr class="small ">
+    <th>{{ title_key }}</th>
+    <th>{{ title_value }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for key, number in values %}
+    {% if number is null %}
+      <tr style="background-color:#FCFCFC;">
+        <td colspan="2"></td>
+      </tr>
+    {% else %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ number|join(delimiter) }}</td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,32 @@
+{
+  "name": "burdanews/symfony-bundle-basics",
+  "description": "HBM Basics Bundle - Shared functionality (templates, controller, ...) for symfony projects.",
+  "authors" : [{
+    "name" : "Christian Puchinger",
+    "email" : "puchinger@burda.com"
+  }],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "autoload": {
+    "psr-0": {
+      "HBM\\BasicsBundle": ""
+    }
+  },
+  "require": {
+    "php" : ">=7.1",
+    "ext-json": "*",
+    "symfony/config": "^4.2",
+    "symfony/dependency-injection": "^4.2",
+    "symfony/form": "^4.2",
+    "symfony/framework-bundle": "^4.2",
+    "symfony/http-kernel": "^4.2",
+    "symfony/monolog-bundle": "^3.3",
+    "symfony/orm-pack": "*",
+    "symfony/security-bundle": "^4.2",
+    "symfony/twig-bundle": "^4.2"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "target-dir": "HBM/BasicsBundle"
+}

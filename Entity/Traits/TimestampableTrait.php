@@ -23,7 +23,7 @@ trait TimestampableTrait {
    *
    * @throws \Exception
    */
-  public function setCreated($created) : self {
+  public function setCreated($created) {
     if (is_string($created)) {
       $created = new \DateTime($created);
     }
@@ -51,7 +51,7 @@ trait TimestampableTrait {
    *
    * @throws \Exception
    */
-  public function setModified($modified) : self {
+  public function setModified($modified) {
     if (is_string($modified)) {
       $modified = new \DateTime($modified);
     }

@@ -14,7 +14,7 @@ trait UuidableTrait {
    *
    * @return self
    */
-  public function setUuid() : self {
+  public function setUuid() {
     if ($this->uuid === NULL) {
       try {
         $uuid = uniqid('', TRUE).random_int(1000, 9999);

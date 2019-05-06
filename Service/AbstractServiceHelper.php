@@ -5,6 +5,7 @@ namespace HBM\BasicsBundle\Service;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -32,6 +33,13 @@ abstract class AbstractServiceHelper {
   /****************************************************************************/
   /* SYMFONY                                                                  */
   /****************************************************************************/
+
+  /**
+   * @return ParameterBagInterface|object
+   */
+  public function parameterBag() {
+    return $this->container->get('parameter_bag');
+  }
 
   /**
    * @return TokenStorage|object

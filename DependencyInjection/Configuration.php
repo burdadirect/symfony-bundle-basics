@@ -24,6 +24,14 @@ class Configuration implements ConfigurationInterface {
       $rootNode = $treeBuilder->root('hbm_basics');
     }
 
+    $rootNode
+      ->children()
+        ->arrayNode('confirm')->addDefaultsIfNotSet()
+          ->scalarNode('template')->defaultValue('partials/confirm.html.twig')->end()
+          ->scalarNode('navi')->defaultValue('default')->end()
+        ->end()
+      ->end();
+
     return $treeBuilder;
   }
 

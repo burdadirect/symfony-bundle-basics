@@ -1,0 +1,20 @@
+<h1 class="mt-0">Achtung</h1>
+<h3  id="confirm-title">{{ title|raw }}</h3>
+
+{% if details %}
+  <div id="confirm-details">{{ details|raw }}</div>
+{% endif %}
+
+<div class="mt-4">
+  {{ form_start(formView) }}
+  <div class="hbm-form-buttons row">
+    <div class="col-md-3 offset-md-2">
+      {{ form_widget(formView.group_buttons.submit_and_no) }}
+    </div>
+    <div class="col-md-3 offset-md-2">
+      {{ form_widget(formView.group_buttons.submit_and_yes) }}
+    </div>
+  </div>
+  {{ form_rest(formView) }}
+  {{ form_end(formView) }}
+</div>

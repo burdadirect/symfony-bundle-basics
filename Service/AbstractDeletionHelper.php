@@ -17,17 +17,6 @@ abstract class AbstractDeletionHelper {
   protected $dh;
 
   /**
-   * AbstractDeletionHelper constructor.
-   *
-   * @param AbstractServiceHelper $serviceHelper
-   * @param AbstractDoctrineHelper $doctrineHelper
-   */
-  public function __construct(AbstractServiceHelper $serviceHelper, AbstractDoctrineHelper $doctrineHelper) {
-    $this->sh = $serviceHelper;
-    $this->dh = $doctrineHelper;
-  }
-
-  /**
    * @param $items
    * @param $headline
    * @param $route

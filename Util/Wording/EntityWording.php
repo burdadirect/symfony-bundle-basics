@@ -2,7 +2,7 @@
 
 namespace HBM\BasicsBundle\Util\Wording;
 
-abstract class EntityHelper {
+abstract class EntityWording {
 
   /**
    * @var string

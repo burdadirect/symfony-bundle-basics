@@ -2,7 +2,7 @@
 
 namespace HBM\BasicsBundle\Util\Wording;
 
-class EntityDeletionHelper extends EntityHelper {
+class EntityDeletionWording extends EntityWording {
 
   public function confirmTitle() : string {
     return 'Bitte bestätigen Sie, dass '.$this->entityLabel('text-primary').' gelöscht werden soll.';

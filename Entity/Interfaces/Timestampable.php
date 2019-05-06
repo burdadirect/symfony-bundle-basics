@@ -11,7 +11,7 @@ interface Timestampable extends Addressable {
    *
    * @return self
    */
-  public function setCreated($created) : self;
+  public function setCreated($created);
 
   /**
    * Get created
@@ -27,7 +27,7 @@ interface Timestampable extends Addressable {
    *
    * @return self
    */
-  public function setModified($modified) : self;
+  public function setModified($modified);
 
   /**
    * Get modified

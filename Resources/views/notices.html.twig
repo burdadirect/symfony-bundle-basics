@@ -1,0 +1,65 @@
+{% if object.noticesSystem|length > 0 %}
+  <div class="mt-5 hbm-notices hbm-notices-system">
+    <h2>System-Nachrichten</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Level</th>
+          <th>Typ</th>
+          <th>Titel</th>
+          <th>Nachricht</th>
+          <th>Erstellt</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for notice in object.noticesSystem %}
+        <tr>
+          <td>{{ notice.id }}</td>
+          <td>{% include 'partials/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td>{{ notice.level }}</td>
+          <td>{{ notice.mode }}</td>
+          <td>{{ notice.title }}</td>
+          <td>{{ notice.message|raw }}</td>
+          <td>{{ notice.created|date('Y-m-d H:i:s') }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}
+
+{% if object.noticesManual|length > 0 %}
+  <div class="mt-5 hbm-notices hbm-notices-manual">
+    <h2>Notizen</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Level</th>
+          <th>Titel</th>
+          <th>Nachricht</th>
+          <th>Erstellt</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for notice in object.noticesManual %}
+        <tr>
+          <td>{{ notice.id }}</td>
+          <td>{% include 'partials/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td>{{ notice.level }}</td>
+          <td>{{ notice.title }}</td>
+          <td>{{ notice.message|raw }}</td>
+          <td>{{ notice.created|date('Y-m-d H:i:s') }}</td>
+          <td class="text-center">
+            {% block hbm_basics_notices_actions %}{% endblock hbm_basics_notices_actions %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endif %}

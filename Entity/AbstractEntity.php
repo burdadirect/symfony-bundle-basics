@@ -2,12 +2,13 @@
 
 namespace HBM\BasicsBundle\Entity;
 
+use HBM\BasicsBundle\Entity\Interfaces\Addressable;
 use HBM\BasicsBundle\Entity\Interfaces\Timestampable;
 use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
 use HBM\BasicsBundle\Entity\Traits\TimestampableTrait;
 use HBM\BasicsBundle\Entity\Traits\UuidableTrait;
 
-abstract class AbstractEntity implements Uuidable, Timestampable {
+abstract class AbstractEntity implements Addressable, Uuidable, Timestampable {
 
   use UuidableTrait, TimestampableTrait;
 

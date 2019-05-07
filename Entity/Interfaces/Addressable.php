@@ -11,11 +11,4 @@ interface Addressable {
    */
   public function getId() : ?int;
 
-  /**
-   * Get UUID
-   *
-   * @return string
-   */
-  public function getUuid() : string;
-
 }

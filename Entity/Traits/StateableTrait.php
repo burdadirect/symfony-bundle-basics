@@ -7,11 +7,6 @@ use HBM\BasicsBundle\Util\Data\State;
 trait StateableTrait {
 
   /**
-   * @var int
-   */
-  protected $state;
-
-  /**
    * Set state.
    *
    * @param int $state

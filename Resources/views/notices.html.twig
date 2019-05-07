@@ -17,7 +17,7 @@
       {% for notice in object.noticesSystem %}
         <tr>
           <td>{{ notice.id }}</td>
-          <td>{% include 'partials/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
           <td>{{ notice.mode }}</td>
           <td>{{ notice.title }}</td>
@@ -49,7 +49,7 @@
       {% for notice in object.noticesManual %}
         <tr>
           <td>{{ notice.id }}</td>
-          <td>{% include 'partials/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
           <td>{{ notice.title }}</td>
           <td>{{ notice.message|raw }}</td>

@@ -74,9 +74,9 @@ abstract class AbstractWebTestCase extends WebTestCase {
   protected function logIn(Client $client, $user = TRUE, array $roles = ['ROLE_USER']) {
     $session = $client->getContainer()->get('session');
 
-    if (\is_bool($user)) {
+    if (is_bool($user)) {
       $user = $this->randomUser();
-    } elseif (\is_int($user)) {
+    } elseif (is_int($user)) {
       $user = $this->getUserRepository()->find($user);
     }
 
@@ -119,7 +119,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $client = $this->makeClient();
 
     // Role needed?
-    if (\count($roles) > 0) {
+    if (count($roles) > 0) {
       $this->assertRedirect($client, $url, static::REDIRECT_LOGIN);
 
       $this->logIn($client, TRUE, $roles);

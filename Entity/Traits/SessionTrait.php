@@ -1,11 +1,8 @@
 <?php
 
-namespace HBM\BasicsBundle\Entity;
+namespace HBM\BasicsBundle\Entity\Traits;
 
-/**
- * Dummy file for database-stored Sessions.
- */
-class Session {
+trait SessionTrait {
 
   /****************************************************************************/
   /* PROPERTIES                                                               */
@@ -14,22 +11,22 @@ class Session {
   /**
    * @var string
    */
-  private $sessionId;
+  protected $sessionId;
 
   /**
    * @var string
    */
-  private $sessionData;
+  protected $sessionData;
 
   /**
    * @var int
    */
-  private $sessionTime;
+  protected $sessionTime;
 
   /**
    * @var int
    */
-  private $sessionLifetime;
+  protected $sessionLifetime;
 
   /****************************************************************************/
   /* CONSTRUCTOR / GETTER / SETTER                                            */

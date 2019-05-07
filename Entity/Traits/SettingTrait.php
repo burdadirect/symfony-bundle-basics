@@ -1,10 +1,10 @@
 <?php
 
-namespace HBM\BasicsBundle\Entity;
+namespace HBM\BasicsBundle\Entity\Traits;
 
 use HBM\BasicsBundle\Util\Data\SettingVarType;
 
-class Setting extends Entity {
+trait SettingTrait {
 
   /****************************************************************************/
   /* PROPERTIES                                                               */
@@ -13,32 +13,32 @@ class Setting extends Entity {
   /**
    * @var string
    */
-  private $varType;
+  protected $varType;
 
   /**
    * @var string
    */
-  private $varNature;
+  protected $varNature;
 
   /**
    * @var string
    */
-  private $varKey;
+  protected $varKey;
 
   /**
    * @var float
    */
-  private $varValue;
+  protected $varValue;
 
   /**
    * @var bool
    */
-  private $editable = FALSE;
+  protected $editable = FALSE;
 
   /**
    * @var string
    */
-  private $notice;
+  protected $notice;
 
   /****************************************************************************/
   /* CONSTRUCTOR / GETTER / SETTER                                            */

@@ -7,7 +7,7 @@ use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
 use HBM\BasicsBundle\Entity\Traits\TimestampableTrait;
 use HBM\BasicsBundle\Entity\Traits\UuidableTrait;
 
-class Entity implements Uuidable, Timestampable {
+abstract class AbstractEntity implements Uuidable, Timestampable {
 
   use UuidableTrait, TimestampableTrait;
 

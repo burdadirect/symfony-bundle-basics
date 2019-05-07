@@ -2,7 +2,7 @@
 
 namespace HBM\BasicsBundle\Service;
 
-use HBM\BasicsBundle\Entity\Entity;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 
 abstract class AbstractDeletionHelper {
 
@@ -30,7 +30,7 @@ abstract class AbstractDeletionHelper {
   }
 
   /**
-   * @param Entity[] $items
+   * @param AbstractEntity[] $items
    * @param string $headline
    * @param string $route
    * @param string|callable $funcText

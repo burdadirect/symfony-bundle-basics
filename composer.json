@@ -23,11 +23,11 @@
     "symfony/monolog-bundle": "^3.3",
     "symfony/orm-pack": "*",
     "symfony/security-bundle": "^4.2",
-    "symfony/twig-bundle": "^4.2"
+    "symfony/twig-bundle": "^4.2",
+    "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "fzaninotto/faker": "^1.7"
   },
   "require-dev": {
-    "doctrine/doctrine-fixtures-bundle": "^3.0",
-    "fzaninotto/faker": "^1.7",
     "liip/functional-test-bundle": "~2.0@alpha",
     "phpunit/phpunit": "^7.5",
     "roave/security-advisories": "dev-master"

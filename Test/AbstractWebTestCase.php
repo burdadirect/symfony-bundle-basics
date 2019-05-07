@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Tests;
+namespace HBM\BasicsBundle\Test;
 
 use HBM\BasicsBundle\Entity\Repository\AbstractEntityRepo;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;

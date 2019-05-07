@@ -25,11 +25,10 @@
     "symfony/security-bundle": "^4.2",
     "symfony/twig-bundle": "^4.2",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
-    "fzaninotto/faker": "^1.7"
+    "fzaninotto/faker": "^1.7",
+    "liip/functional-test-bundle": "~3.0@alpha"
   },
   "require-dev": {
-    "liip/functional-test-bundle": "~2.0@alpha",
-    "phpunit/phpunit": "^7.5",
     "roave/security-advisories": "dev-master"
   },
   "target-dir": "HBM/BasicsBundle"

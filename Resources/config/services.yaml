@@ -2,3 +2,4 @@ services:
     _defaults:
         public: true
         autowire: false
+        autoconfigure: false

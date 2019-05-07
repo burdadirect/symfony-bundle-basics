@@ -7,6 +7,7 @@ use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
 use HBM\BasicsBundle\Util\Result\Result;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -319,8 +320,11 @@ abstract class AbstractController extends BaseController {
     $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo);
 
     if ($return instanceof FormInterface) {
-      return $this->renderCustom($this->sh->parameterBag()->get('hbm_basics.confirm.template'), [
-        'navi' => $this->sh->parameterBag()->get('hbm_basics.confirm.navi'),
+      /** @var ParameterBagInterface $pb */
+      $pb = $this->container->get('parameter_bag');
+
+      return $this->renderCustom($pb->get('hbm.basics')['confirm']['template'], [
+        'navi' => $pb->get('hbm.basics')['confirm']['navi'],
         'formView' => $return->createView(),
         'title' => $confirmTitle,
         'details' => $confirmDetails,

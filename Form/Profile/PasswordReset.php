@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Form;
+namespace HBM\BasicsBundle\Form\Profile;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,7 +28,7 @@ class PasswordReset extends AbstractType {
   }
 
   public function getBlockPrefix() {
-    return 'hbm_basics_password_reset';
+    return 'hbm_basics_form_profile_password_reset';
   }
 
 }

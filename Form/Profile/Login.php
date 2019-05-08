@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Form;
+namespace HBM\BasicsBundle\Form\Profile;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -37,6 +37,6 @@ class Login extends AbstractType {
   }
 
   public function getBlockPrefix() {
-    return 'hbm_basics_form_login';
+    return 'hbm_basics_form_profile_login';
   }
 }

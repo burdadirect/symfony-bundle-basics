@@ -26,7 +26,7 @@ trait SettingTrait {
   protected $varKey;
 
   /**
-   * @var float
+   * @var mixed
    */
   protected $varValue;
 
@@ -113,7 +113,7 @@ trait SettingTrait {
   /**
    * Set varValue
    *
-   * @param float $varValue
+   * @param mixed $varValue
    *
    * @return self
    */
@@ -126,7 +126,7 @@ trait SettingTrait {
   /**
    * Get varValue
    *
-   * @return float|int|string|bool
+   * @return mixed|float|int|string|bool
    */
   public function getVarValue() {
     return $this->varValue;

@@ -3,6 +3,7 @@
 namespace HBM\BasicsBundle\Service;
 
 use Monolog\Logger;
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -22,12 +23,19 @@ abstract class AbstractServiceHelper {
   protected $container;
 
   /**
+   * @var ParameterBagInterface
+   */
+  private $parameterBag;
+
+  /**
    * ServiceHelper constructor.
    *
    * @param ContainerInterface $container
+   * @param ParameterBagInterface $parameterBag
    */
-  public function __construct(ContainerInterface $container) {
+  public function __construct(ContainerInterface $container, ParameterBagInterface $parameterBag) {
     $this->container = $container;
+    $this->parameterBag = $parameterBag;
   }
 
   /****************************************************************************/
@@ -35,10 +43,10 @@ abstract class AbstractServiceHelper {
   /****************************************************************************/
 
   /**
-   * @return ParameterBagInterface|object
+   * @return ParameterBagInterface
    */
-  public function parameterBag() {
-    return $this->container->get('parameter_bag');
+  public function parameterBag() : ParameterBagInterface {
+    return $this->parameterBag;
   }
 
   /**

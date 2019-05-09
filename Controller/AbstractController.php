@@ -320,11 +320,8 @@ abstract class AbstractController extends BaseController {
     $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo);
 
     if ($return instanceof FormInterface) {
-      /** @var ParameterBagInterface $pb */
-      $pb = $this->container->get('parameter_bag');
-
-      return $this->renderCustom($pb->get('hbm.basics')['confirm']['template'], [
-        'navi' => $pb->get('hbm.basics')['confirm']['navi'],
+      return $this->renderCustom($this->sh->parameterBag()->get('hbm.basics')['confirm']['template'], [
+        'navi' => $this->sh->parameterBag()->get('hbm.basics')['confirm']['navi'],
         'formView' => $return->createView(),
         'title' => $confirmTitle,
         'details' => $confirmDetails,

@@ -3,6 +3,7 @@
 namespace HBM\BasicsBundle\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\Connection;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 abstract class AbstractDoctrineHelper {
@@ -13,18 +14,12 @@ abstract class AbstractDoctrineHelper {
   private $doctrine;
 
   /**
-   * @var ObjectManager
-   */
-  private $objectManager;
-
-  /**
-   * DoctrineHelper constructor.
+   * AbstractDoctrineHelper constructor.
    *
    * @param RegistryInterface $doctrine
    */
   public function __construct(RegistryInterface $doctrine) {
     $this->doctrine = $doctrine;
-    $this->objectManager = $this->doctrine->getManager();
   }
 
   /****************************************************************************/
@@ -32,20 +27,32 @@ abstract class AbstractDoctrineHelper {
   /****************************************************************************/
 
   /**
+   * @param string|null $name
+   *
    * @return ObjectManager
    */
-  public function getOM() : ObjectManager {
-    return $this->objectManager;
+  public function getOM(string $name = null) : ObjectManager {
+    return $this->doctrine->getManager($name);
   }
 
   /**
+   * @param string|null $name
+   *
    * @return ObjectManager
    */
-  public function resetOM() : ObjectManager {
-    $this->doctrine->resetManager();
-    $this->objectManager = $this->doctrine->getManager();
+  public function resetOM(string $name = null) : ObjectManager {
+    $this->doctrine->resetManager($name);
 
-    return $this->objectManager;
+    return $this->getOM($name);
+  }
+
+  /**
+   * @param string|NULL $name
+   *
+   * @return object|Connection
+   */
+  public function getConnection(string $name = null) {
+    return $this->doctrine->getConnection($name);
   }
 
 }

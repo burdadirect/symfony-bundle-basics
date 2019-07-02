@@ -46,8 +46,11 @@ abstract class AbstractWebTestCase extends WebTestCase {
   protected function tearDown() : void {
     parent::tearDown();
 
-    $this->dh->resetOM();
-    $this->dh = null; // avoid memory leaks
+    // Only supported for lazy services.
+    // $this->dh->resetOM();
+
+    // Avoid memory leaks.
+    $this->dh = null;
   }
 
   /**

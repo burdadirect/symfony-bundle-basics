@@ -36,10 +36,10 @@ abstract class AbstractData {
 
   /****************************************************************************/
 
-  public static function flatten(string $field = NULL, string $default = NULL, string $filter = NULL, array $keys = NULL) : array {
+  public static function flatten(string $field = NULL, string $default = NULL, string $filter = NULL, array $keys = NULL, string $prefix = NULL) : array {
     $array = [];
     foreach (static::filter($filter, $keys) as $key => $value) {
-      $array[$key] = $value[$field ?: static::$label] ?? $default;
+      $array[$prefix.$key] = $value[$field ?: static::$label] ?? $default;
     }
 
     return $array;

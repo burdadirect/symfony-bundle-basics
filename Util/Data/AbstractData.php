@@ -74,8 +74,11 @@ abstract class AbstractData {
 
   /****************************************************************************/
 
-  public static function label(string $key, string $default = NULL, string $field = NULL) : ?string {
-    return static::$data[$key][$field ?: static::$label] ?? $default;
+  public static function label(string $key = NULL, string $default = NULL, string $field = NULL) : ?string {
+    if (($key !== NULL) && (isset(static::$data[$key][$field ?: static::$label]))) {
+      return static::$data[$key][$field ?: static::$label];
+    }
+    return $default;
   }
 
   /****************************************************************************/

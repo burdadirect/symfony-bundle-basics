@@ -1,6 +1,6 @@
 {% if obj.creator %}
   {{ obj.creator.name }}
-  <small class="{% block hbm_basics_classes %}d-block mini-70{% endblock hbm_basics_classes %}">{{ obj.creator.email }}</small>
+  <small class="{{ classes|default('d-block mini-70') }}">{{ obj.creator.email }}</small>
 {% else %}
   n/a
 {% endif %}

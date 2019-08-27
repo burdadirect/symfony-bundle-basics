@@ -191,7 +191,7 @@ abstract class AbstractController extends BaseController {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, $button_class);
+    $this->addSubmitButton($form, $button, 'submit', $button_class);
 
     return $form;
   }
@@ -215,7 +215,7 @@ abstract class AbstractController extends BaseController {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, $button_class);
+    $this->addSubmitButton($form, $button, 'submit', $button_class);
 
     return $form;
   }
@@ -239,7 +239,7 @@ abstract class AbstractController extends BaseController {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, $button_class);
+    $this->addSubmitButton($form, $button, 'submit', $button_class);
 
     return $form;
   }

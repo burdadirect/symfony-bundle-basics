@@ -3,14 +3,12 @@
 namespace HBM\BasicsBundle\Service;
 
 use Monolog\Logger;
-use phpDocumentor\Reflection\DocBlock\Tags\Param;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -36,6 +34,13 @@ abstract class AbstractServiceHelper {
   public function __construct(ContainerInterface $container, ParameterBagInterface $parameterBag) {
     $this->container = $container;
     $this->parameterBag = $parameterBag;
+  }
+
+  /**
+   * @return FormHelper|object
+   */
+  public function formHelper() {
+    return $this->container->get(FormHelper::class);
   }
 
   /****************************************************************************/
@@ -78,7 +83,7 @@ abstract class AbstractServiceHelper {
   }
 
   /**
- * @return Router|object
+ * @return RouterInterface|object
  */
   public function router() {
     return $this->container->get('router');
@@ -100,13 +105,6 @@ abstract class AbstractServiceHelper {
    */
   public function session() {
     return $this->container->get('session');
-  }
-
-  /**
-   * @return EngineInterface|object
-   */
-  public function templating() {
-    return $this->container->get('templating');
   }
 
   /**

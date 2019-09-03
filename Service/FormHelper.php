@@ -41,7 +41,7 @@ class FormHelper {
    * Create form.
    *
    * @param string $type
-   * @param null $data
+   * @param $data
    * @param array $options
    *
    * @return FormInterface
@@ -53,7 +53,7 @@ class FormHelper {
   /**
    * Create form builder.
    *
-   * @param null $data
+   * @param $data
    * @param array $options
    *
    * @return FormBuilderInterface
@@ -66,7 +66,7 @@ class FormHelper {
    * Prepare form builder.
    *
    * @param $route
-   * @param null $data
+   * @param $data
    * @param array $options
    *
    * @return FormBuilderInterface
@@ -142,7 +142,7 @@ class FormHelper {
    * Creates a form to create an entity.
    *
    * @param string $formType
-   * @param array $data
+   * @param $data
    * @param string|null $route
    * @param array $options
    * @param string $button

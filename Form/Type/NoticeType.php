@@ -20,7 +20,7 @@ class NoticeType extends AbstractType {
   protected function getSubFormDefault(FormBuilderInterface $builder) : FormBuilderInterface {
     $group = $builder->create('group_default', FormType::class, [
       'inherit_data' => true,
-      'attr' => ['data-form-compound-card' => ''],
+      'card' => true,
       'label' => 'Allgemein',
     ]);
 

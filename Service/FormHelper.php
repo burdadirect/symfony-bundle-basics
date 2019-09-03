@@ -46,7 +46,7 @@ class FormHelper {
    *
    * @return FormInterface
    */
-  public function createForm(string $type, $data = null, array $options = []) : FormInterface {
+  private function createForm(string $type, $data = null, array $options = []) : FormInterface {
     return $this->formFactoryInterface->create($type, $data, $options);
   }
 
@@ -58,7 +58,7 @@ class FormHelper {
    *
    * @return FormBuilderInterface
    */
-  public function createFormBuilder($data = null, array $options = []) : FormBuilderInterface {
+  private function createFormBuilder($data = null, array $options = []) : FormBuilderInterface {
     return $this->formFactoryInterface->createBuilder(FormType::class, $data, $options);
   }
 
@@ -71,7 +71,7 @@ class FormHelper {
    *
    * @return FormBuilderInterface
    */
-  public function prepareFormBuilder($route, $data = null, array $options = []) : FormBuilderInterface {
+  public function initFormBuilder($route, $data = null, array $options = []) : FormBuilderInterface {
     $optionsDefault = [
       'method' => 'POST',
       'translation_domain' => FALSE
@@ -111,7 +111,7 @@ class FormHelper {
    * @return FormBuilderInterface
    */
   public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo) : FormBuilderInterface {
-    $formBuilder = $this->prepareFormBuilder($url);
+    $formBuilder = $this->initFormBuilder($url);
 
     $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', 'btn btn-lg btn-block btn-success');
     $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', 'btn btn-lg btn-block btn-danger');
@@ -128,7 +128,7 @@ class FormHelper {
    * @return FormBuilderInterface
    */
   public function createFormBuilderDeletion($id, $route) : FormBuilderInterface {
-    $formBuilder = $this->prepareFormBuilder(NULL, NULL, [
+    $formBuilder = $this->initFormBuilder(NULL, NULL, [
       'action' => $this->generateOrReturnUrl($route, ['id' => $id]),
       'method' => 'DELETE',
     ]);

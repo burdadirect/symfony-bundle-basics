@@ -2,11 +2,17 @@
 
 namespace HBM\BasicsBundle\Test;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Tools\SchemaTool;
 use HBM\BasicsBundle\Entity\Repository\AbstractEntityRepo;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
-use Liip\FunctionalTestBundle\Test\WebTestCase;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -22,6 +28,11 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @var AbstractDoctrineHelper
    */
   protected $dh;
+
+  /**
+   * @var ClassMetadata[]
+   */
+  protected $schemaMetadatas;
 
   /**
    * @var object
@@ -54,13 +65,32 @@ abstract class AbstractWebTestCase extends WebTestCase {
   }
 
   /**
-   * @param bool $authentication
-   * @param array $params
+   * @param array $fixtures
    *
-   * @return Client
+   * @throws \Doctrine\ORM\Tools\ToolsException
    */
-  protected function makeClient($authentication = false, array $params = []): Client {
-    return parent::makeClient($authentication, $params);
+  public function loadFixtures(array $fixtures = []) {
+    $loader = new Loader();
+    foreach ($fixtures as $fixture) {
+      $loader->addFixture(new $fixture());
+    }
+
+    /* TODO: Check if necessary! */
+    /** @var EntityManager $em */
+    $em = $this->dh->getOM();
+
+    if ($this->schemaMetadatas === NULL) {
+      $schemaTool = new SchemaTool($em);
+      $schemaTool->dropDatabase();
+      $this->schemaMetadatas = $em->getMetadataFactory()->getAllMetadata();
+      if (count($this->schemaMetadatas) > 0) {
+        $schemaTool->createSchema($this->schemaMetadatas);
+      }
+    }
+
+    $purger = new ORMPurger($em);
+    $executor = new ORMExecutor($em, $purger);
+    $executor->execute($loader->getFixtures());
   }
 
   /****************************************************************************/
@@ -68,13 +98,13 @@ abstract class AbstractWebTestCase extends WebTestCase {
   /**
    * Log in.
    *
-   * @param Client $client
+   * @param KernelBrowser $client
    * @param string|int|bool|object $user
    * @param array $roles
    *
    * @return object
    */
-  protected function logIn(Client $client, $user = TRUE, array $roles = ['ROLE_USER']) {
+  protected function logIn(KernelBrowser $client, $user = TRUE, array $roles = ['ROLE_USER']) {
     $session = $client->getContainer()->get('session');
 
     if (is_bool($user)) {
@@ -116,10 +146,10 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @param string|null $redirect
    * @param bool $redirection
    *
-   * @return Client
+   * @return KernelBrowser
    */
-  protected function assertRoute(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : Client {
-    $client = $this->makeClient();
+  protected function assertRoute(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
+    $client = parent::createClient();
 
     // Role needed?
     if (count($roles) > 0) {
@@ -145,9 +175,9 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @param string|null $redirect
    * @param bool $redirection
    *
-   * @return Client
+   * @return KernelBrowser
    */
-  protected function assertRouteJson(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : Client {
+  protected function assertRouteJson(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
     $client = $this->assertRoute($url, $roles, $redirect, $redirection);
     $resp = $client->getResponse();
     $this->assertJson($resp->getContent(), '"'.$url.'" should return JSON.'.$this->getResponseMessageHint($resp));
@@ -156,12 +186,12 @@ abstract class AbstractWebTestCase extends WebTestCase {
   }
 
   /**
-   * @param Client $client
+   * @param KernelBrowser $client
    * @param string $url
    * @param string|null $redirect
    * @param bool $redirection
    */
-  protected function assertRedirect(Client $client, string $url, string $redirect = NULL, bool $redirection = FALSE) : void {
+  protected function assertRedirect(KernelBrowser $client, string $url, string $redirect = NULL, bool $redirection = FALSE) : void {
     if ($redirect === NULL) {
       $redirect = static::REDIRECT_LOGIN;
     }
@@ -176,11 +206,11 @@ abstract class AbstractWebTestCase extends WebTestCase {
   }
 
   /**
-   * @param Client $client
+   * @param KernelBrowser $client
    * @param string $url
    * @param array $parameters
    */
-  protected function assertSuccessfulResponse(Client $client, string $url, array $parameters = []) : void {
+  protected function assertSuccessfulResponse(KernelBrowser $client, string $url, array $parameters = []) : void {
     $client->request('GET', $url, $parameters);
     $resp = $client->getResponse();
     $this->assertTrue($resp->isSuccessful(), '"'.$url.'" should be successful.'.$this->getResponseMessageHint($resp));

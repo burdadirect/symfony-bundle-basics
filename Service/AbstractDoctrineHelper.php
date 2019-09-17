@@ -4,6 +4,7 @@ namespace HBM\BasicsBundle\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 abstract class AbstractDoctrineHelper {
@@ -27,7 +28,7 @@ abstract class AbstractDoctrineHelper {
   /****************************************************************************/
 
   /**
-   * @param string|null $name
+   * @param string|NULL $name
    *
    * @return ObjectManager
    */
@@ -36,7 +37,7 @@ abstract class AbstractDoctrineHelper {
   }
 
   /**
-   * @param string|null $name
+   * @param string|NULL $name
    *
    * @return ObjectManager
    */

@@ -2,15 +2,11 @@
 
 namespace HBM\BasicsBundle\Test;
 
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\SchemaTool;
 use HBM\BasicsBundle\Entity\Repository\AbstractEntityRepo;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
+use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -18,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class AbstractWebTestCase extends WebTestCase {
+
+  use FixturesTrait;
 
   /**
    * @var AbstractServiceHelper
@@ -62,35 +60,6 @@ abstract class AbstractWebTestCase extends WebTestCase {
 
     // Avoid memory leaks.
     $this->dh = null;
-  }
-
-  /**
-   * @param array $fixtures
-   *
-   * @throws \Doctrine\ORM\Tools\ToolsException
-   */
-  public function loadFixtures(array $fixtures = []) {
-    $loader = new Loader();
-    foreach ($fixtures as $fixture) {
-      $loader->addFixture(new $fixture());
-    }
-
-    /* TODO: Check if necessary! */
-    /** @var EntityManager $em */
-    $em = $this->dh->getOM();
-
-    if ($this->schemaMetadatas === NULL) {
-      $schemaTool = new SchemaTool($em);
-      $schemaTool->dropDatabase();
-      $this->schemaMetadatas = $em->getMetadataFactory()->getAllMetadata();
-      if (count($this->schemaMetadatas) > 0) {
-        $schemaTool->createSchema($this->schemaMetadatas);
-      }
-    }
-
-    $purger = new ORMPurger($em);
-    $executor = new ORMExecutor($em, $purger);
-    $executor->execute($loader->getFixtures());
   }
 
   /****************************************************************************/

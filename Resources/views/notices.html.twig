@@ -16,7 +16,9 @@
       <tbody>
       {% for notice in object.noticesSystem %}
         <tr>
-          <td>{{ notice.id }}</td>
+          <td>
+            {% block hbm_basics_notices_system_id %}{{ notice.id }}{% endblock hbm_basics_notices_system_id %}
+          </td>
           <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
           <td>{{ notice.mode }}</td>
@@ -48,7 +50,9 @@
       <tbody>
       {% for notice in object.noticesManual %}
         <tr>
-          <td>{{ notice.id }}</td>
+          <td>
+            {% block hbm_basics_notices_manual_id %}{{ notice.id }}{% endblock hbm_basics_notices_manual_id %}
+          </td>
           <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
           <td>{{ notice.title }}</td>

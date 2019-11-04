@@ -4,6 +4,7 @@ namespace HBM\BasicsBundle\Util\Data;
 
 abstract class AbstractData {
 
+  protected static $filter = 'filter';
   protected static $label = 'text';
 
   private static $data = [];
@@ -20,8 +21,11 @@ abstract class AbstractData {
     if ($filter !== NULL) {
       $filtered = [];
       foreach (static::$data as $key => $value) {
-        if (isset($value['filter']) && is_array($value['filter']) && in_array($filter, $value['filter'], TRUE)) {
-          $filtered[$key] = $value;
+        if (isset($value[static::$filter]) && is_array($value[static::$filter])) {
+          $valuesToFilter = array_map([static::class, 'filterCallback'], $value[static::$filter]);
+          if (in_array($filter, $valuesToFilter, TRUE)) {
+            $filtered[$key] = $value;
+          }
         }
       }
       return $filtered;
@@ -32,6 +36,10 @@ abstract class AbstractData {
     }
 
     return static::$data;
+  }
+
+  protected static function filterCallback($value) {
+    return $value;
   }
 
   /****************************************************************************/

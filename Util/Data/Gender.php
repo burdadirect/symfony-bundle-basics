@@ -49,4 +49,24 @@ class Gender extends AbstractData {
     ],
   ];
 
+  /**
+   * Determine gender from various strings.
+   * 
+   * @param string|null $gender
+   * @return string|null
+   */
+  public static function determine(?string $gender) : ?string {
+    if ($gender) {
+      $gender = strtolower($gender);
+
+      foreach (self::data() as $key => $value) {
+        if (in_array($gender, $value['aliases'], TRUE)) {
+          return $key;
+        }
+      }
+    }
+
+    return NULL;
+  }
+
 }

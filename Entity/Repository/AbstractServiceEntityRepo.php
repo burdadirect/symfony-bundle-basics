@@ -136,29 +136,29 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository {
    *
    * @return QueryBuilder
    */
-  public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like') : QueryBuilder {
-    $and = $qb->expr()->andX();
+  public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = TRUE, bool $allFields = FALSE) : QueryBuilder {
+    $condWords = $allWords ? $qb->expr()->andX() : $qb->expr()->orX();
 
     $counter = 0;
     foreach ($words as $word) {
-      $or = $qb->expr()->orX();
+      $condFields = $allFields ? $qb->expr()->andX() : $qb->expr()->orX();
 
       foreach ($fields as $field) {
         if ($method === 'eq') {
-          $or->add($qb->expr()->eq($field, ':'.$prefix.$counter));
+          $condFields->add($qb->expr()->eq($field, ':'.$prefix.$counter));
         } else {
-          $or->add($qb->expr()->like($field, ':'.$prefix.$counter));
+          $condFields->add($qb->expr()->like($field, ':'.$prefix.$counter));
         }
       }
 
       $qb->setParameter($prefix.$counter, sprintf($format, $word));
       $counter++;
 
-      $and->add($or);
+      $condWords->add($condFields);
     }
 
-    if ($and->count() > 0) {
-      $qb->andWhere($and);
+    if ($condWords->count() > 0) {
+      $qb->andWhere($condWords);
     }
 
     return $qb;

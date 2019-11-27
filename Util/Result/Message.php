@@ -3,12 +3,9 @@
 namespace HBM\BasicsBundle\Util\Result;
 
 use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
-use HBM\BasicsBundle\Entity\Traits\UuidableTrait;
 use HBM\BasicsBundle\Util\Data\Level;
 
-class Message implements Uuidable {
-
-  use UuidableTrait;
+class Message {
 
   /**
    * @var string
@@ -29,13 +26,6 @@ class Message implements Uuidable {
   public function __construct(string $message, string $level = Level::INFO) {
     $this->message = $message;
     $this->level = $level;
-  }
-
-  /**
-   * @return int|null
-   */
-  public function getId(): ?int {
-    return NULL;
   }
 
   /**
@@ -85,6 +75,16 @@ class Message implements Uuidable {
   /****************************************************************************/
   /* CUSTOM                                                                   */
   /****************************************************************************/
+
+  /**
+   * @return string|null
+   */
+  public function formatMessage() : ?string {
+    if (func_num_args() > 0) {
+      return sprintf($this->getMessage(), ...func_get_args());
+    }
+    return $this->getMessage();
+  }
 
   /**
    * @return string

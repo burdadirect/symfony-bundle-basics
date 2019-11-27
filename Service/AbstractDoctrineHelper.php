@@ -2,23 +2,23 @@
 
 namespace HBM\BasicsBundle\Service;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 abstract class AbstractDoctrineHelper {
 
   /**
-   * @var RegistryInterface
+   * @var ManagerRegistry
    */
   private $doctrine;
 
   /**
    * AbstractDoctrineHelper constructor.
    *
-   * @param RegistryInterface $doctrine
+   * @param ManagerRegistry $doctrine
    */
-  public function __construct(RegistryInterface $doctrine) {
+  public function __construct(ManagerRegistry $doctrine) {
     $this->doctrine = $doctrine;
   }
 

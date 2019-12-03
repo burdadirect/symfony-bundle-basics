@@ -85,7 +85,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     // The firewall context defaults to the firewall name
     $firewallContext = 'main';
 
-    $token = new UsernamePasswordToken($user, null, $firewallContext, $roles);
+    $token = new UsernamePasswordToken($user->getUsername(), null, $firewallContext, $roles);
     $session->set('_security_'.$firewallContext, serialize($token));
     $session->save();
 
@@ -183,6 +183,18 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $client->request('GET', $url, $parameters);
     $resp = $client->getResponse();
     $this->assertTrue($resp->isSuccessful(), '"'.$url.'" should be successful.'.$this->getResponseMessageHint($resp));
+  }
+
+  /**
+   * @param Crawler $crawler
+   * @param string $redirectUrl
+   * @param string $message
+   */
+  protected function assertHtmlContainsRedirect(Crawler $crawler, string $redirectUrl, string $message) : void {
+    $redirectUrlEscaped = preg_quote($redirectUrl, '/');
+    $redirectHostEscaped = preg_quote('http://localhost', '/');
+    $pattern = '/(.*)<meta http-equiv="refresh" content="0;url=\'?('.$redirectHostEscaped.')?'.$redirectUrlEscaped.'\'?">(.*)/';
+    $this->assertRegExp($pattern, $crawler->html(), $message);
   }
 
   /**

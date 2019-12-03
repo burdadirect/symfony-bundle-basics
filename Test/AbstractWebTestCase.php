@@ -3,6 +3,8 @@
 namespace HBM\BasicsBundle\Test;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use HBM\BasicsBundle\Entity\Repository\AbstractEntityRepo;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
@@ -10,6 +12,7 @@ use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -71,22 +74,31 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @param string|int|bool|object $user
    * @param array $roles
    *
-   * @return object
+   * @return bool|object|null
+   *
+   * @throws \Exception
    */
   protected function logIn(KernelBrowser $client, $user = TRUE, array $roles = ['ROLE_USER']) {
     $session = $client->getContainer()->get('session');
 
     if (is_bool($user)) {
-      $user = $this->randomUser();
+      $user = $this->randomUserWithRoles($roles);
     } elseif (is_int($user)) {
       $user = $this->getUserRepository()->find($user);
     }
-    $user->setRoles($roles);
+    if ($user === NULL) {
+      throw new \Exception('No user found!');
+    }
+    foreach ($roles as $role) {
+      if (!in_array($role, $user->getRoles())) {
+        throw new \Exception('User is missing the following role: '.$role);
+      }
+    }
 
     // The firewall context defaults to the firewall name
     $firewallContext = 'main';
 
-    $token = new UsernamePasswordToken($user, null, $firewallContext, $roles);
+    $token = new UsernamePasswordToken($user, null, $firewallContext, $user->getRoles());
 
     $session->set('_security_'.$firewallContext, serialize($token));
     $session->save();
@@ -98,35 +110,63 @@ abstract class AbstractWebTestCase extends WebTestCase {
   }
 
   /**
-   * @return object
+   * @return object|null
    */
   protected function randomUser() {
-    if ($this->user === null) {
-      $users = $this->getUserRepository()->findRandomBy([], 1);
-      $this->user = reset($users);
+    $users = $this->getUserRepository()->findRandomBy([], 1);
+    return reset($users);
+  }
+
+  /**
+   * @param array $roles
+   *
+   * @return object|null
+   */
+  protected function randomUserWithRoles($roles = []) {
+    $qb = $this->getUserRepository()->createQueryBuilder('u');
+    foreach ($roles as $roleIndex => $roleName) {
+      $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . $roleName . '"%');
+    }
+    $numOfUsers = 0;
+    try {
+      $numOfUsers = $qb->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
+    } catch (NoResultException $e) {
+    } catch (NonUniqueResultException $e) {
     }
 
-    return $this->user;
+    $randomOffset = 0;
+    try {
+      $randomOffset = random_int(0, max(0, $numOfUsers - 1));
+    } catch (\Exception $e) {
+    }
+
+    try {
+      return $qb->select('u')->setFirstResult($randomOffset)->setMaxResults(1)->getQuery()->getSingleResult();
+    } catch (\Exception $e) {
+      return NULL;
+    }
   }
 
   /****************************************************************************/
 
   /**
    * @param string|null $url
-   * @param array $roles
+   * @param string|int|bool|object $user
    * @param string|null $redirect
    * @param bool $redirection
    *
    * @return KernelBrowser
+   *
+   * @throws \Exception
    */
-  protected function assertRoute(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
+  protected function assertRoute(string $url, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
     $client = parent::createClient();
 
-    // Role needed?
-    if (count($roles) > 0) {
+    // User needed?
+    if ($user !== NULL) {
       $this->assertRedirect($client, $url, static::REDIRECT_LOGIN);
 
-      $this->logIn($client, TRUE, $roles);
+      $this->logIn($client, $user);
     }
 
     if ($redirect || $redirection) {
@@ -142,14 +182,16 @@ abstract class AbstractWebTestCase extends WebTestCase {
 
   /**
    * @param string|null $url
-   * @param array $roles
+   * @param string|int|bool|object $user
    * @param string|null $redirect
    * @param bool $redirection
    *
    * @return KernelBrowser
+   *
+   * @throws \Exception
    */
-  protected function assertRouteJson(string $url = null, array $roles = [], string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
-    $client = $this->assertRoute($url, $roles, $redirect, $redirection);
+  protected function assertRouteJson(string $url = null, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
+    $client = $this->assertRoute($url, $user, $redirect, $redirection);
     $resp = $client->getResponse();
     $this->assertJson($resp->getContent(), '"'.$url.'" should return JSON.'.$this->getResponseMessageHint($resp));
 

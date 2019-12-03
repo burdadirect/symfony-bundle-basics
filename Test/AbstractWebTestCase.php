@@ -81,11 +81,13 @@ abstract class AbstractWebTestCase extends WebTestCase {
     } elseif (is_int($user)) {
       $user = $this->getUserRepository()->find($user);
     }
+    $user->setRoles($roles);
 
     // The firewall context defaults to the firewall name
     $firewallContext = 'main';
 
-    $token = new UsernamePasswordToken($user->getUsername(), null, $firewallContext, $roles);
+    $token = new UsernamePasswordToken($user, null, $firewallContext, $roles);
+
     $session->set('_security_'.$firewallContext, serialize($token));
     $session->save();
 

@@ -530,7 +530,7 @@ class Country extends AbstractData {
     ],
     self::CZ => [
       'text' => 'CZ',
-      'de' => 'Tschechoslowakei',
+      'de' => 'Tschechische Republik',
       'en' => 'Czech Republic',
     ],
     self::DE => [

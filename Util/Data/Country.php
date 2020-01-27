@@ -317,6 +317,7 @@ class Country extends AbstractData {
       'text' => 'AT',
       'de' => 'Österreich',
       'en' => 'Austria',
+      'filter' => ['EU'],
     ],
     self::AU => [
       'text' => 'AU',
@@ -357,6 +358,7 @@ class Country extends AbstractData {
       'text' => 'BE',
       'de' => 'Belgien',
       'en' => 'Belgium',
+      'filter' => ['EU'],
     ],
     self::BF => [
       'text' => 'BF',
@@ -367,6 +369,7 @@ class Country extends AbstractData {
       'text' => 'BG',
       'de' => 'Bulgarien',
       'en' => 'Bulgaria',
+      'filter' => ['EU'],
     ],
     self::BH => [
       'text' => 'BH',
@@ -527,16 +530,19 @@ class Country extends AbstractData {
       'text' => 'CY',
       'de' => 'Zypern',
       'en' => 'Cyprus',
+      'filter' => ['EU'],
     ],
     self::CZ => [
       'text' => 'CZ',
       'de' => 'Tschechische Republik',
       'en' => 'Czech Republic',
+      'filter' => ['EU'],
     ],
     self::DE => [
       'text' => 'DE',
       'de' => 'Deutschland',
       'en' => 'Germany',
+      'filter' => ['EU'],
     ],
     self::DJ => [
       'text' => 'DJ',
@@ -547,6 +553,7 @@ class Country extends AbstractData {
       'text' => 'DK',
       'de' => 'Dänemark',
       'en' => 'Denmark',
+      'filter' => ['EU'],
     ],
     self::DM => [
       'text' => 'DM',
@@ -572,6 +579,7 @@ class Country extends AbstractData {
       'text' => 'EE',
       'de' => 'Estland',
       'en' => 'Estonia',
+      'filter' => ['EU'],
     ],
     self::EG => [
       'text' => 'EG',
@@ -592,6 +600,7 @@ class Country extends AbstractData {
       'text' => 'ES',
       'de' => 'Spanien',
       'en' => 'Spain',
+      'filter' => ['EU'],
     ],
     self::ET => [
       'text' => 'ET',
@@ -602,6 +611,7 @@ class Country extends AbstractData {
       'text' => 'FI',
       'de' => 'Finnland',
       'en' => 'Finland',
+      'filter' => ['EU'],
     ],
     self::FJ => [
       'text' => 'FJ',
@@ -627,6 +637,7 @@ class Country extends AbstractData {
       'text' => 'FR',
       'de' => 'Frankreich',
       'en' => 'France',
+      'filter' => ['EU'],
     ],
     self::GA => [
       'text' => 'GA',
@@ -637,6 +648,7 @@ class Country extends AbstractData {
       'text' => 'GB',
       'de' => 'Großbritannien',
       'en' => 'United Kingdom',
+      'filter' => ['EU'],
     ],
     self::GD => [
       'text' => 'GD',
@@ -697,6 +709,7 @@ class Country extends AbstractData {
       'text' => 'GR',
       'de' => 'Griechenland',
       'en' => 'Greece',
+      'filter' => ['EU'],
     ],
     self::GS => [
       'text' => 'GS',
@@ -742,6 +755,7 @@ class Country extends AbstractData {
       'text' => 'HR',
       'de' => 'Kroatien',
       'en' => 'Croatia',
+      'filter' => ['EU'],
     ],
     self::HT => [
       'text' => 'HT',
@@ -752,6 +766,7 @@ class Country extends AbstractData {
       'text' => 'HU',
       'de' => 'Ungarn',
       'en' => 'Hungary',
+      'filter' => ['EU'],
     ],
     self::ID => [
       'text' => 'ID',
@@ -762,6 +777,7 @@ class Country extends AbstractData {
       'text' => 'IE',
       'de' => 'Irland',
       'en' => 'Ireland',
+      'filter' => ['EU'],
     ],
     self::IL => [
       'text' => 'IL',
@@ -802,6 +818,7 @@ class Country extends AbstractData {
       'text' => 'IT',
       'de' => 'Italien',
       'en' => 'Italy',
+      'filter' => ['EU'],
     ],
     self::JE => [
       'text' => 'JE',
@@ -917,16 +934,19 @@ class Country extends AbstractData {
       'text' => 'LT',
       'de' => 'Litauen',
       'en' => 'Lithuania',
+      'filter' => ['EU'],
     ],
     self::LU => [
       'text' => 'LU',
       'de' => 'Luxemburg',
       'en' => 'Luxembourg',
+      'filter' => ['EU'],
     ],
     self::LV => [
       'text' => 'LV',
       'de' => 'Lettland',
       'en' => 'Latvia',
+      'filter' => ['EU'],
     ],
     self::LY => [
       'text' => 'LY',
@@ -1017,6 +1037,7 @@ class Country extends AbstractData {
       'text' => 'MT',
       'de' => 'Malta',
       'en' => 'Malta',
+      'filter' => ['EU'],
     ],
     self::MU => [
       'text' => 'MU',
@@ -1082,6 +1103,7 @@ class Country extends AbstractData {
       'text' => 'NL',
       'de' => 'Niederlande',
       'en' => 'Netherlands',
+      'filter' => ['EU'],
     ],
     self::NO => [
       'text' => 'NO',
@@ -1147,6 +1169,7 @@ class Country extends AbstractData {
       'text' => 'PL',
       'de' => 'Polen',
       'en' => 'Poland',
+      'filter' => ['EU'],
     ],
     self::PM => [
       'text' => 'PM',
@@ -1172,6 +1195,7 @@ class Country extends AbstractData {
       'text' => 'PT',
       'de' => 'Portugal',
       'en' => 'Portugal',
+      'filter' => ['EU'],
     ],
     self::PW => [
       'text' => 'PW',
@@ -1197,6 +1221,7 @@ class Country extends AbstractData {
       'text' => 'RO',
       'de' => 'Rumänien',
       'en' => 'Romania',
+      'filter' => ['EU'],
     ],
     self::RS => [
       'text' => 'RS',
@@ -1237,6 +1262,7 @@ class Country extends AbstractData {
       'text' => 'SE',
       'de' => 'Schweden',
       'en' => 'Sweden',
+      'filter' => ['EU'],
     ],
     self::SG => [
       'text' => 'SG',
@@ -1252,6 +1278,7 @@ class Country extends AbstractData {
       'text' => 'SI',
       'de' => 'Slowenien',
       'en' => 'Slovenia',
+      'filter' => ['EU'],
     ],
     self::SJ => [
       'text' => 'SJ',
@@ -1262,6 +1289,7 @@ class Country extends AbstractData {
       'text' => 'SK',
       'de' => 'Slowakische Republik',
       'en' => 'Slovakia',
+      'filter' => ['EU'],
     ],
     self::SL => [
       'text' => 'SL',

@@ -181,6 +181,10 @@ class EntityWording {
     return $name;
   }
 
+  private function escapeTextForFormatString($text) {
+    return str_replace('%', '%%', $text);
+  }
+
   /**
    * Creates an entity label.
    *
@@ -205,7 +209,7 @@ class EntityWording {
     $classPart = $class ? ' class="'.$class.'"' : '';
     $namePart = $this->getName() ? ' <em'.$classPart.'>'.$this->getName().'</em>' : '';
 
-    return $this->label('%s <strong>%s'.$namePart.'%s</strong>', $ucfirst);
+    return $this->label('%s <strong>%s'.$this->escapeTextForFormatString($namePart).'%s</strong>', $ucfirst);
   }
 
   /**
@@ -216,7 +220,7 @@ class EntityWording {
   public function labelText($ucfirst = FALSE) : string {
     $namePart = $this->getName() ? ' "'.$this->getName().'"' : '';
 
-    return $this->label('%s %s'.$namePart.'%s', $ucfirst);
+    return $this->label('%s %s'.$this->escapeTextForFormatString($namePart).'%s', $ucfirst);
   }
 
 }

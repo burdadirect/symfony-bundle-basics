@@ -5,7 +5,7 @@ namespace HBM\BasicsBundle\Test;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use HBM\BasicsBundle\Entity\Repository\AbstractEntityRepo;
+use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
@@ -46,9 +46,9 @@ abstract class AbstractWebTestCase extends WebTestCase {
   public const REDIRECT_LOGIN = 'http://localhost/login';
 
   /**
-   * @return AbstractEntityRepo
+   * @return ExtendedEntityRepo
    */
-  abstract protected function getUserRepository() : AbstractEntityRepo;
+  abstract protected function getUserRepository() : ExtendedEntityRepo;
 
   /**
    * {@inheritDoc}

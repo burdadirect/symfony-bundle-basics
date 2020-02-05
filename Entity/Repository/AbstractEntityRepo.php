@@ -5,16 +5,12 @@ namespace HBM\BasicsBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
 
-abstract class AbstractEntityRepo extends EntityRepository {
+abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEntityRepo {
 
   /**
-   * Finds entities by a set of criteria.
-   *
-   * @param array      $criteria
-   * @param int|null   $limit
-   *
-   * @return array The objects.
+   * @inheritDoc
    */
   public function findRandomBy(array $criteria, $limit = null) : array {
     try {
@@ -27,14 +23,10 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * @param QueryBuilder $qb
-   * @param array $sortations
-   * @param array $default
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function addSortations(QueryBuilder $qb, array $sortations, array $default = []) : QueryBuilder {
-    if (\count($sortations) === 0) {
+    if (count($sortations) === 0) {
       $sortations = $default;
     }
 
@@ -46,15 +38,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Adjust a query builder for searching.
-   *
-   * @param QueryBuilder $qb
-   * @param string $alias
-   * @param string $field
-   * @param string|int|mixed|null $value
-   * @param string $prefix
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function searchValue(QueryBuilder $qb, string $alias, string $field, $value = NULL, string $prefix = 'value') : QueryBuilder {
     if ($value !== NULL) {
@@ -65,15 +49,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Adjust a query builder for searching.
-   *
-   * @param QueryBuilder $qb
-   * @param string $alias
-   * @param string $field
-   * @param array|null $choices
-   * @param string $prefix
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function searchChoices(QueryBuilder $qb, string $alias, string $field, array $choices = NULL, string $prefix = 'choices'): QueryBuilder {
     if (count($choices) > 0) {
@@ -84,15 +60,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Adjust a query builder for searching.
-   *
-   * @param QueryBuilder $qb
-   * @param string $alias
-   * @param string $field
-   * @param array|null $selections
-   * @param string $prefix
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function searchSelection(QueryBuilder $qb, string $alias, string $field, array $selections = NULL, string $prefix = 'selections'): QueryBuilder {
     if (count($selections) > 0) {
@@ -105,14 +73,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Adjust a query builder for searching.
-   *
-   * @param QueryBuilder $qb
-   * @param string $alias
-   * @param string $field
-   * @param bool|null $isNull
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function searchNull(QueryBuilder $qb, string $alias, string $field, bool $isNull = NULL) : QueryBuilder {
     if ($isNull === TRUE) {
@@ -125,16 +86,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Add search field to querybuilder.
-   *
-   * @param QueryBuilder $qb
-   * @param array $fields
-   * @param array $words
-   * @param string $prefix
-   * @param string $format
-   * @param string $method
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like') : QueryBuilder {
     $and = $qb->expr()->andX();
@@ -165,14 +117,7 @@ abstract class AbstractEntityRepo extends EntityRepository {
   }
 
   /**
-   * Check if querybuilder already has been joined.
-   *
-   * @param QueryBuilder $qb
-   * @param string $alias
-   * @param string $field
-   * @param string $joinAlias
-   *
-   * @return QueryBuilder
+   * @inheritDoc
    */
   public function leftJoinOnce(QueryBuilder $qb, string $alias, string $field, string $joinAlias) : QueryBuilder {
     /** @var Join[] $joins */

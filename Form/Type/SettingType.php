@@ -58,7 +58,7 @@ class SettingType extends AbstractType {
         'label' => 'Bearbeitbar?',
         'required' => true,
         'choices' => [
-          'nein' => State::BLOCKED,
+          'nein' => State::PENDING,
           'ja' => State::ACTIVE
         ],
         'expanded' => true,

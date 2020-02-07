@@ -68,6 +68,13 @@ abstract class AbstractWebTestCase extends WebTestCase {
   /****************************************************************************/
 
   /**
+   * @return KernelBrowser
+   */
+  protected function createCustomClient() : KernelBrowser {
+    return parent::createClient();
+  }
+
+  /**
    * Log in.
    *
    * @param KernelBrowser $client
@@ -160,7 +167,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @throws \Exception
    */
   protected function assertRoute(string $url, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
-    $client = parent::createClient();
+    $client = $this->createCustomClient();
 
     // User needed?
     if ($user !== NULL) {

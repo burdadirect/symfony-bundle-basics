@@ -34,6 +34,7 @@ class Country extends AbstractData {
   public const BM = 'BM';
   public const BN = 'BN';
   public const BO = 'BO';
+  public const BQ = 'BQ';
   public const BR = 'BR';
   public const BS = 'BS';
   public const BT = 'BT';
@@ -57,6 +58,7 @@ class Country extends AbstractData {
   public const CS = 'CS';
   public const CU = 'CU';
   public const CV = 'CV';
+  public const CW = 'CW';
   public const CX = 'CX';
   public const CY = 'CY';
   public const CZ = 'CZ';
@@ -213,6 +215,7 @@ class Country extends AbstractData {
   public const SR = 'SR';
   public const ST = 'ST';
   public const SV = 'SV';
+  public const SX = 'SX';
   public const SY = 'SY';
   public const SZ = 'SZ';
   public const TC = 'TC';
@@ -406,6 +409,11 @@ class Country extends AbstractData {
       'de' => 'Bolivien',
       'en' => 'Bolivia',
     ],
+    self::BQ => [
+      'text' => 'BQ ',
+      'de' => 'Bonaire, Sint Eustatius und Saba',
+      'en' => 'Bonaire, Sint Eustatius and Saba',
+    ],
     self::BR => [
       'text' => 'BR',
       'de' => 'Brasilien',
@@ -520,6 +528,11 @@ class Country extends AbstractData {
       'text' => 'CV',
       'de' => 'Cabo Verde',
       'en' => 'Cape Verde',
+    ],
+    self::CW => [
+      'text' => 'CW',
+      'de' => 'Curaçao',
+      'en' => 'Curaçao',
     ],
     self::CX => [
       'text' => 'CX',
@@ -1325,6 +1338,11 @@ class Country extends AbstractData {
       'text' => 'SV',
       'de' => 'El Salvador',
       'en' => 'El Salvador',
+    ],
+    self::SX => [
+      'text' => 'SX',
+      'de' => 'Sint Maarten',
+      'en' => 'Sint Maarten',
     ],
     self::SY => [
       'text' => 'SY',

@@ -9,7 +9,7 @@ class EntityDeletionWording extends EntityWording {
   }
 
   public function confirmDeletionSuccess(array $unlinkedFiles = []) : string {
-    $entityNominative = $this->labelHtml(NULL, NULL, TRUE);
+    $entityNominative = $this->labelHtml(NULL, TRUE);
 
     $message = $entityNominative.' wurde gelöscht.';
     if (\count($unlinkedFiles) > 0) {

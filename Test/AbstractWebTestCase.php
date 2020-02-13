@@ -254,7 +254,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
    *
    * @return string
    */
-  private function getResponseMessageHint(Response $response, string $prefix = ' ') : string {
+  protected function getResponseMessageHint(Response $response, string $prefix = ' ') : string {
     $data = [
       'Code' => $response->getStatusCode(),
       'Location' => $response->headers->get('Location', 'n/a'),

@@ -267,6 +267,5 @@ abstract class AbstractWebTestCase extends WebTestCase {
 
     return $prefix.'['.implode(', ', $data).']';
   }
-  
 
 }

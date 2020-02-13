@@ -247,6 +247,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $pattern = '/(.*)<meta http-equiv="refresh" content="0;url=\'?('.$redirectHostEscaped.')?'.$redirectUrlEscaped.'\'?">(.*)/';
     $this->assertRegExp($pattern, $crawler->html(), $message);
   }
+  
 
   /**
    * @param Response $response

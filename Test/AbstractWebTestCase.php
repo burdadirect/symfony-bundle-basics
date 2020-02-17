@@ -2,12 +2,9 @@
 
 namespace HBM\BasicsBundle\Test;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
-use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
-use HBM\BasicsBundle\Service\AbstractServiceHelper;
 use Liip\TestFixturesBundle\Test\FixturesTrait;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -19,26 +16,6 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 abstract class AbstractWebTestCase extends WebTestCase {
 
   use FixturesTrait;
-
-  /**
-   * @var AbstractServiceHelper
-   */
-  protected $sh;
-
-  /**
-   * @var AbstractDoctrineHelper
-   */
-  protected $dh;
-
-  /**
-   * @var ClassMetadata[]
-   */
-  protected $schemaMetadatas;
-
-  /**
-   * @var object
-   */
-  protected $user;
 
   /**
    * @var string
@@ -57,12 +34,6 @@ abstract class AbstractWebTestCase extends WebTestCase {
    */
   protected function tearDown() : void {
     parent::tearDown();
-
-    // Only supported for lazy services.
-    // $this->dh->resetOM();
-
-    // Avoid memory leaks.
-    $this->dh = null;
   }
 
   /****************************************************************************/

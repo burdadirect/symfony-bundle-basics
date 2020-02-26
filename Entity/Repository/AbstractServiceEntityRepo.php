@@ -3,6 +3,7 @@
 namespace HBM\BasicsBundle\Entity\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
@@ -86,9 +87,45 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   }
 
   /**
+   * @param $qb
+   * @param $condGroups
+   * @param bool $all
+   *
+   * @return QueryBuilder
+   */
+  public function addCondGroup($qb, $condGroups, $all = FALSE) : QueryBuilder {
+    $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
+
+    foreach ($condGroups as $condGroup) {
+      if ($condGroup->count() > 0) {
+        $conds->add($condGroup);
+      }
+    }
+
+    if ($conds->count() > 0) {
+      $qb->andWhere($conds);
+    }
+
+    return $qb;
+  }
+
+  /**
    * @inheritDoc
    */
   public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = TRUE, bool $allFields = FALSE) : QueryBuilder {
+    $condWords = $this->getSearchFieldsConditions($qb, $fields, $words, $prefix, $format, $method, $allWords, $allFields);
+
+    if ($condWords->count() > 0) {
+      $qb->andWhere($condWords);
+    }
+
+    return $qb;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getSearchFieldsConditions(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = TRUE, bool $allFields = FALSE) : Composite {
     $condWords = $allWords ? $qb->expr()->andX() : $qb->expr()->orX();
 
     $counter = 0;
@@ -109,11 +146,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
       $condWords->add($condFields);
     }
 
-    if ($condWords->count() > 0) {
-      $qb->andWhere($condWords);
-    }
-
-    return $qb;
+    return $condWords;
   }
 
   /**

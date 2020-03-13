@@ -22,6 +22,11 @@ class Result {
   private $return;
 
   /**
+   * @var mixed
+   */
+  private $payload;
+
+  /**
    * @var string
    */
   public $error;
@@ -59,6 +64,28 @@ class Result {
    */
   public function getReturn() : ?bool {
     return $this->return;
+  }
+
+  /**
+   * Set payload.
+   *
+   * @param mixed $payload
+   *
+   * @return self
+   */
+  public function setPayload($payload = NULL) : self {
+    $this->payload = $payload;
+
+    return $this;
+  }
+
+  /**
+   * Get payload.
+   *
+   * @return mixed|null
+   */
+  public function getPayload() {
+    return $this->payload;
   }
 
   /**

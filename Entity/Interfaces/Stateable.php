@@ -37,6 +37,11 @@ interface Stateable extends Addressable {
   /**
    * @return bool
    */
+  public function isReview() : bool;
+
+  /**
+   * @return bool
+   */
   public function isBlocked() : bool;
 
 }

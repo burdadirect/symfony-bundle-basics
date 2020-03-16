@@ -40,6 +40,10 @@ trait StateableTrait {
     return $this->getState() === State::PENDING;
   }
 
+  public function isReview() : bool {
+    return $this->getState() === State::REVIEW;
+  }
+
   public function isBlocked() : bool {
     return $this->getState() === State::BLOCKED;
   }

@@ -17,57 +17,74 @@ abstract class AbstractDeletionHelper {
   protected $dh;
 
   /**
-   * @param $items
-   * @param $headline
-   * @param $route
-   * @param $funcText
-   * @param null $funcRemove
+   * @param AbstractEntity[] $items
+   * @param string $headline
+   * @param string|callable|NULL $callableRoute
+   * @param string|callable|NULL $callableText
+   * @param callable|NULL $callableDiscard
+   * @param string|callable|NULL $callableIcon
    *
    * @return string
    */
-  protected function assembleConfirmMessagesForRelatedItems($items, $headline, $route, $funcText, $funcRemove = NULL) : string {
-    return $this->assembleConfirmMessages($items, 'An das Objekt sind folgende <strong>'.$headline.'</strong> geknüpft (werden gelöscht):', $route, $funcText, $funcRemove);
+  protected function assembleConfirmMessagesForRelatedItems($items, $headline, $callableRoute, $callableText, $callableDiscard = NULL, $callableIcon = NULL) : string {
+    return $this->assembleConfirmMessages($items, 'An das Objekt sind folgende <strong>'.$headline.'</strong> geknüpft:', $callableRoute, $callableText, $callableDiscard, $callableIcon);
   }
 
   /**
    * @param AbstractEntity[] $items
    * @param string $headline
-   * @param string $route
-   * @param string|callable $funcText
-   * @param string $funcRemove
+   * @param string|callable|NULL $callableRoute
+   * @param string|callable|NULL $callableText
+   * @param callable|NULL $callableDiscard
+   * @param string|callable|NULL $callableIcon
    *
    * @return string
    */
-  protected function assembleConfirmMessages($items, $headline, $route, $funcText, $funcRemove = NULL) : string {
+  protected function assembleConfirmMessages($items, $headline, $callableRoute, $callableText, $callableDiscard = NULL, $callableIcon = NULL) : string {
     $message = '';
     if (\count($items) > 0) {
       $message .= '<p class="mb-1">'.$headline.'</p>';
       $message .= '<ul class="tree">';
 
       foreach ($items as $item) {
-        $removable = TRUE;
-        if ($funcRemove instanceof \Closure) {
-          $removable = $funcRemove($item);
+        // Should this item be discarded?
+        $discard = FALSE;
+        if ($callableDiscard instanceof \Closure) {
+          $discard = $callableDiscard($item);
         }
-        if (!$removable) {
+        if ($discard) {
           continue;
         }
 
-        $text = NULL;
-        if ($funcText instanceof \Closure) {
-          $text = $funcText($item);
-        } elseif ($funcText !== NULL) {
-          $text = $item->{$funcText}();
+        // Get icon representation of the action for this item.
+        $icon = NULL;
+        if ($callableIcon instanceof \Closure) {
+          $icon = $callableIcon($item);
+        } elseif ($callableIcon !== NULL) {
+          $icon = $callableIcon;
         }
+
+        // Get text representation of this item.
+        $text = NULL;
+        if ($callableText instanceof \Closure) {
+          $text = $callableText($item);
+        } elseif ($callableText !== NULL) {
+          $text = $item->{$callableText}();
+        }
+
+        // Get the link to the item (if possible).
         $link = $item->getId();
-        if ($route !== NULL) {
+        if ($callableRoute instanceof \Closure) {
+          $link = $callableRoute($item, $this->sh->router());
+        } elseif ($callableRoute !== NULL) {
           try {
-            $link = '<a href="'.$this->sh->router()->generate($route, ['id' => $item->getId()]).'" title="'.$text.'">'.$item->getId().'</a>';
+            $link = '<a href="'.$this->sh->router()->generate($callableRoute, ['id' => $item->getId()]).'" title="'.$text.'">'.$item->getId().'</a>';
           } catch (\Exception $e) {
           }
         }
+
         $message .= '<li>';
-        $message .= $link.': '.$text;
+        $message .= $icon.$link.': '.$text;
         $message .= '</li>';
       }
 

@@ -3,6 +3,8 @@
 namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\AbstractEntity;
+use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessage;
+use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessageInterface;
 
 abstract class AbstractDeletionHelper {
 
@@ -17,74 +19,46 @@ abstract class AbstractDeletionHelper {
   protected $dh;
 
   /**
-   * @param AbstractEntity[] $items
-   * @param string $headline
-   * @param string|callable|NULL $callableRoute
-   * @param string|callable|NULL $callableText
-   * @param callable|NULL $callableDiscard
-   * @param string|callable|NULL $callableIcon
+   * @param array $confirmMessages
    *
    * @return string
    */
-  protected function assembleConfirmMessagesForRelatedItems($items, $headline, $callableRoute, $callableText, $callableDiscard = NULL, $callableIcon = NULL) : string {
-    return $this->assembleConfirmMessages($items, 'An das Objekt sind folgende <strong>'.$headline.'</strong> geknüpft:', $callableRoute, $callableText, $callableDiscard, $callableIcon);
+  public function renderConfirmMessages(array $confirmMessages) : string {
+    $confirmDetails = '';
+    foreach ($confirmMessages as $confirmMessage) {
+      $confirmDetails .= $this->renderConfirmMessage($confirmMessage);
+    }
+    return $confirmDetails;
   }
 
   /**
-   * @param AbstractEntity[] $items
-   * @param string $headline
-   * @param string|callable|NULL $callableRoute
-   * @param string|callable|NULL $callableText
-   * @param callable|NULL $callableDiscard
-   * @param string|callable|NULL $callableIcon
+   * @param ConfirmMessage $confirmMessage
    *
    * @return string
    */
-  protected function assembleConfirmMessages($items, $headline, $callableRoute, $callableText, $callableDiscard = NULL, $callableIcon = NULL) : string {
+  public function renderConfirmMessage(ConfirmMessage $confirmMessage) : string {
     $message = '';
-    if (\count($items) > 0) {
-      $message .= '<p class="mb-1">'.$headline.'</p>';
+    if (\count($confirmMessage->getItems()) > 0) {
+      $message .= '<p class="mb-1">An das Objekt sind folgende <strong>'.$confirmMessage->getWording().'</strong> geknüpft:</p>';
       $message .= '<ul class="tree">';
 
-      foreach ($items as $item) {
-        // Should this item be discarded?
-        $discard = FALSE;
-        if ($callableDiscard instanceof \Closure) {
-          $discard = $callableDiscard($item);
-        }
-        if ($discard) {
+      foreach ($confirmMessage->getItems() as $item) {
+        if ($confirmMessage->evalDiscard($item)) {
           continue;
         }
 
-        // Get icon representation of the action for this item.
-        $icon = NULL;
-        if ($callableIcon instanceof \Closure) {
-          $icon = $callableIcon($item);
-        } elseif ($callableIcon !== NULL) {
-          $icon = $callableIcon;
-        }
+        $id = $confirmMessage->evalId($item);
+        $icon = $this->renderConfirmMessageIcon($confirmMessage, $item);
+        $text = $confirmMessage->evalText($item);
 
-        // Get text representation of this item.
-        $text = NULL;
-        if ($callableText instanceof \Closure) {
-          $text = $callableText($item);
-        } elseif ($callableText !== NULL) {
-          $text = $item->{$callableText}();
-        }
-
-        // Get the link to the item (if possible).
-        $link = $item->getId();
-        if ($callableRoute instanceof \Closure) {
-          $link = $callableRoute($item, $this->sh->router());
-        } elseif ($callableRoute !== NULL) {
-          try {
-            $link = '<a href="'.$this->sh->router()->generate($callableRoute, ['id' => $item->getId()]).'" title="'.$text.'">'.$item->getId().'</a>';
-          } catch (\Exception $e) {
-          }
+        $link = $id;
+        if ($url = $confirmMessage->evalUrl($item, $this->sh->router())) {
+          $link = '<a href="'.$url.'" title="'.$text.'">'.$id.'</a>';
         }
 
         $message .= '<li>';
-        $message .= $icon.$link.': '.$text;
+        $message .= $confirmMessage->evalFormat($icon, $link, $text);
+        $message .= $this->renderConfirmMessages($confirmMessage->evalChildren($item));
         $message .= '</li>';
       }
 
@@ -92,6 +66,16 @@ abstract class AbstractDeletionHelper {
     }
 
     return $message;
+  }
+
+  /**
+   * @param ConfirmMessageInterface $confirmMessage
+   * @param AbstractEntity $item
+   *
+   * @return string|null
+   */
+  public function renderConfirmMessageIcon(ConfirmMessageInterface $confirmMessage, AbstractEntity $item) : ?string {
+    return $confirmMessage->evalIcon($item);
   }
 
 }

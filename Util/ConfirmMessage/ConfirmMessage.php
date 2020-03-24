@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\Collection;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use Symfony\Component\Routing\RouterInterface;
 
-class ConfirmMessage implements ConfirmMessageInterface {
+class ConfirmMessage {
 
   public const MODE_DELETE = 'delete';
   public const MODE_NULLIFY = 'nullify';
@@ -52,9 +52,15 @@ class ConfirmMessage implements ConfirmMessageInterface {
   private $discard;
 
   /**
+   * sprintf arguments:
+   *  - %1$s: id
+   *  - %2$s: url
+   *  - %3$s: text
+   *  - %4$s: icon
+   *
    * @var string
    */
-  protected $format = '%s &mdash; %s: %s';
+  protected $format = '<a href="%2$s" title="%3$s">%1$s</a>: %3$s';
 
   /****************************************************************************/
 
@@ -332,8 +338,8 @@ class ConfirmMessage implements ConfirmMessageInterface {
    *
    * @return string
    */
-  public function evalFormat($icon, $link, $text) : string {
-    return sprintf($this->format, $icon, $link, $text);
+  public function evalFormat($id, $url, $text, $icon) : string {
+    return sprintf($this->format, $id, $url, $text, $icon);
   }
 
 }

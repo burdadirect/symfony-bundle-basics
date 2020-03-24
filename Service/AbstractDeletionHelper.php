@@ -48,16 +48,12 @@ abstract class AbstractDeletionHelper {
         }
 
         $id = $confirmMessage->evalId($item);
-        $icon = $this->renderConfirmMessageIcon($confirmMessage, $item);
+        $url = $confirmMessage->evalUrl($item, $this->sh->router());
         $text = $confirmMessage->evalText($item);
-
-        $link = $id;
-        if ($url = $confirmMessage->evalUrl($item, $this->sh->router())) {
-          $link = '<a href="'.$url.'" title="'.$text.'">'.$id.'</a>';
-        }
+        $icon = $confirmMessage->evalIcon($item);
 
         $message .= '<li>';
-        $message .= $confirmMessage->evalFormat($icon, $link, $text);
+        $message .= $confirmMessage->evalFormat($id, $url, $text, $icon);
         $message .= $this->renderConfirmMessages($confirmMessage->evalChildren($item));
         $message .= '</li>';
       }
@@ -66,16 +62,6 @@ abstract class AbstractDeletionHelper {
     }
 
     return $message;
-  }
-
-  /**
-   * @param ConfirmMessageInterface $confirmMessage
-   * @param AbstractEntity $item
-   *
-   * @return string|null
-   */
-  public function renderConfirmMessageIcon(ConfirmMessageInterface $confirmMessage, AbstractEntity $item) : ?string {
-    return $confirmMessage->evalIcon($item);
   }
 
 }

@@ -51,17 +51,6 @@ class ConfirmMessage {
    */
   private $discard;
 
-  /**
-   * sprintf arguments:
-   *  - %1$s: id
-   *  - %2$s: url
-   *  - %3$s: text
-   *  - %4$s: icon
-   *
-   * @var string
-   */
-  protected $format = '<a href="%2$s" title="%3$s">%1$s</a>: %3$s';
-
   /****************************************************************************/
 
   public function __construct($items = [], string $wording = NULL, $mode = NULL) {
@@ -305,13 +294,18 @@ class ConfirmMessage {
    *
    * @return string|null
    */
-  public function evalUrl(AbstractEntity $item, RouterInterface $router) : ?string {
+  public function evalUrl(AbstractEntity $item, RouterInterface $router = NULL) : ?string {
     if ($this->route instanceof \Closure) {
       return call_user_func($this->route, $item, $router);
     } elseif ($this->route !== NULL) {
-      try {
-        return $router->generate($this->route, ['id' => $item->getId()]);
-      } catch (\Exception $e) {
+      $first = $this->route[0] ?? '';
+      if ($first === '/') {
+        return $this->route;
+      } elseif ($router) {
+        try {
+          return $router->generate($this->route, ['id' => $item->getId()]);
+        } catch (\Exception $e) {
+        }
       }
     }
 
@@ -332,14 +326,22 @@ class ConfirmMessage {
   }
 
   /**
-   * @param $icon
-   * @param $link
-   * @param $text
+   * @param AbstractEntity $item
+   * @param RouterInterface|NULL $router
    *
    * @return string
    */
-  public function evalFormat($id, $url, $text, $icon) : string {
-    return sprintf($this->format, $id, $url, $text, $icon);
+  public function render(AbstractEntity $item, RouterInterface $router = NULL) : string {
+    $id = $this->evalId($item);
+    $url = $this->evalUrl($item, $router);
+    $text = $this->evalText($item);
+    $icon = $this->evalIcon($item);
+
+    if ($url) {
+      return '<a href="'.$url.'" title="'.strip_tags($text).'">'.$id.'</a>: '.$text;
+    } else {
+      return $id.': '.$text;
+    }
   }
 
 }

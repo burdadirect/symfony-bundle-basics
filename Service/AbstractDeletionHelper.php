@@ -39,29 +39,56 @@ abstract class AbstractDeletionHelper {
   public function renderConfirmMessage(ConfirmMessage $confirmMessage) : string {
     $message = '';
     if (\count($confirmMessage->getItems()) > 0) {
-      $message .= '<p class="mb-1">An das Objekt sind folgende <strong>'.$confirmMessage->getWording().'</strong> geknüpft:</p>';
-      $message .= '<ul class="tree">';
-
+      $listItems = '';
       foreach ($confirmMessage->getItems() as $item) {
         if ($confirmMessage->evalDiscard($item)) {
           continue;
         }
-
-        $id = $confirmMessage->evalId($item);
-        $url = $confirmMessage->evalUrl($item, $this->sh->router());
-        $text = $confirmMessage->evalText($item);
-        $icon = $confirmMessage->evalIcon($item);
-
-        $message .= '<li>';
-        $message .= $confirmMessage->evalFormat($id, $url, $text, $icon);
-        $message .= $this->renderConfirmMessages($confirmMessage->evalChildren($item));
-        $message .= '</li>';
+        $listItems .= $this->renderListItem($confirmMessage, $item);
       }
 
-      $message .= '</ul>';
+      $message .= $this->renderHeadline($confirmMessage);
+      $message .= $this->renderList($listItems);
     }
 
     return $message;
+  }
+
+  /**
+   * @param ConfirmMessage $confirmMessage
+   *
+   * @return string
+   */
+  public function renderHeadline(ConfirmMessage $confirmMessage) : string {
+    return '<p>An das Objekt sind folgende <strong>'.$confirmMessage->getWording().'</strong> geknüpft:</p>';
+  }
+
+  /**
+   * @param $listItems
+   *
+   * @return string
+   */
+  public function renderList($listItems) : string {
+    $list = '<ul class="tree">';
+    $list .= $listItems;
+    $list .= '</ul>';
+
+    return $list;
+  }
+
+  /**
+   * @param ConfirmMessage $confirmMessage
+   * @param AbstractEntity $item
+   *
+   * @return string
+   */
+  public function renderListItem(ConfirmMessage $confirmMessage, AbstractEntity $item) : string {
+    $listItem = '<li>';
+    $listItem .= $confirmMessage->render($item, $this->sh->router());
+    $listItem .= $this->renderConfirmMessages($confirmMessage->evalChildren($item));
+    $listItem .= '</li>';
+
+    return $listItem;
   }
 
 }

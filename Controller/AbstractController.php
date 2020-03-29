@@ -54,6 +54,21 @@ abstract class AbstractController extends BaseController {
    * @param null|string $prefix
    * @param null|string $postfix
    */
+  protected function addFlashMessagesFromNotices(array $notices, $prefix = NULL, $postfix = NULL) : void {
+    foreach ($notices as $notice) {
+      $string = $notice->getTitle();
+      if ($notice->getMessage()) {
+        $string = '<div class="normal"><strong>'.$string.'</strong><br />'.$notice->getMessage().'</div>';
+      }
+      $this->addFlashMessage($notice->getAlertLevel(), $prefix.$string.$postfix);
+    }
+  }
+
+  /**
+   * @param Result $result
+   * @param null|string $prefix
+   * @param null|string $postfix
+   */
   protected function addFlashMessagesFromResult(Result $result, $prefix = NULL, $postfix = NULL) : void {
     foreach ($result->getMessages() as $message) {
       $this->addFlashMessage($message->getLevel(), $prefix.$message->getMessage().$postfix);
@@ -66,13 +81,7 @@ abstract class AbstractController extends BaseController {
    * @param null|string $postfix
    */
   protected function addFlashNoticesFromResult(Result $result, $prefix = NULL, $postfix = NULL) : void {
-    foreach ($result->getNotices() as $notice) {
-      $string = $notice->getTitle();
-      if ($notice->getMessage()) {
-        $string = '<div class="normal"><strong>'.$string.'</strong><br />'.$notice->getMessage().'</div>';
-      }
-      $this->addFlashMessage($notice->getAlertLevel(), $prefix.$string.$postfix);
-    }
+    $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
   }
 
   /****************************************************************************/

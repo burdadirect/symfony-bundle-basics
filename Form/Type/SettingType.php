@@ -2,6 +2,7 @@
 
 namespace HBM\BasicsBundle\Form\Type;
 
+use HBM\BasicsBundle\Entity\Interfaces\SettingInterface;
 use HBM\BasicsBundle\Util\Data\SettingVarType;
 use HBM\BasicsBundle\Util\Data\State;
 use Symfony\Component\Form\AbstractType;
@@ -27,6 +28,17 @@ class SettingType extends AbstractType {
       'label' => 'Allgemein',
     ]);
 
+    /** @var SettingInterface $setting */
+    $setting = $builder->getData();
+
+    if ($setting->getVarType() === SettingVarType::JSON) {
+      $editorMode = 'ace/mode/json';
+    } elseif ($setting->getVarType() === SettingVarType::HTML) {
+      $editorMode = 'ace/mode/html';
+    } else {
+      $editorMode = 'ace/mode/text';
+    }
+
     $group
       ->add('varNature', TextType::class, [
         'label' => 'Art',
@@ -47,7 +59,11 @@ class SettingType extends AbstractType {
       ->add('varValue', TextareaType::class, [
         'label' => 'Wert',
         'required' => false,
-        'attr' => ['rows' => '5'],
+        'attr' => [
+          'rows' => '5',
+          'data-ace-id' => 'editor-twig-settings',
+          'data-ace-options' => json_encode(['ace' => ['mode' => $editorMode], 'general' => ['textarea' => TRUE]]),
+        ],
       ])
       ->add('notice', TextareaType::class, [
         'label' => 'Notiz',
@@ -56,6 +72,16 @@ class SettingType extends AbstractType {
       ])
       ->add('editable', ChoiceType::class, [
         'label' => 'Bearbeitbar?',
+        'required' => true,
+        'choices' => [
+          'nein' => State::PENDING,
+          'ja' => State::ACTIVE
+        ],
+        'expanded' => true,
+        'multiple' => false
+      ])
+      ->add('previewable', ChoiceType::class, [
+        'label' => 'Vorschau?',
         'required' => true,
         'choices' => [
           'nein' => State::PENDING,

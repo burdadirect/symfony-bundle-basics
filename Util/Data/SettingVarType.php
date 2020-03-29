@@ -7,6 +7,7 @@ class SettingVarType extends AbstractData {
   public const INT     = 'int';
   public const FLOAT   = 'float';
   public const STRING  = 'string';
+  public const HTML    = 'html';
   public const BOOLEAN = 'boolean';
   public const CSV     = 'csv';
   public const JSON    = 'json';
@@ -20,6 +21,9 @@ class SettingVarType extends AbstractData {
     ],
     self::STRING => [
       'text' => 'Text',
+    ],
+    self::HTML => [
+      'text' => 'HTML',
     ],
     self::BOOLEAN => [
       'text' => 'Wahrheitswert',

@@ -36,6 +36,11 @@ trait SettingTrait {
   protected $editable = FALSE;
 
   /**
+   * @var bool
+   */
+  private $previewable = TRUE;
+
+  /**
    * @var string
    */
   protected $notice;
@@ -133,9 +138,9 @@ trait SettingTrait {
   }
 
   /**
-   * Set editable
+   * Set editable.
    *
-   * @param boolean $editable
+   * @param bool $editable
    *
    * @return self
    */
@@ -152,6 +157,28 @@ trait SettingTrait {
    */
   public function getEditable() : ?bool {
     return $this->editable;
+  }
+
+  /**
+   * Set previewable.
+   *
+   * @param bool $previewable
+   *
+   * @return self
+   */
+  public function setPreviewable(bool $previewable = NULL) : self {
+    $this->previewable = $previewable;
+
+    return $this;
+  }
+
+  /**
+   * Get previewable.
+   *
+   * @return bool|null
+   */
+  public function getPreviewable() : ?bool {
+    return $this->previewable;
   }
 
   /**
@@ -193,7 +220,7 @@ trait SettingTrait {
     }
 
     if ($this->getVarType() === SettingVarType::BOOLEAN) {
-      return (boolean) $this->getVarValue();
+      return (bool) $this->getVarValue();
     }
 
     if ($this->getVarType() === SettingVarType::CSV) {

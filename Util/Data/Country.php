@@ -361,7 +361,7 @@ class Country extends AbstractData {
       'text' => 'BE',
       'de' => 'Belgien',
       'en' => 'Belgium',
-      'filter' => ['EU'],
+      'filter' => ['EU', 'BX'],
     ],
     self::BF => [
       'text' => 'BF',
@@ -953,7 +953,7 @@ class Country extends AbstractData {
       'text' => 'LU',
       'de' => 'Luxemburg',
       'en' => 'Luxembourg',
-      'filter' => ['EU'],
+      'filter' => ['EU', 'BX'],
     ],
     self::LV => [
       'text' => 'LV',
@@ -1116,7 +1116,7 @@ class Country extends AbstractData {
       'text' => 'NL',
       'de' => 'Niederlande',
       'en' => 'Netherlands',
-      'filter' => ['EU'],
+      'filter' => ['EU', 'BX'],
     ],
     self::NO => [
       'text' => 'NO',

@@ -192,16 +192,15 @@ class EntityWording {
    *
    * @param string $format
    * @param bool|NULL $ucfirst
-   * @param bool $useId
    *
    * @return string
    */
-  private function label($format, $ucfirst = FALSE, $useId = TRUE) : string {
-    $idPart = ($useId && $this->getId()) ? ' [#'.$this->getId().']' : '';
+  private function label($format, $ucfirst = FALSE) : string {
+    $idPart = $this->getId() ? ' [#'.$this->getId().']' : '';
 
     $nominativePart = $this->getNominative($ucfirst);
     if ($nominativePart) {
-      $nominativePart = ' '.$nominativePart;
+      $nominativePart = $nominativePart.' ';
     }
 
     return sprintf($format, $nominativePart, $this->getType(), $idPart);
@@ -210,27 +209,25 @@ class EntityWording {
   /**
    * @param null $class
    * @param bool $ucfirst
-   * @param bool $useId
    *
    * @return string
    */
-  public function labelHtml($class = NULL, $ucfirst = FALSE, $useId = TRUE) : string {
+  public function labelHtml($class = NULL, $ucfirst = FALSE) : string {
     $classPart = $class ? ' class="'.$class.'"' : '';
     $namePart = $this->getName() ? ' <em'.$classPart.'>'.$this->getName().'</em>' : '';
 
-    return $this->label('%s<strong>%s'.$this->escapeTextForFormatString($namePart).'%s</strong>', $ucfirst, $useId);
+    return $this->label('%s<strong>%s'.$this->escapeTextForFormatString($namePart).'%s</strong>', $ucfirst);
   }
 
   /**
    * @param bool $ucfirst
-   * @param bool $useId
    *
    * @return string
    */
-  public function labelText($ucfirst = FALSE, $useId = TRUE) : string {
+  public function labelText($ucfirst = FALSE) : string {
     $namePart = $this->getName() ? ' "'.strip_tags($this->getName()).'"' : '';
 
-    return $this->label('%s%s'.$this->escapeTextForFormatString($namePart).'%s', $ucfirst, $useId);
+    return $this->label('%s%s'.$this->escapeTextForFormatString($namePart).'%s', $ucfirst);
   }
 
 }

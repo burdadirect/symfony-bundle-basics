@@ -33,10 +33,11 @@ abstract class AbstractDeletionHelper {
 
   /**
    * @param ConfirmMessage $confirmMessage
+   * @param string|null $headline
    *
    * @return string
    */
-  public function renderConfirmMessage(ConfirmMessage $confirmMessage) : string {
+  public function renderConfirmMessage(ConfirmMessage $confirmMessage, string $headline = NULL) : string {
     $message = '';
     if (\count($confirmMessage->getItems()) > 0) {
       $listItems = '';
@@ -47,7 +48,7 @@ abstract class AbstractDeletionHelper {
         $listItems .= $this->renderListItem($confirmMessage, $item);
       }
 
-      $message .= $this->renderHeadline($confirmMessage);
+      $message .= $headline ?: $this->renderHeadline($confirmMessage);
       $message .= $this->renderList($listItems);
     }
 

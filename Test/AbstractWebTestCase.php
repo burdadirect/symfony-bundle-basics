@@ -44,14 +44,6 @@ abstract class AbstractWebTestCase extends WebTestCase {
   /****************************************************************************/
 
   /**
-   * @return KernelBrowser
-   * @deprecated Implement and use getCustomClient() instead.
-   */
-  protected function createCustomClient() : KernelBrowser {
-    return parent::createClient();
-  }
-
-  /**
    * Log in.
    *
    * @param KernelBrowser $client

@@ -28,6 +28,11 @@ abstract class AbstractWebTestCase extends WebTestCase {
   abstract protected function getUserRepository() : ExtendedEntityRepo;
 
   /**
+   * @return KernelBrowser
+   */
+  abstract protected function getCustomClient() : KernelBrowser;
+
+  /**
    * {@inheritDoc}
    *
    * @throws \Exception
@@ -40,6 +45,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
 
   /**
    * @return KernelBrowser
+   * @deprecated Implement and use getCustomClient() instead.
    */
   protected function createCustomClient() : KernelBrowser {
     return parent::createClient();
@@ -138,10 +144,12 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @throws \Exception
    */
   protected function assertRoute(string $url, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
-    $client = $this->createCustomClient();
+    $client = $this->getCustomClient();
 
     // User needed?
     if ($user !== NULL) {
+      $client->restart();
+
       $this->assertRedirect($client, $url, static::REDIRECT_LOGIN);
 
       $this->logIn($client, $user);

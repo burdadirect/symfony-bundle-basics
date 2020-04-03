@@ -4,9 +4,9 @@ namespace HBM\BasicsBundle\Security\Listeners;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class AjaxAuthenticationListener {
 
@@ -14,20 +14,20 @@ class AjaxAuthenticationListener {
    * Handles security related exceptions.
    *
    * See: https://gist.github.com/xanf/1015146
-   *
-   * @param GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
+   * 
+   * @param ExceptionEvent $event
    */
-  public function onCoreException(GetResponseForExceptionEvent $event) {
-    $exception = $event->getException();
+  public function onCoreException(ExceptionEvent $event) {
+    $throwable = $event->getThrowable();
     $request = $event->getRequest();
 
     if ($request->isXmlHttpRequest()) {
-      if ($exception instanceof AuthenticationException) {
+      if ($throwable instanceof AuthenticationException) {
         $response = new JsonResponse();
         $response->setData(['success' => FALSE, 'reason' => 'User is not authenticated!']);
         $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
         $event->setResponse($response);
-      } elseif ($exception instanceof AccessDeniedException) {
+      } elseif ($throwable instanceof AccessDeniedException) {
         $response = new JsonResponse();
         $response->setData(['success' => FALSE, 'reason' => 'User is not authorized!']);
         $response->setStatusCode(Response::HTTP_FORBIDDEN);

@@ -14,7 +14,7 @@ class AjaxAuthenticationListener {
    * Handles security related exceptions.
    *
    * See: https://gist.github.com/xanf/1015146
-   * 
+   *
    * @param ExceptionEvent $event
    */
   public function onCoreException(ExceptionEvent $event) {

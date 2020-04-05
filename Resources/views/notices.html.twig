@@ -4,13 +4,13 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>User</th>
-          <th>Level</th>
-          <th>Mode</th>
+          <th class="fixed-10-center">ID</th>
+          <th class="fixed-10">Level</th>
+          <th class="fixed-10">Mode</th>
           <th>Titel</th>
           <th>Nachricht</th>
-          <th>Erstellt</th>
+          <th class="fixed-10">Ersteller</th>
+          <th class="fixed-10">Erstellt</th>
         </tr>
       </thead>
       <tbody>
@@ -19,12 +19,12 @@
           <td>
             {% block hbm_basics_notices_system_id %}{{ notice.id }}{% endblock hbm_basics_notices_system_id %}
           </td>
-          <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
           <td>{{ notice.mode }}</td>
           <td>{{ notice.title }}</td>
           <td>{{ notice.message|raw }}</td>
-          <td>{{ notice.created|date('Y-m-d H:i:s') }}</td>
+          <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
         </tr>
       {% endfor %}
       </tbody>
@@ -38,13 +38,14 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>User</th>
-          <th>Level</th>
+          <th class="fixed-10-center">ID</th>
+          <th class="fixed-10">Level</th>
+          <th class="fixed-10">Mode</th>
           <th>Titel</th>
           <th>Nachricht</th>
-          <th>Erstellt</th>
-          <th>Aktionen</th>
+          <th class="fixed-10">Ersteller</th>
+          <th class="fixed-10">Erstellt</th>
+          <th class="fixed-10-center">Aktionen</th>
         </tr>
       </thead>
       <tbody>
@@ -53,12 +54,13 @@
           <td>
             {% block hbm_basics_notices_manual_id %}{{ notice.id }}{% endblock hbm_basics_notices_manual_id %}
           </td>
-          <td>{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td>{{ notice.level }}</td>
+          <td>{{ notice.mode }}</td>
           <td>{{ notice.title }}</td>
           <td>{{ notice.message|raw }}</td>
-          <td>{{ notice.created|date('Y-m-d H:i:s') }}</td>
-          <td class="text-center">
+          <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+          <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
+          <td>
             {% block hbm_basics_notices_actions %}{% endblock hbm_basics_notices_actions %}
           </td>
         </tr>

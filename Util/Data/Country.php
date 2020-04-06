@@ -126,6 +126,7 @@ class Country extends AbstractData {
   public const KI = 'KI';
   public const KM = 'KM';
   public const KN = 'KN';
+  public const KO = 'KO';
   public const KP = 'KP';
   public const KR = 'KR';
   public const KW = 'KW';
@@ -882,6 +883,11 @@ class Country extends AbstractData {
       'text' => 'KN',
       'de' => 'St. Kitts/Nevis',
       'en' => 'Saint Kitts and Nevis',
+    ],
+    self::KO => [
+      'text' => 'KO',
+      'de' => 'Kosovo',
+      'en' => 'Kosovo',
     ],
     self::KP => [
       'text' => 'KP',

@@ -152,7 +152,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   /**
    * @inheritDoc
    */
-  public function leftJoinOnce(QueryBuilder $qb, string $alias, string $field, string $joinAlias) : QueryBuilder {
+  public function leftJoinOnce(QueryBuilder $qb, string $alias, string $field, string $joinAlias, $conditionType = null, $condition = null, $indexBy = null) : QueryBuilder {
     /** @var Join[] $joins */
     $joins = $qb->getDQLPart('join')[$alias] ?? [];
 
@@ -163,7 +163,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
       }
     }
 
-    $qb->leftJoin($joinColumn, $joinAlias);
+    $qb->leftJoin($joinColumn, $joinAlias, $conditionType, $condition, $indexBy);
 
     return $qb;
   }

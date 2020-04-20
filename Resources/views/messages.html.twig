@@ -1,6 +1,6 @@
 {% import '@HBMBasics/macros.html.twig' as macros %}
 
-{% if app.request.hasPreviousSession %}
+{% if app.request.hasPreviousSession or forceFlashMessages|default(false) %}
   {% if app.session and app.session.flashbag %}
     {{ macros.messages(app.session.flashbag.get('error'), 'alert-danger') }}
     {{ macros.messages(app.session.flashbag.get('warning'), 'alert-warning') }}

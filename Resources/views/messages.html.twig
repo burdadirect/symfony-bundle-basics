@@ -1,5 +1,6 @@
 {% import '@HBMBasics/macros.html.twig' as macros %}
 
+{# See: https://symfony.com/doc/current/session.html#avoid-starting-sessions-for-anonymous-users #}
 {% if app.request.hasPreviousSession or forceFlashMessages|default(false) %}
   {% if app.session and app.session.flashbag %}
     {{ macros.messages(app.session.flashbag.get('error'), 'alert-danger') }}

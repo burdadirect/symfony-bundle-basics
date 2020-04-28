@@ -142,7 +142,7 @@ abstract class AbstractController extends BaseController {
    *
    * @return null|RedirectResponse|Response
    */
-  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'nein') {
+  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'Nein') {
     $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo);
 
     if ($return instanceof FormInterface) {

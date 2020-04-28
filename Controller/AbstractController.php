@@ -94,14 +94,13 @@ abstract class AbstractController extends BaseController {
    * @param Request $request
    * @param $urlYes
    * @param $urlNo
-   * @param null $confirmTitle
-   * @param null $confirmDetails
    * @param string $textYes
    * @param string $textNo
+   * @param string $flashMessage
    *
    * @return null|RedirectResponse|Response|FormInterface
    */
-  protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'nein') {
+  protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, $textYes = 'Ja', $textNo = 'nein', $flashMessage = 'Aktion abgebrochen') {
     $builder = $this->sh->formHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
     $form = $builder->getForm();
     $form->handleRequest($request);
@@ -118,7 +117,9 @@ abstract class AbstractController extends BaseController {
 
 
     if ($form->isSubmitted() && $submitAndNo->isClicked()) {
-      $this->addFlashMessage('info', 'Aktion abgebrochen!');
+      if ($flashMessage) {
+        $this->addFlashMessage('info', $flashMessage);
+      }
       return $this->redirect($urlNo);
     }
 
@@ -142,8 +143,8 @@ abstract class AbstractController extends BaseController {
    *
    * @return null|RedirectResponse|Response
    */
-  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'Nein') {
-    $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo);
+  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'Nein', $flashMessage = 'Aktion abgebrochen') {
+    $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage);
 
     if ($return instanceof FormInterface) {
       return $this->renderCustom($this->sh->parameterBag()->get('hbm.basics')['confirm']['template'], [

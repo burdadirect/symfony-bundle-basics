@@ -6,9 +6,21 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
 
 abstract class AbstractServiceEntityRepo extends ServiceEntityRepository implements ExtendedEntityRepo {
+
+  public function updateFields(AbstractEntity $entity, array $fields) {
+    $qb = $this->createQueryBuilder('x');
+    $qb->update();
+    foreach ($fields as $fieldKey => $fielValue) {
+      $qb->set('x.'.$fieldKey, ':'.$fieldKey)->setParameter($fieldKey, $fielValue);
+    }
+    $qb->where($qb->expr()->eq('x.id', ':id'))->setParameter('id', $entity->getId());
+
+    return $qb->getQuery()->execute();
+  }
 
   /**
    * @inheritDoc

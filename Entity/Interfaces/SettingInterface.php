@@ -13,9 +13,9 @@ interface SettingInterface extends Addressable {
 
   /**
    * Get varValueParsed.
-   * 
+   *
    * @return mixed
    */
-  public function getVarValueParsed() : ?string;
+  public function getVarValueParsed();
 
 }

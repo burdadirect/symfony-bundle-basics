@@ -208,6 +208,14 @@ trait SettingTrait {
   /****************************************************************************/
 
   /**
+   * @param string|null $default
+   * @return string|null
+   */
+  public function getVarTypeLabel(string $default = NULL) : ?string {
+    return SettingVarType::label($this->getVarType(), $default);
+  }
+
+  /**
    * @return mixed
    */
   public function getVarValueParsed() {

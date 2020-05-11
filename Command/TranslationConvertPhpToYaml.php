@@ -45,7 +45,7 @@ class TranslationConvertPhpToYaml extends Command {
       }
     }
 
-    $yaml = Yaml::dump($translationsRegrouped, 5, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
+    $yaml = Yaml::dump($translationsRegrouped, 6, 4, Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
     $yaml = str_replace(": |\n", ": >-\n", $yaml);
 
     if ($fileOutput = $input->getArgument('file-output')) {

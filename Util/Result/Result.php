@@ -22,9 +22,9 @@ class Result {
   private $return;
 
   /**
-   * @var mixed
+   * @var array
    */
-  private $payload;
+  private $payloads;
 
   /**
    * @var string
@@ -42,6 +42,7 @@ class Result {
 
     $this->mesages = [];
     $this->notices = [];
+    $this->payloads = [];
   }
 
   /**
@@ -67,25 +68,25 @@ class Result {
   }
 
   /**
-   * Set payload.
+   * Set payloads.
    *
-   * @param mixed $payload
+   * @param array $payloads
    *
    * @return self
    */
-  public function setPayload($payload = NULL) : self {
-    $this->payload = $payload;
+  public function setPayloads(array $payloads) : self {
+    $this->payloads = $payloads;
 
     return $this;
   }
 
   /**
-   * Get payload.
+   * Get payloads.
    *
-   * @return mixed|null
+   * @return array
    */
-  public function getPayload() {
-    return $this->payload;
+  public function getPayloads() {
+    return $this->payloads;
   }
 
   /**
@@ -192,6 +193,29 @@ class Result {
       ];
     }
     return $messages;
+  }
+
+  /****************************************************************************/
+
+  /**
+   * @param string $key
+   *
+   * @return mixed|null
+   */
+  public function getPayload(string $key) {
+    return $this->payloads[$key] ?? NULL;
+  }
+
+  /**
+   * @param string $key
+   * @param $payload
+   *
+   * @return $this
+   */
+  public function setPayload(string $key, $payload) : self {
+    $this->payloads[$key] = $payload;
+
+    return $this;
   }
 
 }

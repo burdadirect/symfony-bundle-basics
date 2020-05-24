@@ -2,12 +2,17 @@
 
 namespace HBM\BasicsBundle\Controller;
 
+use Doctrine\ORM\EntityRepository;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
+use HBM\BasicsBundle\Util\AttributeMessage\AttributeMessage;
 use HBM\BasicsBundle\Util\Result\Result;
+use HBM\BasicsBundle\Util\Wording\EntityWording;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +39,101 @@ abstract class AbstractController extends BaseController {
    * @return Response
    */
   abstract protected function renderCustom($template, array $data = [], Response $response = NULL) : Response;
+
+  /****************************************************************************/
+  /* OBJECTS                                                                  */
+  /****************************************************************************/
+
+  /**
+   * @param Request $request
+   * @param EntityRepository $repo
+   * @param $id
+   * @param EntityWording $wording
+   * @param AttributeMessage|string|null $attribute
+   * @param string $redirect
+   *
+   * @return object|JsonResponse|RedirectResponse|null
+   */
+  protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, $attribute = NULL, string $redirect = '/') {
+    $wording->setId($id);
+
+    /** @var AbstractEntity $object */
+    $object = $id ? $repo->find($id) : NULL;
+    if ($object === NULL) {
+      if ($request->isXmlHttpRequest()) {
+        return new JsonResponse(['success' => FALSE], Response::HTTP_NOT_FOUND);
+      }
+
+      $this->addFlashMessage('error', $wording->labelHtml('', TRUE).' wurde nicht gefunden.');
+      return $this->redirect($this->generateOrReturnUrl($redirect)/*, Response::HTTP_NOT_FOUND*/);
+    }
+
+    if (!($attribute instanceof AttributeMessage)) {
+      $attribute = new AttributeMessage($attribute);
+    }
+
+    if ($attribute->getAttribute() && !$this->isGranted($attribute->getAttribute(), $object)) {
+      $entityString = $wording->assignName($object)->labelHtml();
+      if ($message = $attribute->getMessage()) {
+        $this->addFlashMessage($message->getLevel(), $message->formatMessage($entityString));
+      } else {
+        $this->addFlashMessage('error', 'Sie können die Aktion für '.$entityString.' aufgrund fehlender Rechte nicht durchführen.');
+      }
+      return $this->redirect($this->generateOrReturnUrl($redirect)/*, Response::HTTP_FORBIDDEN*/);
+    }
+
+    return $object;
+  }
+
+  /**
+   * @param callable $callable
+   * @param array $params
+   * @param string $messageSuccess
+   * @param \Closure $redirectSuccess
+   * @param string $messageError
+   * @param \Closure $redirectError
+   * @param array $sprintArgs
+   *
+   * @return RedirectResponse|null
+   */
+  protected function tryToPersistEntity(callable $callable, array $params, string $messageSuccess, \Closure $redirectSuccess, string $messageError, \Closure $redirectError = NULL, array $sprintArgs = []) : ?RedirectResponse {
+    try {
+      call_user_func($callable, ...$params);
+
+      $this->addFlashMessage('success', sprintf($messageSuccess, ...$sprintArgs));
+
+      if ($redirectSuccess) {
+        return $redirectSuccess();
+      }
+    } catch (\Exception $e) {
+      $this->addFlashErrorsForException(sprintf($messageError, ...$sprintArgs), $e);
+
+      if ($redirectError) {
+        return $redirectError();
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * @param AbstractEntity $entity
+   * @param \Closure|null $closure
+   */
+  protected function persistAndFlushEntity(AbstractEntity $entity, \Closure $closure = NULL) : void {
+    $this->dh->getOM()->persist($entity);
+    $this->dh->getOM()->flush();
+
+    if ($closure) {
+      $closure();
+    }
+  }
+
+  /**
+   * @param string $message
+   * @param \Exception|null $exception
+   */
+  abstract protected function addFlashErrorsForException(string $message, \Exception $exception = NULL) : void;
 
   /****************************************************************************/
   /* MESSAGES                                                                 */
@@ -72,6 +172,17 @@ abstract class AbstractController extends BaseController {
   protected function addFlashMessagesFromResult(Result $result, $prefix = NULL, $postfix = NULL) : void {
     foreach ($result->getMessages() as $message) {
       $this->addFlashMessage($message->getLevel(), $prefix.$message->getMessage().$postfix);
+    }
+  }
+
+  /**
+   * @param string $type
+   * @param string $template
+   * @param array $data
+   */
+  protected function addFlashMessageFromTemplate(string $type, string $template, array $data = []) : void {
+    if ($session = $this->sh->session()) {
+      $session->getFlashBag()->add($type, $this->renderView($template, $data));
     }
   }
 

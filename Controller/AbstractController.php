@@ -59,6 +59,29 @@ abstract class AbstractController extends BaseController {
 
     /** @var AbstractEntity $object */
     $object = $id ? $repo->find($id) : NULL;
+
+    // Check if object is null.
+    if ($return = $this->checkForNull($request, $object, $wording, $redirect)) {
+      return $return;
+    }
+
+    // Check if object is granted attribute.
+    if ($return = $this->checkForAttribute($request, $object, $wording, $attribute, $redirect)) {
+      return $return;
+    }
+
+    return $object;
+  }
+
+  /**
+   * @param Request $request
+   * @param AbstractEntity $object
+   * @param EntityWording $wording
+   * @param string $redirect
+   *
+   * @return JsonResponse|RedirectResponse|null
+   */
+  protected function checkForNull(Request $request, AbstractEntity $object, EntityWording $wording, string $redirect) {
     if ($object === NULL) {
       if ($request->isXmlHttpRequest()) {
         return new JsonResponse(['success' => FALSE], Response::HTTP_NOT_FOUND);
@@ -68,11 +91,19 @@ abstract class AbstractController extends BaseController {
       return $this->redirect($this->generateOrReturnUrl($redirect)/*, Response::HTTP_NOT_FOUND*/);
     }
 
+    return NULL;
+  }
+
+  protected function checkForAttribute(Request $request, AbstractEntity $object, EntityWording $wording, $attribute, string $redirect) {
     if (!($attribute instanceof AttributeMessage)) {
       $attribute = new AttributeMessage($attribute);
     }
 
     if ($attribute->getAttribute() && !$this->isGranted($attribute->getAttribute(), $object)) {
+      if ($request->isXmlHttpRequest()) {
+        return new JsonResponse(['success' => FALSE], Response::HTTP_FORBIDDEN);
+      }
+
       $entityString = $wording->assignName($object)->labelHtml();
       if ($message = $attribute->getMessage()) {
         $this->addFlashMessage($message->getLevel(), $message->formatMessage($entityString));
@@ -82,7 +113,7 @@ abstract class AbstractController extends BaseController {
       return $this->redirect($this->generateOrReturnUrl($redirect)/*, Response::HTTP_FORBIDDEN*/);
     }
 
-    return $object;
+    return NULL;
   }
 
   /**

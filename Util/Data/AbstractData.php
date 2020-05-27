@@ -17,10 +17,14 @@ abstract class AbstractData {
     return static::filter($filter, $keys);
   }
 
+  public static function _data() : array {
+    return static::$data;
+  }
+
   public static function filter(string $filter = NULL, array $keys = NULL) : array {
     if ($filter !== NULL) {
       $filtered = [];
-      foreach (static::$data as $key => $value) {
+      foreach (static::_data() as $key => $value) {
         if (isset($value[static::$filter]) && is_array($value[static::$filter])) {
           $valuesToFilter = array_map([static::class, 'filterCallback'], $value[static::$filter]);
           if (in_array($filter, $valuesToFilter, TRUE)) {
@@ -32,10 +36,10 @@ abstract class AbstractData {
     }
 
     if ($keys !== NULL) {
-      return array_intersect_key(static::$data, array_fill_keys($keys, TRUE));
+      return array_intersect_key(static::_data(), array_fill_keys($keys, TRUE));
     }
 
-    return static::$data;
+    return static::_data();
   }
 
   protected static function filterCallback($value) {
@@ -54,27 +58,27 @@ abstract class AbstractData {
   }
 
   public static function get(string $key = NULL) : ?array {
-    return static::$data[$key] ?? NULL;
+    return static::_data()[$key] ?? NULL;
   }
 
   /****************************************************************************/
 
   public static function format(string $key, string $format, string $default = NULL) : ?string {
-    if ($data = static::$data[$key] ?? NULL) {
+    if ($data = static::_data()[$key] ?? NULL) {
       return sprintf($format, ...array_values($data));
     }
     return $default;
   }
 
   public static function formatWithKey(string $key, string $format, string $default = NULL) : ?string {
-    if ($data = static::$data[$key] ?? NULL) {
+    if ($data = static::_data()[$key] ?? NULL) {
       return sprintf($format, $key, ...array_values($data));
     }
     return $default;
   }
 
   public static function formatCallback(string $key, callable $callback, string $default = NULL) : ?string {
-    if ($data = static::$data[$key] ?? NULL) {
+    if ($data = static::_data()[$key] ?? NULL) {
       return $callback(...array_values($data));
     }
     return $default;
@@ -83,8 +87,8 @@ abstract class AbstractData {
   /****************************************************************************/
 
   public static function label(string $key = NULL, string $default = NULL, string $field = NULL) : ?string {
-    if (($key !== NULL) && (isset(static::$data[$key][$field ?: static::$label]))) {
-      return static::$data[$key][$field ?: static::$label];
+    if (($key !== NULL) && (isset(static::_data()[$key][$field ?: static::$label]))) {
+      return static::_data()[$key][$field ?: static::$label];
     }
     return $default;
   }
@@ -92,7 +96,7 @@ abstract class AbstractData {
   /****************************************************************************/
 
   public static function random() {
-    $keys = array_keys(static::$data);
+    $keys = array_keys(static::_data());
     shuffle($keys);
     return reset($keys);
   }

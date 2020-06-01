@@ -75,13 +75,13 @@ abstract class AbstractController extends BaseController {
 
   /**
    * @param Request $request
-   * @param AbstractEntity $object
+   * @param AbstractEntity|null $object
    * @param EntityWording $wording
    * @param string $redirect
    *
    * @return JsonResponse|RedirectResponse|null
    */
-  protected function checkForNull(Request $request, AbstractEntity $object, EntityWording $wording, string $redirect) {
+  protected function checkForNull(Request $request, ?AbstractEntity $object, EntityWording $wording, string $redirect) {
     if ($object === NULL) {
       if ($request->isXmlHttpRequest()) {
         return new JsonResponse(['success' => FALSE], Response::HTTP_NOT_FOUND);

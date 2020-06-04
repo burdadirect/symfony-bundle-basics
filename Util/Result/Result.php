@@ -225,7 +225,7 @@ class Result {
   /**
    * @return JsonResponse
    */
-  public function jsonRepsonse() : JsonResponse {
+  public function jsonResponse() : JsonResponse {
     $httpStatus = $this->getReturn() ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
     return new JsonResponse(['success' => $this->getReturn(), 'messages' => $this->getMessagesArray()], $httpStatus);
   }

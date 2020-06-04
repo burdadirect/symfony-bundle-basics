@@ -3,6 +3,8 @@
 namespace HBM\BasicsBundle\Util\Result;
 
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Result {
 
@@ -216,6 +218,16 @@ class Result {
     $this->payloads[$key] = $payload;
 
     return $this;
+  }
+
+  /****************************************************************************/
+
+  /**
+   * @return JsonResponse
+   */
+  public function jsonRepsonse() : JsonResponse {
+    $httpStatus = $this->getReturn() ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+    return new JsonResponse(['success' => $this->getReturn(), 'messages' => $this->getMessagesArray()], $httpStatus);
   }
 
 }

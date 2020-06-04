@@ -120,9 +120,9 @@ abstract class AbstractController extends BaseController {
    * @param callable $callable
    * @param array $params
    * @param string|null $messageSuccess
-   * @param \Closure $responseSuccess
+   * @param \Closure|null $responseSuccess
    * @param string|null $messageError
-   * @param \Closure $responseError
+   * @param \Closure|null $responseError
    * @param array $sprintArgs
    *
    * @return Response|null

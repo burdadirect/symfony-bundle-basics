@@ -120,27 +120,27 @@ abstract class AbstractController extends BaseController {
    * @param callable $callable
    * @param array $params
    * @param string $messageSuccess
-   * @param \Closure $redirectSuccess
+   * @param \Closure $responseSuccess
    * @param string $messageError
-   * @param \Closure $redirectError
+   * @param \Closure $responseError
    * @param array $sprintArgs
    *
-   * @return RedirectResponse|null
+   * @return Response|null
    */
-  protected function tryToPersistEntity(callable $callable, array $params, string $messageSuccess, \Closure $redirectSuccess, string $messageError, \Closure $redirectError = NULL, array $sprintArgs = []) : ?RedirectResponse {
+  protected function tryToPersistEntity(callable $callable, array $params, string $messageSuccess, \Closure $responseSuccess, string $messageError, \Closure $responseError = NULL, array $sprintArgs = []) : ?Response {
     try {
       call_user_func($callable, ...$params);
 
       $this->addFlashMessage('success', sprintf($messageSuccess, ...$sprintArgs));
 
-      if ($redirectSuccess) {
-        return $redirectSuccess();
+      if ($responseSuccess) {
+        return $responseSuccess();
       }
     } catch (\Exception $e) {
       $this->addFlashErrorsForException(sprintf($messageError, ...$sprintArgs), $e);
 
-      if ($redirectError) {
-        return $redirectError();
+      if ($responseError) {
+        return $responseError();
       }
     }
 

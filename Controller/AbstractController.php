@@ -119,25 +119,29 @@ abstract class AbstractController extends BaseController {
   /**
    * @param callable $callable
    * @param array $params
-   * @param string $messageSuccess
+   * @param string|null $messageSuccess
    * @param \Closure $responseSuccess
-   * @param string $messageError
+   * @param string|null $messageError
    * @param \Closure $responseError
    * @param array $sprintArgs
    *
    * @return Response|null
    */
-  protected function tryToPersistEntity(callable $callable, array $params, string $messageSuccess, \Closure $responseSuccess, string $messageError, \Closure $responseError = NULL, array $sprintArgs = []) : ?Response {
+  protected function tryToPersistEntity(callable $callable, array $params, ?string $messageSuccess, ?\Closure $responseSuccess, ?string $messageError, ?\Closure $responseError = NULL, array $sprintArgs = []) : ?Response {
     try {
       call_user_func($callable, ...$params);
 
-      $this->addFlashMessage('success', sprintf($messageSuccess, ...$sprintArgs));
+      if ($messageSuccess) {
+        $this->addFlashMessage('success', sprintf($messageSuccess, ...$sprintArgs));
+      }
 
       if ($responseSuccess) {
         return $responseSuccess();
       }
     } catch (\Exception $e) {
-      $this->addFlashErrorsForException(sprintf($messageError, ...$sprintArgs), $e);
+      if ($messageError) {
+        $this->addFlashErrorsForException(sprintf($messageError, ...$sprintArgs), $e);
+      }
 
       if ($responseError) {
         return $responseError();

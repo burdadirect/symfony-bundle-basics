@@ -4,7 +4,6 @@ namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessage;
-use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessageInterface;
 
 abstract class AbstractDeletionHelper {
 
@@ -50,6 +49,8 @@ abstract class AbstractDeletionHelper {
 
       $message .= $headline ?: $this->renderHeadline($confirmMessage);
       $message .= $this->renderList($listItems);
+    } elseif ($confirmMessage->getMessage()) {
+      $message .= $confirmMessage->getMessage();
     }
 
     return $message;

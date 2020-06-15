@@ -51,6 +51,12 @@ class ConfirmMessage {
    */
   private $discard;
 
+  /**
+   * @var string
+   */
+  private $message;
+
+
   /****************************************************************************/
 
   public function __construct($items = [], string $wording = NULL, $mode = NULL) {
@@ -233,6 +239,28 @@ class ConfirmMessage {
    */
   public function getDiscard() {
     return $this->discard;
+  }
+
+  /**
+   * Set message.
+   *
+   * @param string $message
+   *
+   * @return self
+   */
+  public function setMessage(string $message = NULL) : self {
+    $this->message = $message;
+
+    return $this;
+  }
+
+  /**
+   * Get message.
+   *
+   * @return string|null
+   */
+  public function getMessage() : ?string {
+    return $this->message;
   }
 
   /****************************************************************************/

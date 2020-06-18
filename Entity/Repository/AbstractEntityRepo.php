@@ -14,7 +14,8 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
    */
   public function findRandomBy(array $criteria, $limit = null) : array {
     try {
-      $randomOffset = random_int(0, max(0, $this->count($criteria) - 1));
+      $limitCap = ($limit === NULL) ? 0 : $limit;
+      $randomOffset = random_int(0, max(0, $this->count($criteria) - $limitCap));
     } catch (\Exception $e) {
       $randomOffset = 0;
     }

@@ -38,7 +38,7 @@ class Login extends AbstractType {
 
     $attrPassword = [];
     if ($this->togglePassword) {
-      $attrPassword['data-toggable'] = true;
+      $attrPassword['data-toggable-password'] = true;
     }
 
     $group_default

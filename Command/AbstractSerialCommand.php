@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractSerialCommand extends Command {
 
   public const STATE_IDLE = 'idle';
-  public const STATE_BUSY = 'busy';
 
   protected $serialExecution  = TRUE;
 
@@ -38,7 +37,7 @@ abstract class AbstractSerialCommand extends Command {
     // Check setting state.
     if ($setting->getVarValueParsed() === self::STATE_IDLE) {
       // Set setting value to "busy"
-      $this->updateStateSetting($setting, self::STATE_BUSY);
+      $this->updateStateSetting($setting, date('Y-m-d H:i:s'));
 
       return TRUE;
     }

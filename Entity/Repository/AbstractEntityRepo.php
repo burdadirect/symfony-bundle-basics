@@ -5,9 +5,21 @@ namespace HBM\BasicsBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
 
 abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEntityRepo {
+
+  public function updateFields(AbstractEntity $entity, array $fields) {
+    $qb = $this->createQueryBuilder('x');
+    $qb->update();
+    foreach ($fields as $fieldKey => $fielValue) {
+      $qb->set('x.'.$fieldKey, ':'.$fieldKey)->setParameter($fieldKey, $fielValue);
+    }
+    $qb->where($qb->expr()->eq('x.id', ':id'))->setParameter('id', $entity->getId());
+
+    return $qb->getQuery()->execute();
+  }
 
   /**
    * @inheritDoc

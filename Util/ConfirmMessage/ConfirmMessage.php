@@ -10,6 +10,7 @@ class ConfirmMessage {
 
   public const MODE_DELETE = 'delete';
   public const MODE_NULLIFY = 'nullify';
+  public const MODE_REASSIGN = 'reassign';
 
   /**
    * @var Collection|AbstractEntity[]|array
@@ -30,6 +31,11 @@ class ConfirmMessage {
    * @var mixed
    */
   private $text;
+
+  /**
+   * @var mixed
+   */
+  private $title;
 
   /**
    * @var mixed
@@ -151,6 +157,28 @@ class ConfirmMessage {
    */
   public function getText() {
     return $this->text;
+  }
+
+  /**
+   * Set title.
+   *
+   * @param mixed $title
+   *
+   * @return self
+   */
+  public function setTitle($title = NULL) : self {
+    $this->title = $title;
+
+    return $this;
+  }
+
+  /**
+   * Get title.
+   *
+   * @return mixed|null
+   */
+  public function getTitle() {
+    return $this->title;
   }
 
   /**
@@ -296,7 +324,30 @@ class ConfirmMessage {
     if ($this->text instanceof \Closure) {
       return call_user_func($this->text, $item);
     } elseif ($this->text !== NULL) {
-      return $item->{$this->text}();
+      if (method_exists($item, $this->text)) {
+        return call_user_func([$item, $this->text]);
+      } else {
+        return $this->text;
+      }
+    }
+
+    return NULL;
+  }
+
+  /**
+   * @param AbstractEntity $item
+   *
+   * @return string|null
+   */
+  public function evalTitle(AbstractEntity $item) : ?string {
+    if ($this->title instanceof \Closure) {
+      return call_user_func($this->title, $item);
+    } elseif ($this->title !== NULL) {
+      if (method_exists($item, $this->title)) {
+        return call_user_func([$item, $this->title]);
+      } else {
+        return $this->title;
+      }
     }
 
     return NULL;
@@ -364,9 +415,10 @@ class ConfirmMessage {
     $url = $this->evalUrl($item, $router);
     $text = $this->evalText($item);
     $icon = $this->evalIcon($item);
+    $title = $this->evalTitle($item);
 
     if ($url) {
-      return '<a href="'.$url.'" title="'.strip_tags($text).'">'.$id.'</a>: '.$text;
+      return '<a href="'.$url.'" title="'.strip_tags($title ?: $text).'">'.$id.'</a>: '.$text;
     } else {
       return $id.': '.$text;
     }

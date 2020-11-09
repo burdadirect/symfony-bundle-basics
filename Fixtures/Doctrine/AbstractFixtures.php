@@ -3,7 +3,7 @@
 namespace HBM\BasicsBundle\Fixtures\Doctrine;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use HBM\BasicsBundle\Fixtures\Faker\Generator\CustomGenerator;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\EmailsProvider;
@@ -82,8 +82,8 @@ abstract class AbstractFixtures extends Fixture {
   /****************************************************************************/
 
   /**
-   * @param ObjectManager|NULL $manager
-   * @param string $key
+   * @param ObjectManager|null $manager
+   * @param string|null $key
    *
    * @return mixed
    */

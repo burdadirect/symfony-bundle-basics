@@ -12,6 +12,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Twig\Environment;
 
 abstract class AbstractServiceHelper {
 
@@ -108,7 +109,7 @@ abstract class AbstractServiceHelper {
   }
 
   /**
-   * @return \Twig_Environment|object
+   * @return Environment|object
    */
   public function twig() {
     return $this->container->get('twig');

@@ -32,13 +32,13 @@ abstract class AbstractController extends BaseController {
   /**
    * Render template and set default values.
    *
-   * @param string $template
+   * @param string|null $template
    * @param array $data
-   * @param Response $response
+   * @param Response|null $response
    *
    * @return Response
    */
-  abstract protected function renderCustom($template, array $data = [], Response $response = NULL) : Response;
+  abstract protected function renderCustom(?string $template, array $data = [], Response $response = NULL) : Response;
 
   /****************************************************************************/
   /* OBJECTS                                                                  */

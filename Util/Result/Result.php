@@ -197,6 +197,40 @@ class Result {
     return $messages;
   }
 
+  /**
+   * Add messages.
+   *
+   * @param array|Message[] $messages
+   *
+   * @return self
+   */
+  public function addMessages(array $messages) : self {
+    foreach ($messages as $message) {
+      $this->addMessage($message);
+    }
+
+    return $this;
+  }
+
+  /**
+   * Merge another result to this one.
+   *
+   * @param Result $result
+   *
+   * @return self
+   */
+  public function merge(Result $result) {
+    $this->addMessages($result->getMessages());
+
+    if (($this->getReturn() === FALSE) || ($result->getReturn() === FALSE)) {
+      $this->setReturn(FALSE);
+    } elseif (($this->getReturn() === NULL) || ($result->getReturn() === NULL)) {
+      $this->setReturn(NULL);
+    }
+
+    return $this;
+  }
+
   /****************************************************************************/
 
   /**

@@ -50,15 +50,19 @@ abstract class AbstractController extends BaseController {
    * @param $id
    * @param EntityWording $wording
    * @param AttributeMessage|string|null $attribute
-   * @param string $redirect
+   * @param string|callable $redirect
    *
    * @return object|JsonResponse|RedirectResponse|null
    */
-  protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, $attribute = NULL, string $redirect = '/') {
+  protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, $attribute = NULL, $redirect = '/') {
     $wording->setId($id);
 
     /** @var AbstractEntity $object */
     $object = $id ? $repo->find($id) : NULL;
+
+    if (is_callable($redirect)) {
+      $redirect = call_user_func($redirect, $object);
+    }
 
     // Check if object is null.
     if ($return = $this->checkForNull($request, $object, $wording, $redirect)) {
@@ -94,6 +98,15 @@ abstract class AbstractController extends BaseController {
     return NULL;
   }
 
+  /**
+   * @param Request $request
+   * @param AbstractEntity $object
+   * @param EntityWording $wording
+   * @param AttributeMessage|string|null $attribute
+   * @param string $redirect
+   *
+   * @return JsonResponse|RedirectResponse|null
+   */
   protected function checkForAttribute(Request $request, AbstractEntity $object, EntityWording $wording, $attribute, string $redirect) {
     if (!($attribute instanceof AttributeMessage)) {
       $attribute = new AttributeMessage($attribute);
@@ -110,6 +123,7 @@ abstract class AbstractController extends BaseController {
       } else {
         $this->addFlashMessage('error', 'Sie können die Aktion für '.$entityString.' aufgrund fehlender Rechte nicht durchführen.');
       }
+
       return $this->redirect($this->generateOrReturnUrl($redirect)/*, Response::HTTP_FORBIDDEN*/);
     }
 

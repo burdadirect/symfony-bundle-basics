@@ -2,6 +2,7 @@
 
 namespace HBM\BasicsBundle\Util\Result;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,30 +10,29 @@ use Symfony\Component\HttpFoundation\Response;
 class Result {
 
   /**
-   * @var Message[]
+   * @var ArrayCollection|Message[]
    */
-  private $mesages;
+  protected $messages;
 
   /**
-   * @var NoticeInterface[]
+   * @var ArrayCollection|NoticeInterface[]
    */
-  private $notices;
+  protected $notices;
 
   /**
    * @var bool
    */
-  private $return;
+  protected $return;
 
   /**
    * @var array
    */
-  private $payloads;
+  protected $payloads;
 
   /**
    * @var string
    */
   public $error;
-
 
   /**
    * Result constructor.
@@ -42,19 +42,19 @@ class Result {
   public function __construct(bool $return = NULL) {
     $this->return = $return;
 
-    $this->mesages = [];
-    $this->notices = [];
+    $this->messages = new ArrayCollection();
+    $this->notices = new ArrayCollection();
     $this->payloads = [];
   }
 
   /**
    * Set return.
    *
-   * @param bool $return
+   * @param bool|null $return
    *
    * @return self
    */
-  public function setReturn($return) : self {
+  public function setReturn(?bool $return) : self {
     $this->return = $return;
 
     return $this;
@@ -87,7 +87,7 @@ class Result {
    *
    * @return array
    */
-  public function getPayloads() {
+  public function getPayloads() : array {
     return $this->payloads;
   }
 
@@ -99,7 +99,9 @@ class Result {
    * @return self
    */
   public function addMessage(Message $message) : self {
-    $this->mesages[] = $message;
+    if (!$this->messages->contains($message)) {
+      $this->messages->add($message);
+    }
 
     return $this;
   }
@@ -112,10 +114,8 @@ class Result {
    * @return self
    */
   public function removeMessage(Message $message) : self {
-    foreach ($this->mesages as $key => $value) {
-      if ($value->getUuid() === $message->getUuid()) {
-        unset($this->mesages[$key]);
-      }
+    if ($this->messages->contains($message)) {
+      $this->messages->remove($message);
     }
 
     return $this;
@@ -127,7 +127,7 @@ class Result {
    * @return Message[]
    */
   public function getMessages() : array {
-    return $this->mesages;
+    return $this->messages->toArray();
   }
 
   /**
@@ -138,7 +138,9 @@ class Result {
    * @return self
    */
   public function addNotice(NoticeInterface $notice) : self {
-    $this->notices[] = $notice;
+    if (!$this->notices->contains($notice)) {
+      $this->notices->add($notice);
+    }
 
     return $this;
   }
@@ -151,10 +153,8 @@ class Result {
    * @return self
    */
   public function removeNotice(NoticeInterface $notice) : self {
-    foreach ($this->notices as $key => $value) {
-      if ($value->getUuid() === $notice->getUuid()) {
-        unset($this->notices[$key]);
-      }
+    if ($this->notices->contains($notice)) {
+      $this->notices->remove($notice);
     }
 
     return $this;
@@ -166,7 +166,7 @@ class Result {
    * @return NoticeInterface[]
    */
   public function getNotices() : array {
-    return $this->notices;
+    return $this->notices->toArray();
   }
 
   /****************************************************************************/
@@ -219,7 +219,7 @@ class Result {
    *
    * @return self
    */
-  public function merge(Result $result) {
+  public function merge(Result $result) : self {
     $this->addMessages($result->getMessages());
 
     if (($this->getReturn() === FALSE) || ($result->getReturn() === FALSE)) {
@@ -244,7 +244,7 @@ class Result {
 
   /**
    * @param string $key
-   * @param $payload
+   * @param mixed $payload
    *
    * @return $this
    */
@@ -260,8 +260,9 @@ class Result {
    * @return JsonResponse
    */
   public function jsonResponse() : JsonResponse {
-    $httpStatus = $this->getReturn() ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
-    return new JsonResponse(['success' => $this->getReturn(), 'messages' => $this->getMessagesArray()], $httpStatus);
+    $status = $this->getReturn() ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+
+    return new JsonResponse(['success' => $this->getReturn(), 'messages' => $this->getMessagesArray()], $status);
   }
 
 }

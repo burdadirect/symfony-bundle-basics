@@ -42,4 +42,13 @@ abstract class AbstractEntity implements Addressable, Uuidable, Timestampable {
     return str_pad($this->getId(), 11, '0', STR_PAD_LEFT);
   }
 
+  /**
+   * Get the id with the FQCN prefixed.
+   *
+   * @return string
+   */
+  public function getIdFQCN() : string {
+    return static::class.'#'.$this->getId();
+  }
+
 }

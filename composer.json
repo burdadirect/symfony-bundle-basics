@@ -1,5 +1,5 @@
 {
-  "name": "burdanews/symfony-bundle-basics",
+  "name": "burdadirect/symfony-bundle-basics",
   "description": "HBM Basics Bundle - Shared functionality (templates, controller, ...) for symfony projects.",
   "authors" : [{
     "name" : "Christian Puchinger",

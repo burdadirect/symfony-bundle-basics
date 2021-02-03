@@ -25,7 +25,11 @@ abstract class AbstractDeletionHelper {
   public function renderConfirmMessages(array $confirmMessages) : string {
     $confirmDetails = '';
     foreach ($confirmMessages as $confirmMessage) {
-      $confirmDetails .= $this->renderConfirmMessage($confirmMessage);
+      if ($confirmMessage instanceof ConfirmMessage) {
+        $confirmDetails .= $this->renderConfirmMessage($confirmMessage);
+      } else {
+        $confirmDetails .= $confirmMessage;
+      }
     }
     return $confirmDetails;
   }

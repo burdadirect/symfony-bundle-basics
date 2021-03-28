@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Form\Type;
+namespace HBM\BasicsBundle\Form\Type\Entity;
 
 use HBM\BasicsBundle\Entity\Interfaces\SettingInterface;
 use HBM\BasicsBundle\Util\Data\SettingVarType;

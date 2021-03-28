@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Form\Type;
+namespace HBM\BasicsBundle\Form\Type\Entity;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

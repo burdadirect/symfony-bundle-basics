@@ -21,8 +21,8 @@
           </td>
           {{ block('hbm_basics_notices_level_mode_td') }}
           {{ block('hbm_basics_notices_columns_td') }}
-          <td>{{ notice.title }}</td>
-          <td>{{ notice.message|raw }}</td>
+          <td>{% block hbm_basics_notices_system_title %}{{ notice.title }}{% endblock hbm_basics_notices_system_title %}</td>
+          <td>{% block hbm_basics_notices_system_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_system_message %}</td>
           <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
         </tr>
@@ -56,8 +56,8 @@
           </td>
           {{ block('hbm_basics_notices_level_mode_td') }}
           {{ block('hbm_basics_notices_columns_td') }}
-          <td>{{ notice.title }}</td>
-          <td>{{ notice.message|raw }}</td>
+          <td>{% block hbm_basics_notices_manual_title %}{{ notice.title }}{% endblock hbm_basics_notices_manual_title %}</td>
+          <td>{% block hbm_basics_notices_manual_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_manual_message %}</td>
           <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
           <td>

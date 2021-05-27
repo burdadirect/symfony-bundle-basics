@@ -92,7 +92,7 @@ abstract class AbstractSerialCommand extends Command {
   /* EXECUTION                                                              */
   /**************************************************************************/
 
-  abstract protected function executeLogic(InputInterface $input, OutputInterface $output);
+  abstract protected function executeLogic(InputInterface $input, OutputInterface $output) : int;
 
   /**
    * (non-PHPdoc)

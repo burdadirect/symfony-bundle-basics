@@ -6,7 +6,7 @@ services:
 
     HBM\BasicsBundle\Service\FormHelper:
         public: true
-        arguments: ['@form.factory', '@router']
+        arguments: ['@form.factory', '@router', '%hbm.basics.form%']
 
     HBM\BasicsBundle\Command\:
         resource: '../../Command'

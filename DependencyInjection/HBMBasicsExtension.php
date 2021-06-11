@@ -24,6 +24,7 @@ class HBMBasicsExtension extends Extension {
     $config = $this->processConfiguration($configuration, $configs);
 
     $container->setParameter('hbm.basics', $config);
+    $container->setParameter('hbm.basics.form', $config['form']);
 
     $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
     $loader->load('services.yaml');

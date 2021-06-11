@@ -3,7 +3,6 @@
 namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\Interfaces\Addressable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,24 +15,9 @@ use Symfony\Component\Routing\RouterInterface;
 class FormHelper {
 
   /**
-   * @var string
+   * @var array
    */
-  private $saveButtonDefaultClasses;
-
-  /**
-   * @var string
-   */
-  private $saveButtonPrimaryClasses;
-
-  /**
-   * @var string
-   */
-  private $saveButtonSuccessClasses;
-
-  /**
-   * @var string
-   */
-  private $saveButtonDangerClasses;
+  private $config;
 
   /**
    * @var FormFactoryInterface
@@ -49,16 +33,12 @@ class FormHelper {
    * FormHelper constructor.
    * @param FormFactoryInterface $formFactoryInterface
    * @param RouterInterface $routerInterface
-   * @param ContainerInterface $container
+   * @param array $config
    */
-  public function __construct(FormFactoryInterface $formFactoryInterface, RouterInterface $routerInterface, ContainerInterface $container) {
+  public function __construct(FormFactoryInterface $formFactoryInterface, RouterInterface $routerInterface, array $config) {
     $this->formFactoryInterface = $formFactoryInterface;
     $this->routerInterface = $routerInterface;
-    $config = $container->getParameter('hbm.basics');
-    $this->saveButtonDefaultClasses = $config['form']['saveButtonDefaultClasses'];
-    $this->saveButtonPrimaryClasses = $config['form']['saveButtonPrimaryClasses'];
-    $this->saveButtonSuccessClasses = $config['form']['saveButtonSuccessClasses'];
-    $this->saveButtonDangerClasses = $config['form']['saveButtonDangerClasses'];
+    $this->config = $config;
   }
 
   /****************************************************************************/
@@ -116,7 +96,7 @@ class FormHelper {
    *
    * @return string
    */
-  private function generateOrReturnUrl(string $url, array $params = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) : string {
+  public function generateOrReturnUrl(string $url, array $params = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) : string {
     $first = $url[0] ?? '';
     if ('/' !== $first) {
       return $this->routerInterface->generate($url, $params, $referenceType);
@@ -139,8 +119,8 @@ class FormHelper {
   public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo) : FormBuilderInterface {
     $formBuilder = $this->initFormBuilder($url);
 
-    $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', $this->saveButtonDefaultClasses .' '. $this->saveButtonSuccessClasses);
-    $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', $this->saveButtonDefaultClasses .' '. $this->saveButtonDangerClasses);
+    $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', $this->getButtonClasses('affirm'));
+    $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', $this->getButtonClasses('decline'));
 
     return $formBuilder;
   }
@@ -183,7 +163,7 @@ class FormHelper {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->saveButtonDefaultClasses .' '. $this->saveButtonPrimaryClasses);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -207,7 +187,7 @@ class FormHelper {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->saveButtonDefaultClasses .' '. $this->saveButtonPrimaryClasses);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -231,7 +211,7 @@ class FormHelper {
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->saveButtonDefaultClasses .' '. $this->saveButtonPrimaryClasses);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -269,11 +249,11 @@ class FormHelper {
    *
    * @param FormInterface|FormBuilderInterface $form
    * @param string $label
-   * @param string|null $class
    * @param string $name
+   * @param string|null $class
+   * @param array $options
    */
-  public function addSubmitButton($form, $label = 'Speichern', $name = 'submit', ?string $class = null) : void {
-    try {
+  public function addSubmitButton($form, $label = 'Speichern', $name = 'submit', ?string $class = NULL, array $options = []) : void {
       if (!$form->has('group_buttons')) {
         $form->add('group_buttons', FormType::class, [
           'attr' => [
@@ -284,12 +264,11 @@ class FormHelper {
         ]);
       }
 
-      $form->get('group_buttons')->add($name, SubmitType::class, [
+      $form->get('group_buttons')->add($name, SubmitType::class, array_merge([
         'label' => $label,
-        'attr' => ['class' => $class ?: $this->saveButtonDefaultClasses .' '. $this->saveButtonPrimaryClasses]
-      ]);
-    } catch (\Exception $e) {
-    }
+        'label_raw' => TRUE,
+        'attr' => ['class' => $class ?: $this->getButtonClasses('primary')],
+      ], $options));
   }
 
   /**
@@ -310,6 +289,15 @@ class FormHelper {
       }
     }
     return $button;
+  }
+
+  /**
+   * @param string $mode
+   *
+   * @return string
+   */
+  protected function getButtonClasses(string $mode) : string {
+    return ($this->config['submit_button_classes']['default'] ?? NULL).' '.($this->config['submit_button_classes'][$mode] ?? NULL);
   }
 
 }

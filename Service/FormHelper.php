@@ -296,7 +296,7 @@ class FormHelper {
    *
    * @return string
    */
-  protected function getButtonClasses(string $mode) : string {
+  public function getButtonClasses(string $mode) : string {
     return ($this->config['submit_button_classes']['default'] ?? NULL).' '.($this->config['submit_button_classes'][$mode] ?? NULL);
   }
 

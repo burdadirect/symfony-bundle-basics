@@ -15,6 +15,11 @@ use Symfony\Component\Routing\RouterInterface;
 class FormHelper {
 
   /**
+   * @var array
+   */
+  private $config;
+
+  /**
    * @var FormFactoryInterface
    */
   private $formFactoryInterface;
@@ -26,13 +31,14 @@ class FormHelper {
 
   /**
    * FormHelper constructor.
-   *
    * @param FormFactoryInterface $formFactoryInterface
    * @param RouterInterface $routerInterface
+   * @param array $config
    */
-  public function __construct(FormFactoryInterface $formFactoryInterface, RouterInterface $routerInterface) {
+  public function __construct(FormFactoryInterface $formFactoryInterface, RouterInterface $routerInterface, array $config) {
     $this->formFactoryInterface = $formFactoryInterface;
     $this->routerInterface = $routerInterface;
+    $this->config = $config;
   }
 
   /****************************************************************************/
@@ -90,7 +96,7 @@ class FormHelper {
    *
    * @return string
    */
-  private function generateOrReturnUrl(string $url, array $params = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) : string {
+  public function generateOrReturnUrl(string $url, array $params = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) : string {
     $first = $url[0] ?? '';
     if ('/' !== $first) {
       return $this->routerInterface->generate($url, $params, $referenceType);
@@ -113,8 +119,8 @@ class FormHelper {
   public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo) : FormBuilderInterface {
     $formBuilder = $this->initFormBuilder($url);
 
-    $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', 'btn btn-lg btn-block btn-success');
-    $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', 'btn btn-lg btn-block btn-danger');
+    $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', $this->getButtonClasses('affirm'));
+    $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', $this->getButtonClasses('decline'));
 
     return $formBuilder;
   }
@@ -146,18 +152,18 @@ class FormHelper {
    * @param string|null $route
    * @param array $options
    * @param string $button
-   * @param string $buttonClass
+   * @param string|null $buttonClass
    *
    * @return FormInterface
    */
-  public function createFormType(string $formType, $data, string $route = null, array $options = [], string $button = 'Abschicken', string $buttonClass= 'btn btn-lg btn-block btn-primary') : FormInterface {
+  public function createFormType(string $formType, $data, string $route = null, array $options = [], string $button = 'Abschicken', ?string $buttonClass = null) : FormInterface {
     $form = $this->createForm($formType, $data, array_merge($options, [
       'action' => $this->generateOrReturnUrl($route),
       'method' => 'POST',
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -170,18 +176,18 @@ class FormHelper {
    * @param string|null $route
    * @param array $options
    * @param string $button
-   * @param string $buttonClass
+   * @param string|null $buttonClass
    *
    * @return FormInterface
    */
-  public function createFormTypeCreation(string $formType, Addressable $entity = null, string $route = null, array $options = [], string $button = 'Erzeugen', string $buttonClass= 'btn btn-lg btn-block btn-primary') : FormInterface {
+  public function createFormTypeCreation(string $formType, Addressable $entity = null, string $route = null, array $options = [], string $button = 'Erzeugen', ?string $buttonClass = null) : FormInterface {
     $form = $this->createForm($formType, $entity, array_merge($options, [
       'action' => $this->generateOrReturnUrl($route),
       'method' => 'POST',
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -194,18 +200,18 @@ class FormHelper {
    * @param string|null $route
    * @param array $options
    * @param string $button
-   * @param string $buttonClass
+   * @param string|null $buttonClass
    *
    * @return FormInterface
    */
-  public function createFormTypeEditing(string $formType, Addressable $entity = null, string $route = null, array $options = [], string $button = 'Speichern', string $buttonClass= 'btn btn-lg btn-block btn-primary') : FormInterface {
+  public function createFormTypeEditing(string $formType, Addressable $entity = null, string $route = null, array $options = [], string $button = 'Speichern', ?string $buttonClass = null) : FormInterface {
     $form = $this->createForm($formType, $entity, array_merge($options, [
       'action' => $this->generateOrReturnUrl($route, $entity ? ['id' => $entity->getId()] : []),
       'method' => 'PUT',
       'translation_domain' => FALSE,
     ]));
 
-    $this->addSubmitButton($form, $button, 'submit', $buttonClass);
+    $this->addSubmitButton($form, $button, 'submit', $buttonClass ?: $this->getButtonClasses('primary'));
 
     return $form;
   }
@@ -243,11 +249,11 @@ class FormHelper {
    *
    * @param FormInterface|FormBuilderInterface $form
    * @param string $label
-   * @param string $class
    * @param string $name
+   * @param string|null $class
+   * @param array $options
    */
-  public function addSubmitButton($form, $label = 'Speichern', $name = 'submit', $class = 'btn btn-lg btn-block btn-primary') : void {
-    try {
+  public function addSubmitButton($form, $label = 'Speichern', $name = 'submit', ?string $class = NULL, array $options = []) : void {
       if (!$form->has('group_buttons')) {
         $form->add('group_buttons', FormType::class, [
           'attr' => [
@@ -258,12 +264,11 @@ class FormHelper {
         ]);
       }
 
-      $form->get('group_buttons')->add($name, SubmitType::class, [
+      $form->get('group_buttons')->add($name, SubmitType::class, array_merge([
         'label' => $label,
-        'attr' => ['class' => $class]
-      ]);
-    } catch (\Exception $e) {
-    }
+        'label_raw' => TRUE,
+        'attr' => ['class' => $class ?: $this->getButtonClasses('primary')],
+      ], $options));
   }
 
   /**
@@ -284,6 +289,15 @@ class FormHelper {
       }
     }
     return $button;
+  }
+
+  /**
+   * @param string $mode
+   *
+   * @return string
+   */
+  public function getButtonClasses(string $mode) : string {
+    return ($this->config['submit_button_classes']['default'] ?? NULL).' '.($this->config['submit_button_classes'][$mode] ?? NULL);
   }
 
 }

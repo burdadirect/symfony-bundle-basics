@@ -32,6 +32,18 @@ class Configuration implements ConfigurationInterface {
             ->scalarNode('navi')->defaultValue('default')->end()
           ->end()
         ->end()
+        ->arrayNode('form')->addDefaultsIfNotSet()
+          ->children()
+            ->arrayNode('submit_button_classes')->addDefaultsIfNotSet()
+              ->children()
+                ->scalarNode('default')->defaultValue('btn btn-lg btn-block')->end()
+                ->scalarNode('primary')->defaultValue('btn-primary')->end()
+                ->scalarNode('affirm')->defaultValue('btn-success')->end()
+                ->scalarNode('decline')->defaultValue('btn-danger')->end()
+              ->end()
+            ->end()
+          ->end()
+        ->end()
       ->end();
 
     return $treeBuilder;

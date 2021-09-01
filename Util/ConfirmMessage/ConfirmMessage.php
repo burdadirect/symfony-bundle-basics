@@ -15,7 +15,7 @@ class ConfirmMessage {
   /**
    * @var Collection|AbstractEntity[]|array
    */
-  private $items = [];
+  private $items;
 
   /**
    * @var string
@@ -323,12 +323,14 @@ class ConfirmMessage {
   public function evalText(AbstractEntity $item) : ?string {
     if ($this->text instanceof \Closure) {
       return call_user_func($this->text, $item);
-    } elseif ($this->text !== NULL) {
+    }
+
+    if ($this->text !== NULL) {
       if (method_exists($item, $this->text)) {
         return call_user_func([$item, $this->text]);
-      } else {
-        return $this->text;
       }
+
+      return $this->text;
     }
 
     return NULL;
@@ -342,12 +344,14 @@ class ConfirmMessage {
   public function evalTitle(AbstractEntity $item) : ?string {
     if ($this->title instanceof \Closure) {
       return call_user_func($this->title, $item);
-    } elseif ($this->title !== NULL) {
+    }
+
+    if ($this->title !== NULL) {
       if (method_exists($item, $this->title)) {
         return call_user_func([$item, $this->title]);
-      } else {
-        return $this->title;
       }
+
+      return $this->title;
     }
 
     return NULL;
@@ -361,7 +365,9 @@ class ConfirmMessage {
   public function evalIcon(AbstractEntity $item) : ?string {
     if ($this->icon instanceof \Closure) {
       return call_user_func($this->icon, $item);
-    } elseif ($this->icon !== NULL) {
+    }
+
+    if ($this->icon !== NULL) {
       return $this->icon;
     }
 
@@ -370,17 +376,22 @@ class ConfirmMessage {
 
   /**
    * @param AbstractEntity $item
+   * @param RouterInterface|null $router
    *
    * @return string|null
    */
   public function evalUrl(AbstractEntity $item, RouterInterface $router = NULL) : ?string {
     if ($this->route instanceof \Closure) {
       return call_user_func($this->route, $item, $router);
-    } elseif ($this->route !== NULL) {
+    }
+
+    if ($this->route !== NULL) {
       $first = $this->route[0] ?? '';
       if ($first === '/') {
         return $this->route;
-      } elseif ($router) {
+      }
+
+      if ($router) {
         try {
           return $router->generate($this->route, ['id' => $item->getId()]);
         } catch (\Exception $e) {
@@ -419,9 +430,9 @@ class ConfirmMessage {
 
     if ($url) {
       return '<a href="'.$url.'" title="'.strip_tags($title ?: $text).'">'.$id.'</a>: '.$text;
-    } else {
-      return $id.': '.$text;
     }
+
+    return $id.': '.$text;
   }
 
 }

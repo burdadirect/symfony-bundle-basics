@@ -4,10 +4,10 @@ namespace HBM\BasicsBundle\Util\Data;
 
 abstract class AbstractData {
 
-  protected static $filter = 'filter';
-  protected static $label = 'text';
+  protected static string $filter = 'filter';
+  protected static string $label = 'text';
 
-  private static $data = [];
+  private static array $data = [];
 
   public static function keys(string $filter = NULL) : array {
     return array_keys(static::filter($filter));

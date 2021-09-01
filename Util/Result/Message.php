@@ -2,20 +2,13 @@
 
 namespace HBM\BasicsBundle\Util\Result;
 
-use HBM\BasicsBundle\Entity\Interfaces\Uuidable;
 use HBM\BasicsBundle\Util\Data\Level;
 
 class Message {
 
-  /**
-   * @var string
-   */
-  private $level;
+  private ?string $level;
 
-  /**
-   * @var string
-   */
-  private $message;
+  private ?string $message;
 
   /**
    * Message constructor.
@@ -31,11 +24,11 @@ class Message {
   /**
    * Set level.
    *
-   * @param string $level
+   * @param string|null $level
    *
    * @return self
    */
-  public function setLevel($level) : self {
+  public function setLevel(?string $level) : self {
     $this->level = $level;
 
     return $this;
@@ -53,11 +46,11 @@ class Message {
   /**
    * Set message.
    *
-   * @param string $message
+   * @param string|null $message
    *
    * @return self
    */
-  public function setMessage($message) : self {
+  public function setMessage(?string $message) : self {
     $this->message = $message;
 
     return $this;

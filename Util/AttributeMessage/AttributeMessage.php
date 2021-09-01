@@ -6,15 +6,9 @@ use HBM\BasicsBundle\Util\Result\Message;
 
 class AttributeMessage {
 
-  /**
-   * @var string
-   */
-  private $attribute;
+  private ?string $attribute;
 
-  /**
-   * @var Message
-   */
-  private $message;
+  private ?Message $message;
 
   /**
    * VoterWrapper constructor.
@@ -30,11 +24,11 @@ class AttributeMessage {
   /**
    * Set attribute.
    *
-   * @param string $attribute
+   * @param string|null $attribute
    *
    * @return self
    */
-  public function setAttribute(string $attribute = NULL) : self {
+  public function setAttribute(?string $attribute) : self {
     $this->attribute = $attribute;
 
     return $this;
@@ -52,11 +46,11 @@ class AttributeMessage {
   /**
    * Set message.
    *
-   * @param Message $message
+   * @param Message|null $message
    *
    * @return self
    */
-  public function setMessage(Message $message = NULL) : self {
+  public function setMessage(?Message $message) : self {
     $this->message = $message;
 
     return $this;

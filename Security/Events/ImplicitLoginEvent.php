@@ -22,11 +22,11 @@ class ImplicitLoginEvent extends InteractiveLoginEvent  {
   /**
    * Set mode.
    *
-   * @param string $mode
+   * @param string|null $mode
    *
    * @return self
    */
-  public function setMode(string $mode = NULL) : self {
+  public function setMode(?string $mode) : self {
     $this->mode = $mode;
 
     return $this;

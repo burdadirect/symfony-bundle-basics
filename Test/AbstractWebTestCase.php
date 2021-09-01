@@ -2,10 +2,12 @@
 
 namespace HBM\BasicsBundle\Test;
 
+use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
-use Liip\TestFixturesBundle\Test\FixturesTrait;
+use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
+use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
@@ -14,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class AbstractWebTestCase extends WebTestCase {
-
-  use FixturesTrait;
 
   /**
    * @var string
@@ -32,13 +32,26 @@ abstract class AbstractWebTestCase extends WebTestCase {
    */
   abstract protected function getCustomClient() : KernelBrowser;
 
+  protected ?KernelBrowser $kernelBrowser = null;
+
+  protected ?AbstractDatabaseTool $databaseTool = null;
+
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->kernelBrowser = self::createClient();
+
+    $this->databaseTool = $this->kernelBrowser->getContainer()->get(DatabaseToolCollection::class)->get();
+  }
+
   /**
-   * {@inheritDoc}
+   * @param array $classNames
+   * @param bool $append
    *
-   * @throws \Exception
+   * @return AbstractExecutor
    */
-  protected function tearDown() : void {
-    parent::tearDown();
+  protected function loadFixtures(array $classNames = [], bool $append = false): AbstractExecutor {
+    return $this->databaseTool->loadFixtures($classNames, $append);
   }
 
   /****************************************************************************/
@@ -66,7 +79,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
       throw new \Exception('No user found!');
     }
     foreach ($roles as $role) {
-      if (!in_array($role, $user->getRoles())) {
+      if (!in_array($role, $user->getRoles(), TRUE)) {
         throw new \Exception('User is missing the following role: '.$role);
       }
     }
@@ -90,7 +103,8 @@ abstract class AbstractWebTestCase extends WebTestCase {
    */
   protected function randomUser() {
     $users = $this->getUserRepository()->findRandomBy([], 1);
-    return reset($users);
+
+    return reset($users) ?: null;
   }
 
   /**
@@ -106,8 +120,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $numOfUsers = 0;
     try {
       $numOfUsers = $qb->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
-    } catch (NoResultException $e) {
-    } catch (NonUniqueResultException $e) {
+    } catch (NoResultException | NonUniqueResultException $e) {
     }
 
     $randomOffset = 0;
@@ -171,7 +184,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
   protected function assertRouteJson(string $url = null, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
     $client = $this->assertRoute($url, $user, $redirect, $redirection);
     $resp = $client->getResponse();
-    $this->assertJson($resp->getContent(), '"'.$url.'" should return JSON.'.$this->getResponseMessageHint($resp));
+    self::assertJson($resp->getContent(), '"'.$url.'" should return JSON.'.$this->getResponseMessageHint($resp));
 
     return $client;
   }
@@ -190,9 +203,9 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $client->request('GET', $url);
     $resp = $client->getResponse();
     if ($redirection) {
-      $this->assertTrue($resp->isRedirection(), '"'.$url.'" should redirect to "'.$redirect.'".'.$this->getResponseMessageHint($resp));
+      self::assertTrue($resp->isRedirection(), '"'.$url.'" should redirect to "'.$redirect.'".'.$this->getResponseMessageHint($resp));
     } else {
-      $this->assertTrue($resp->isRedirect($redirect), '"'.$url.'" should redirect to "'.$redirect.'".'.$this->getResponseMessageHint($resp));
+      self::assertTrue($resp->isRedirect($redirect), '"'.$url.'" should redirect to "'.$redirect.'".'.$this->getResponseMessageHint($resp));
     }
   }
 
@@ -204,7 +217,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
   protected function assertSuccessfulResponse(KernelBrowser $client, string $url, array $parameters = []) : void {
     $client->request('GET', $url, $parameters);
     $resp = $client->getResponse();
-    $this->assertTrue($resp->isSuccessful(), '"'.$url.'" should be successful.'.$this->getResponseMessageHint($resp));
+    self::assertTrue($resp->isSuccessful(), '"'.$url.'" should be successful.'.$this->getResponseMessageHint($resp));
   }
 
   /**
@@ -216,7 +229,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $redirectUrlEscaped = preg_quote($redirectUrl, '/');
     $redirectHostEscaped = preg_quote('http://localhost', '/');
     $pattern = '/(.*)<meta http-equiv="refresh" content="0;url=\'?('.$redirectHostEscaped.')?'.$redirectUrlEscaped.'\'?">(.*)/';
-    $this->assertRegExp($pattern, $crawler->html(), $message);
+    self::assertMatchesRegularExpression($pattern, $crawler->html(), $message);
   }
 
   /**
@@ -232,7 +245,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
       'Content-Type' => $response->headers->get('Content-Type', 'n/a'),
     ];
 
-    array_walk($data, function(&$value, $key) {
+    array_walk($data, static function(&$value, $key) {
       return $value = $key.': "'.$value.'"';
     });
 

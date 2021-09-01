@@ -19,20 +19,11 @@ class Result {
    */
   protected $notices;
 
-  /**
-   * @var bool
-   */
-  protected $return;
+  protected ?bool $return;
 
-  /**
-   * @var array
-   */
-  protected $payloads;
+  protected ?array $payloads;
 
-  /**
-   * @var string
-   */
-  public $error;
+  public ?string $error;
 
   /**
    * Result constructor.

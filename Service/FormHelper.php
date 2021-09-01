@@ -14,20 +14,11 @@ use Symfony\Component\Routing\RouterInterface;
 
 class FormHelper {
 
-  /**
-   * @var array
-   */
-  private $config;
+  private array $config;
 
-  /**
-   * @var FormFactoryInterface
-   */
-  private $formFactoryInterface;
+  private FormFactoryInterface $formFactoryInterface;
 
-  /**
-   * @var RouterInterface
-   */
-  private $routerInterface;
+  private RouterInterface $routerInterface;
 
   /**
    * FormHelper constructor.

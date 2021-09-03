@@ -44,6 +44,12 @@ abstract class AbstractWebTestCase extends WebTestCase {
     $this->databaseTool = $this->kernelBrowser->getContainer()->get(DatabaseToolCollection::class)->get();
   }
 
+  protected function tearDown(): void {
+    parent::tearDown();
+
+    $this->databaseTool = NULL;
+  }
+
   /**
    * @param array $classNames
    * @param bool $append

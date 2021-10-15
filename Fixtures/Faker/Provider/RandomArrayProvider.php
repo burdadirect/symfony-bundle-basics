@@ -7,15 +7,15 @@ use Faker\Provider\Base as BaseProvider;
 final class RandomArrayProvider extends BaseProvider {
 
   /**
-   * @param array  $array                Array to take elements from.
-   * @param int    $min                  Minimum number of random array elements.
-   * @param int    $max                  Maximum number of random array elements.
-   * @param int    $chanceForEmptyArray  The chance for a non empty array.
-   * @param bool   $allowDuplicates      Allow elements to be picked several times. Defaults to false.
+   * @param array $array Array to take elements from.
+   * @param int|null $min Minimum number of random array elements.
+   * @param int|null $max Maximum number of random array elements.
+   * @param int $chanceForEmptyArray The chance for a non empty array.
+   * @param bool $allowDuplicates Allow elements to be picked several times. Defaults to false.
    *
    * @return array
    */
-  public function randomArray(array $array, int $min = NULL, int $max = NULL, int $chanceForEmptyArray = 0, $allowDuplicates = FALSE) : array {
+  public function randomArray(array $array, int $min = NULL, int $max = NULL, int $chanceForEmptyArray = 0, bool $allowDuplicates = FALSE) : array {
     if ($min === NULL) {
       $min = 0;
     } elseif ($min < 0) {

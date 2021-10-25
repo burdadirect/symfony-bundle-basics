@@ -105,7 +105,7 @@ abstract class AbstractSerialCommand extends Command {
 
     // Mark as busy
     if (!$this->markAsBusy($output)) {
-      return NULL;
+      return 1;
     }
 
 
@@ -114,7 +114,7 @@ abstract class AbstractSerialCommand extends Command {
 
 
     // Mark as idle
-    if ($result !== FALSE) {
+    if ($result === 0) {
       $this->markAsIdle();
     }
 

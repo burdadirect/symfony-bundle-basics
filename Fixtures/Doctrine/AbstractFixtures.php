@@ -106,6 +106,23 @@ abstract class AbstractFixtures extends Fixture {
     $manager->flush();
   }
 
+  /**
+   * @param ObjectManager $manager
+   * @param string|null $key
+   *
+   * @return mixed
+   */
+  public function single(ObjectManager $manager, string $key = NULL, bool $flush = true) {
+    $object = $this->createObject($manager, $key);
+    $manager->persist($object);
+
+    if ($flush) {
+      $manager->flush();
+    }
+
+    return $object;
+  }
+
   /****************************************************************************/
   /* REFERENCES                                                               */
   /****************************************************************************/

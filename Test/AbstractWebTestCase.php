@@ -30,7 +30,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
   /**
    * @return KernelBrowser
    */
-  abstract protected function getCustomClient() : KernelBrowser;
+  abstract protected function getKernelBrowser() : KernelBrowser;
 
   protected ?KernelBrowser $kernelBrowser = null;
 
@@ -155,7 +155,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @throws \Exception
    */
   protected function assertRoute(string $url, $user = null, string $redirect = null, bool $redirection = FALSE) : KernelBrowser {
-    $client = $this->getCustomClient();
+    $client = $this->getKernelBrowser();
 
     // User needed?
     if ($user !== NULL) {

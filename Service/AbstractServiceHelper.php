@@ -70,13 +70,6 @@ abstract class AbstractServiceHelper {
   }
 
   /**
-   * @return EncoderFactory|object
-   */
-  public function securityEncoderFactory() {
-    return $this->container->get('public.security.encoder_factory');
-  }
-
-  /**
    * @return EventDispatcher|object;
    */
   public function eventDispatcher() {

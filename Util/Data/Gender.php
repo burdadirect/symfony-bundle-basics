@@ -37,7 +37,7 @@ class Gender extends AbstractData {
       'color' => '#cccccc',
     ],
     self::T => [
-      'text' => 'trans',
+      'text' => 'transgender',
       'short' => 'trans',
       'aliases' => [
         'trans', 'transgender', 'trans-gender', 'transsexuell', 'trans-sexuell',

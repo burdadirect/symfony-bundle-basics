@@ -230,4 +230,21 @@ class EntityWording {
     return $this->label('%s%s'.$this->escapeTextForFormatString($namePart).'%s', $ucfirst);
   }
 
+  /****************************************************************************/
+
+  public function confirmDeletionTitle() : string {
+    return 'Bitte bestätigen Sie, dass '.$this->labelHtml('text-primary').' gelöscht werden soll.';
+  }
+
+  public function confirmDeletionSuccess(array $unlinkedFiles = []) : string {
+    $entityNominative = $this->labelHtml(NULL, TRUE);
+
+    $message = $entityNominative.' wurde gelöscht.';
+    if (\count($unlinkedFiles) > 0) {
+      $message = $entityNominative.' und die zugehörige(n) '.\count($unlinkedFiles).' Datei(en) wurden gelöscht.';
+    }
+
+    return $message;
+  }
+
 }

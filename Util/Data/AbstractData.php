@@ -109,7 +109,7 @@ abstract class AbstractData {
 
   /**
    * @param string|null $filter
-   * 
+   *
    * @return int
    */
   public static function count(string $filter = NULL) : int {

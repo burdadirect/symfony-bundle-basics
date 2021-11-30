@@ -13,6 +13,12 @@ abstract class AbstractData {
     return array_keys(static::filter($filter));
   }
 
+  public static function key(string $key, string $filter = NULL, string $default = NULL) : ?string {
+    $keys = static::keys($filter);
+
+    return in_array($key, $keys, true) ? $key : $default;
+  }
+
   public static function data(string $filter = NULL, array $keys = NULL) : array {
     return static::filter($filter, $keys);
   }
@@ -99,6 +105,15 @@ abstract class AbstractData {
     $keys = array_keys(static::_data());
     shuffle($keys);
     return reset($keys);
+  }
+
+  /**
+   * @param string|null $filter
+   * 
+   * @return int
+   */
+  public static function count(string $filter = NULL) : int {
+    return count(self::keys($filter));
   }
 
 }

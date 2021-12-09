@@ -4,6 +4,7 @@ namespace HBM\BasicsBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use HBM\BasicsBundle\Entity\AbstractEntity;
+use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
 use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
 use HBM\BasicsBundle\Service\AbstractServiceHelper;
 use HBM\BasicsBundle\Util\AttributeMessage\AttributeMessage;
@@ -199,7 +200,7 @@ abstract class AbstractController extends BaseController {
   }
 
   /**
-   * @param Result $result
+   * @param array|NoticeInterface[] $notices
    * @param null|string $prefix
    * @param null|string $postfix
    */

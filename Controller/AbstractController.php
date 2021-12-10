@@ -201,10 +201,10 @@ abstract class AbstractController extends BaseController {
 
   /**
    * @param array|NoticeInterface[] $notices
-   * @param null|string $prefix
-   * @param null|string $postfix
+   * @param string|null $prefix
+   * @param string|null $postfix
    */
-  protected function addFlashMessagesFromNotices(array $notices, $prefix = NULL, $postfix = NULL) : void {
+  protected function addFlashMessagesFromNotices(array $notices, string $prefix = NULL, string $postfix = NULL) : void {
     foreach ($notices as $notice) {
       $string = $notice->getTitle();
       if ($notice->getMessage()) {
@@ -216,10 +216,10 @@ abstract class AbstractController extends BaseController {
 
   /**
    * @param Result $result
-   * @param null|string $prefix
-   * @param null|string $postfix
+   * @param string|null $prefix
+   * @param string|null $postfix
    */
-  protected function addFlashMessagesFromResult(Result $result, $prefix = NULL, $postfix = NULL) : void {
+  protected function addFlashMessagesFromResult(Result $result, string $prefix = NULL, string $postfix = NULL) : void {
     foreach ($result->getMessages() as $message) {
       $this->addFlashMessage($message->getLevel(), $prefix.$message->getMessage().$postfix);
     }
@@ -238,10 +238,10 @@ abstract class AbstractController extends BaseController {
 
   /**
    * @param Result $result
-   * @param null|string $prefix
-   * @param null|string $postfix
+   * @param string|null $prefix
+   * @param string|null $postfix
    */
-  protected function addFlashNoticesFromResult(Result $result, $prefix = NULL, $postfix = NULL) : void {
+  protected function addFlashNoticesFromResult(Result $result, string $prefix = NULL, string $postfix = NULL) : void {
     $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
   }
 
@@ -261,7 +261,7 @@ abstract class AbstractController extends BaseController {
    *
    * @return null|RedirectResponse|Response|FormInterface
    */
-  protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, $textYes = 'Ja', $textNo = 'nein', $flashMessage = 'Aktion abgebrochen') {
+  protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen') {
     $builder = $this->sh->formHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
     $form = $builder->getForm();
     $form->handleRequest($request);
@@ -301,10 +301,11 @@ abstract class AbstractController extends BaseController {
    * @param null $confirmDetails
    * @param string $textYes
    * @param string $textNo
+   * @param string $flashMessage
    *
    * @return null|RedirectResponse|Response
    */
-  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, $textYes = 'Ja', $textNo = 'Nein', $flashMessage = 'Aktion abgebrochen') {
+  protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = NULL, $confirmDetails = NULL, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen') {
     $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage);
 
     if ($return instanceof FormInterface) {

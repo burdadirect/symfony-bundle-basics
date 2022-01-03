@@ -35,5 +35,10 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true
+    }
   }
 }

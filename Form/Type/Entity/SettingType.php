@@ -33,10 +33,13 @@ class SettingType extends AbstractType {
 
     if ($setting->getVarType() === SettingVarType::JSON) {
       $editorMode = 'ace/mode/json';
+      $editorTextarea = false;
     } elseif ($setting->getVarType() === SettingVarType::HTML) {
       $editorMode = 'ace/mode/html';
+      $editorTextarea = false;
     } else {
       $editorMode = 'ace/mode/text';
+      $editorTextarea = true;
     }
 
     $group
@@ -62,7 +65,7 @@ class SettingType extends AbstractType {
         'attr' => [
           'rows' => '5',
           'data-ace-id' => 'editor-twig-settings',
-          'data-ace-options' => json_encode(['ace' => ['mode' => $editorMode], 'general' => ['textarea' => TRUE]]),
+          'data-ace-options' => json_encode(['ace' => ['mode' => $editorMode], 'general' => ['textarea' => $editorTextarea]]),
         ],
       ])
       ->add('notice', TextareaType::class, [

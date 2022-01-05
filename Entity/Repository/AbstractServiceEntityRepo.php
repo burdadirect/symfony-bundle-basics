@@ -76,6 +76,18 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   /**
    * @inheritDoc
    */
+  public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, array $relations = NULL, string $prefix = 'relations'): QueryBuilder {
+    if (count($relations) > 0) {
+      $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
+      $qb->andWhere($qb->expr()->in($joinAlias, ':'.$prefix))->setParameter($prefix, $relations);
+    }
+
+    return $qb;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function searchSelection(QueryBuilder $qb, string $alias, string $field, array $selections = NULL, string $prefix = 'selections'): QueryBuilder {
     if (count($selections) > 0) {
       $qb->andWhere($qb->expr()->in($alias.'.'.$field, ':'.$prefix))->setParameter($prefix, $selections);
@@ -179,6 +191,32 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
     $qb->leftJoin($joinColumn, $joinAlias, $conditionType, $condition, $indexBy);
 
     return $qb;
+  }
+
+  /**
+   * @param string|callable $callback
+   * @param array $criteria
+   * @param array $sortation
+   *
+   * @return array
+   */
+  public function getIdsAndNamesSorted($callback, array $criteria = [], array $sortation = []) : array {
+    $idsAndNames = [];
+
+    $items = $this->findBy($criteria, $sortation);
+    foreach ($items as $item) {
+      $name = null;
+      if (is_string($callback)) {
+        $name = $item->{$callback}();
+      } elseif (is_callable($callback)) {
+        $name = $callback($item);
+      }
+
+      $idsAndNames[$item->getId()] = $name;
+    }
+    uasort($idsAndNames, 'strcasecmp');
+
+    return $idsAndNames;
   }
 
 }

@@ -4,18 +4,15 @@ namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessage;
+use Symfony\Component\Routing\RouterInterface;
 
 abstract class AbstractDeletionHelper {
 
-  /**
-   * @var AbstractServiceHelper
-   */
-  protected $sh;
+  private RouterInterface $router;
 
-  /**
-   * @var AbstractDoctrineHelper
-   */
-  protected $dh;
+  public function __construct(RouterInterface $router) {
+    $this->router = $router;
+  }
 
   /**
    * @param array $confirmMessages
@@ -90,7 +87,7 @@ abstract class AbstractDeletionHelper {
    */
   public function renderListItem(ConfirmMessage $confirmMessage, AbstractEntity $item) : string {
     $listItem = '<li>';
-    $listItem .= $confirmMessage->render($item, $this->sh->router());
+    $listItem .= $confirmMessage->render($item, $this->router);
     $listItem .= $this->renderConfirmMessages($confirmMessage->evalChildren($item));
     $listItem .= '</li>';
 

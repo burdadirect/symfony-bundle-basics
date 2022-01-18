@@ -27,7 +27,7 @@ class PasswordReset extends AbstractType {
     return $group_default;
   }
 
-  public function getBlockPrefix() {
+  public function getBlockPrefix(): string {
     return 'hbm_basics_form_profile_password_reset';
   }
 

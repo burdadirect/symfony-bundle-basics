@@ -37,7 +37,7 @@ class NoticeType extends AbstractType {
     return $group;
   }
 
-  public function getBlockPrefix() {
+  public function getBlockPrefix(): string {
     return 'hbm_form_type_notice';
   }
 

@@ -97,7 +97,7 @@ class SettingType extends AbstractType {
     return $group;
   }
 
-  public function getBlockPrefix() {
+  public function getBlockPrefix(): string {
     return 'hbm_form_type_setting';
   }
 }

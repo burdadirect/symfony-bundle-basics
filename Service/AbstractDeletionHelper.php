@@ -8,7 +8,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 abstract class AbstractDeletionHelper {
 
-  private RouterInterface $router;
+  private ?RouterInterface $router = null;
 
   public function __construct(RouterInterface $router) {
     $this->router = $router;

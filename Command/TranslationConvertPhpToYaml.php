@@ -16,7 +16,7 @@ class TranslationConvertPhpToYaml extends Command {
 
   public const NAME = 'hbm:translation:convert:phpToYaml';
 
-  protected function configure() {
+  protected function configure() : void {
     $this
       ->setName(self::NAME)
       ->setDescription('Translate php translations to yaml')
@@ -26,7 +26,7 @@ class TranslationConvertPhpToYaml extends Command {
     ;
   }
 
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output) : int {
     $fileInput = $input->getArgument('file-input');
 
     $translations = require_once $fileInput;
@@ -57,7 +57,7 @@ class TranslationConvertPhpToYaml extends Command {
     return 0;
   }
 
-  protected function insertIntoArray(array $array, array $keys, $value) {
+  protected function insertIntoArray(array $array, array $keys, $value) : array {
     if (count($keys) === 0) {
       $array[] = $value;
       return $array;

@@ -195,7 +195,7 @@ class EntityWording {
    * @param null $class
    * @param bool $ucfirst
    * @param bool $htmlentities
-   * 
+   *
    * @return string
    */
   public function labelHtml($class = NULL, bool $ucfirst = FALSE, bool $htmlentities = TRUE) : string {

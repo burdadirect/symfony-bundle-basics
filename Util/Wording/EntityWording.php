@@ -4,33 +4,17 @@ namespace HBM\BasicsBundle\Util\Wording;
 
 class EntityWording {
 
-  /**
-   * @var string
-   */
-  protected $type;
+  protected ?string $id = null;
 
+  protected ?string $type;
 
-  /**
-   * @var string
-   */
-  protected $id;
+  protected ?string $name;
 
-  /**
-   * @var string
-   */
-  protected $name;
+  protected ?string $nominative;
 
-  /**
-   * @var string
-   */
-  protected $nominative;
+  protected ?string $function;
 
-  /**
-   * @var string
-   */
-  protected $function;
-
-  public function __construct($type, $name = NULL, $nominative = 'der/die/das', $function = NULL) {
+  public function __construct(?string $type, ?string $name = NULL, ?string $nominative = 'der/die/das', ?string $function = NULL) {
     $this->type = $type;
     $this->name = $name;
     $this->nominative = $nominative;
@@ -40,7 +24,7 @@ class EntityWording {
   /**
    * Set type.
    *
-   * @param string $type
+   * @param string|null $type
    *
    * @return self
    */
@@ -62,7 +46,7 @@ class EntityWording {
   /**
    * Set nominative.
    *
-   * @param string $nominative
+   * @param string|null $nominative
    *
    * @return self
    */
@@ -75,24 +59,25 @@ class EntityWording {
   /**
    * Get nominative.
    *
-   * @param null $ucfirst
+   * @param bool|null $ucfirst
    *
    * @return string|null
    */
-  public function getNominative($ucfirst = NULL) : ?string {
+  public function getNominative(bool $ucfirst = NULL) : ?string {
     if ($ucfirst === TRUE) {
       return ucfirst($this->nominative);
-    } elseif ($ucfirst === FALSE) {
-      return lcfirst($this->nominative);
-    } else {
-      return $this->nominative;
     }
+    if ($ucfirst === FALSE) {
+      return lcfirst($this->nominative);
+    }
+
+    return $this->nominative;
   }
 
   /**
    * Set function.
    *
-   * @param string $function
+   * @param string|null $function
    *
    * @return self
    */
@@ -114,7 +99,7 @@ class EntityWording {
   /**
    * Set id.
    *
-   * @param string $id
+   * @param string|null $id
    *
    * @return self
    */
@@ -173,7 +158,7 @@ class EntityWording {
    */
   public function extractName($object = NULL) : ?string {
     $name = NULL;
-    if ($this->getFunction() && $object) {
+    if ($object && $this->getFunction()) {
       try {
         $name = $object->{$this->getFunction()}();
       } catch (\Exception $exception) {
@@ -195,12 +180,12 @@ class EntityWording {
    *
    * @return string
    */
-  private function label($format, $ucfirst = FALSE) : string {
+  private function label(string $format, bool $ucfirst = FALSE) : string {
     $idPart = $this->getId() ? ' [#'.$this->getId().']' : '';
 
     $nominativePart = $this->getNominative($ucfirst);
     if ($nominativePart) {
-      $nominativePart = $nominativePart.' ';
+      $nominativePart .= ' ';
     }
 
     return sprintf($format, $nominativePart, $this->getType(), $idPart);
@@ -209,12 +194,13 @@ class EntityWording {
   /**
    * @param null $class
    * @param bool $ucfirst
-   *
+   * @param bool $htmlentities
+   * 
    * @return string
    */
-  public function labelHtml($class = NULL, $ucfirst = FALSE) : string {
+  public function labelHtml($class = NULL, bool $ucfirst = FALSE, bool $htmlentities = TRUE) : string {
     $classPart = $class ? ' class="'.$class.'"' : '';
-    $namePart = $this->getName() ? ' <em'.$classPart.'>'.$this->getName().'</em>' : '';
+    $namePart = $this->getName() ? ' <em'.$classPart.'>'.($htmlentities ? htmlentities($this->getName()) : $this->getName()).'</em>' : '';
 
     return $this->label('%s<strong>%s'.$this->escapeTextForFormatString($namePart).'%s</strong>', $ucfirst);
   }
@@ -224,7 +210,7 @@ class EntityWording {
    *
    * @return string
    */
-  public function labelText($ucfirst = FALSE) : string {
+  public function labelText(bool $ucfirst = FALSE) : string {
     $namePart = $this->getName() ? ' "'.strip_tags($this->getName()).'"' : '';
 
     return $this->label('%s%s'.$this->escapeTextForFormatString($namePart).'%s', $ucfirst);
@@ -232,12 +218,12 @@ class EntityWording {
 
   /****************************************************************************/
 
-  public function confirmDeletionTitle() : string {
-    return 'Bitte bestätigen Sie, dass '.$this->labelHtml('text-primary').' gelöscht werden soll.';
+  public function confirmDeletionTitle(bool $htmlentities = TRUE) : string {
+    return 'Bitte bestätigen Sie, dass '.$this->labelHtml('text-primary', FALSE, $htmlentities).' gelöscht werden soll.';
   }
 
-  public function confirmDeletionSuccess(array $unlinkedFiles = []) : string {
-    $entityNominative = $this->labelHtml(NULL, TRUE);
+  public function confirmDeletionSuccess(array $unlinkedFiles = [],bool $htmlentities = TRUE) : string {
+    $entityNominative = $this->labelHtml(NULL, TRUE, $htmlentities);
 
     $message = $entityNominative.' wurde gelöscht.';
     if (\count($unlinkedFiles) > 0) {

@@ -39,7 +39,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->kernelBrowser = self::createClient();
+    $this->initClient();
 
     $this->databaseTool = $this->kernelBrowser->getContainer()->get(DatabaseToolCollection::class)->get();
   }
@@ -48,6 +48,10 @@ abstract class AbstractWebTestCase extends WebTestCase {
     parent::tearDown();
 
     $this->databaseTool = NULL;
+  }
+
+  protected function initClient(): void {
+    $this->kernelBrowser = self::createClient();
   }
 
   /**
@@ -118,7 +122,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
    *
    * @return object|null
    */
-  protected function randomUserWithRoles($roles = []) {
+  protected function randomUserWithRoles(array $roles = []) {
     $qb = $this->getUserRepository()->createQueryBuilder('u');
     foreach ($roles as $roleIndex => $roleName) {
       $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . $roleName . '"%');

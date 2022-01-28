@@ -7,6 +7,8 @@ abstract class AbstractData {
   protected static string $filter = 'filter';
   protected static string $label = 'text';
 
+  protected static bool $filterAndKeys = false;
+
   private static array $data = [];
 
   /**
@@ -70,8 +72,10 @@ abstract class AbstractData {
         }
       }
       $dataToUse = $filtered;
-    } elseif ($keys !== NULL) {
-      $dataToUse = array_intersect_key(static::_data(), array_fill_keys($keys, TRUE));
+    }
+
+    if ((static::$filterAndKeys || ($filter === null)) && ($keys !== NULL)) {
+      $dataToUse = array_intersect_key($dataToUse, array_fill_keys($keys, TRUE));
     }
 
     if ($sort) {

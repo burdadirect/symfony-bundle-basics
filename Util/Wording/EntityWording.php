@@ -222,7 +222,7 @@ class EntityWording {
     return 'Bitte bestätigen Sie, dass '.$this->labelHtml('text-primary', FALSE, $htmlentities).' gelöscht werden soll.';
   }
 
-  public function confirmDeletionSuccess(array $unlinkedFiles = [],bool $htmlentities = TRUE) : string {
+  public function confirmDeletionSuccess(array $unlinkedFiles = [], bool $htmlentities = TRUE) : string {
     $entityNominative = $this->labelHtml(NULL, TRUE, $htmlentities);
 
     $message = $entityNominative.' wurde gelöscht.';

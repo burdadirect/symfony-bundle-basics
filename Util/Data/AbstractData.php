@@ -178,12 +178,12 @@ abstract class AbstractData {
 
   /**
    * @param string|null $key
-   * @param string|null $default
+   * @param mixed|null $default
    * @param string|null $field
    *
    * @return string|null
    */
-  public static function label(string $key = NULL, string $default = NULL, string $field = NULL) : ?string {
+  public static function label(string $key = NULL, $default = NULL, string $field = NULL) : ?string {
     if (($key !== NULL) && (isset(static::_data()[$key][$field ?: static::$label]))) {
       return static::_data()[$key][$field ?: static::$label];
     }
@@ -193,11 +193,11 @@ abstract class AbstractData {
   /**
    * @param string|null $key
    * @param string|null $field
-   * @param string|null $default
+   * @param mixed|null $default
    *
    * @return mixed|string|null
    */
-  public static function field(string $key = NULL, string $field = NULL, string $default = NULL) {
+  public static function field(string $key = NULL, string $field = NULL, $default = NULL) {
     if (($key !== NULL) && (isset(static::_data()[$key][$field ?: static::$label]))) {
       return static::_data()[$key][$field ?: static::$label];
     }

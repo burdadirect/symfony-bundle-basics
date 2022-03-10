@@ -63,7 +63,7 @@ abstract class AbstractDeletionHelper {
    * @return string
    */
   public function renderHeadline(ConfirmMessage $confirmMessage) : string {
-    return '<p>An das Objekt sind folgende <strong>'.$confirmMessage->getWording().'</strong> geknüpft:</p>';
+    return sprintf($confirmMessage->getHeadline(), $confirmMessage->getWording());
   }
 
   /**

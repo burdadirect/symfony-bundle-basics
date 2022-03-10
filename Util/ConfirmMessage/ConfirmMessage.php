@@ -11,6 +11,7 @@ class ConfirmMessage {
   public const MODE_DELETE = 'delete';
   public const MODE_NULLIFY = 'nullify';
   public const MODE_REASSIGN = 'reassign';
+  public const MODE_RESOLVE = 'resolve';
 
   /**
    * @var Collection|AbstractEntity[]|array
@@ -23,7 +24,17 @@ class ConfirmMessage {
   private $wording;
 
   /**
-   * @var mixed
+   * @var string
+   */
+  private $headline = '<p>An das Objekt sind folgende <strong>%s</strong> geknüpft:</p>';
+
+  /**
+   * @var string
+   */
+  private $message;
+
+  /**
+   * @var string
    */
   private $mode;
 
@@ -56,12 +67,6 @@ class ConfirmMessage {
    * @var mixed
    */
   private $discard;
-
-  /**
-   * @var string
-   */
-  private $message;
-
 
   /****************************************************************************/
 
@@ -96,11 +101,11 @@ class ConfirmMessage {
   /**
    * Set wording.
    *
-   * @param string $wording
+   * @param string|null $wording
    *
    * @return self
    */
-  public function setWording(string $wording = NULL) : self {
+  public function setWording(?string $wording): self {
     $this->wording = $wording;
 
     return $this;
@@ -111,18 +116,62 @@ class ConfirmMessage {
    *
    * @return string|null
    */
-  public function getWording() : ?string {
+  public function getWording(): ?string {
     return $this->wording;
+  }
+
+  /**
+   * Set headline.
+   *
+   * @param string|null $headline
+   *
+   * @return self
+   */
+  public function setHeadline(?string $headline): self {
+    $this->headline = $headline;
+
+    return $this;
+  }
+
+  /**
+   * Get headline.
+   *
+   * @return string|null
+   */
+  public function getHeadline(): ?string {
+    return $this->headline;
+  }
+
+  /**
+   * Set message.
+   *
+   * @param string|null $message
+   *
+   * @return self
+   */
+  public function setMessage(?string $message): self {
+    $this->message = $message;
+
+    return $this;
+  }
+
+  /**
+   * Get message.
+   *
+   * @return string|null
+   */
+  public function getMessage(): ?string {
+    return $this->message;
   }
 
   /**
    * Set mode.
    *
-   * @param string $mode
+   * @param string|null $mode
    *
    * @return self
    */
-  public function setMode(string $mode = NULL) : self {
+  public function setMode(?string $mode): self {
     $this->mode = $mode;
 
     return $this;
@@ -133,7 +182,7 @@ class ConfirmMessage {
    *
    * @return string|null
    */
-  public function getMode() : ?string {
+  public function getMode(): ?string {
     return $this->mode;
   }
 
@@ -267,28 +316,6 @@ class ConfirmMessage {
    */
   public function getDiscard() {
     return $this->discard;
-  }
-
-  /**
-   * Set message.
-   *
-   * @param string $message
-   *
-   * @return self
-   */
-  public function setMessage(string $message = NULL) : self {
-    $this->message = $message;
-
-    return $this;
-  }
-
-  /**
-   * Get message.
-   *
-   * @return string|null
-   */
-  public function getMessage() : ?string {
-    return $this->message;
   }
 
   /****************************************************************************/

@@ -48,6 +48,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
     parent::tearDown();
 
     $this->databaseTool = NULL;
+    $this->kernelBrowser = NULL;
   }
 
   protected function initClient(): void {

@@ -10,10 +10,8 @@ use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 abstract class AbstractWebTestCase extends WebTestCase {
 
@@ -79,8 +77,6 @@ abstract class AbstractWebTestCase extends WebTestCase {
    * @throws \Exception
    */
   protected function logIn(KernelBrowser $client, $user = TRUE, array $roles = ['ROLE_USER']) {
-    $session = $client->getContainer()->get('session');
-
     if (is_bool($user)) {
       $user = $this->randomUserWithRoles($roles);
     } elseif (is_int($user)) {
@@ -95,16 +91,7 @@ abstract class AbstractWebTestCase extends WebTestCase {
       }
     }
 
-    // The firewall context defaults to the firewall name
-    $firewallContext = 'main';
-
-    $token = new UsernamePasswordToken($user, null, $firewallContext, $user->getRoles());
-
-    $session->set('_security_'.$firewallContext, serialize($token));
-    $session->save();
-
-    $cookie = new Cookie($session->getName(), $session->getId());
-    $client->getCookieJar()->set($cookie);
+    $client->loginUser($user);
 
     return $user;
   }

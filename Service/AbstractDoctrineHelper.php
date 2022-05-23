@@ -3,24 +3,12 @@
 namespace HBM\BasicsBundle\Service;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use HBM\BasicsBundle\Traits\ServiceDependencies\ManagerRegistryDependencyTrait;
 
 abstract class AbstractDoctrineHelper {
 
-  /**
-   * @var ManagerRegistry
-   */
-  private $doctrine;
-
-  /**
-   * AbstractDoctrineHelper constructor.
-   *
-   * @param ManagerRegistry $doctrine
-   */
-  public function __construct(ManagerRegistry $doctrine) {
-    $this->doctrine = $doctrine;
-  }
+  use ManagerRegistryDependencyTrait;
 
   /****************************************************************************/
   /* OBJECT MANAGER                                                           */
@@ -31,7 +19,7 @@ abstract class AbstractDoctrineHelper {
    *
    * @return ObjectManager
    */
-  public function getOM(string $name = null) : ObjectManager {
+  public function getOM(string $name = null): ObjectManager {
     return $this->doctrine->getManager($name);
   }
 
@@ -40,7 +28,7 @@ abstract class AbstractDoctrineHelper {
    *
    * @return ObjectManager
    */
-  public function resetOM(string $name = null) : ObjectManager {
+  public function resetOM(string $name = null): ObjectManager {
     $this->doctrine->resetManager($name);
 
     return $this->getOM($name);
@@ -51,7 +39,7 @@ abstract class AbstractDoctrineHelper {
    *
    * @return object|Connection
    */
-  public function getConnection(string $name = null) {
+  public function getConnection(string $name = null): Connection {
     return $this->doctrine->getConnection($name);
   }
 

@@ -3,16 +3,12 @@
 namespace HBM\BasicsBundle\Service;
 
 use HBM\BasicsBundle\Entity\AbstractEntity;
+use HBM\BasicsBundle\Traits\ServiceDependencies\RouterDependencyTrait;
 use HBM\BasicsBundle\Util\ConfirmMessage\ConfirmMessage;
-use Symfony\Component\Routing\RouterInterface;
 
 abstract class AbstractDeletionHelper {
 
-  private ?RouterInterface $router = null;
-
-  public function __construct(RouterInterface $router) {
-    $this->router = $router;
-  }
+  use RouterDependencyTrait;
 
   /**
    * @param array $confirmMessages

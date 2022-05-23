@@ -5,11 +5,12 @@ namespace HBM\BasicsBundle\Controller;
 use Doctrine\ORM\EntityRepository;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
-use HBM\BasicsBundle\Service\AbstractDoctrineHelper;
-use HBM\BasicsBundle\Service\AbstractServiceHelper;
+use HBM\BasicsBundle\Traits\ServiceDependencies\ParameterBagDependencyTrait;
+use HBM\BasicsBundle\Traits\ServiceDependencies\SessionDependencyTrait;
 use HBM\BasicsBundle\Util\AttributeMessage\AttributeMessage;
 use HBM\BasicsBundle\Util\Result\Result;
 use HBM\BasicsBundle\Util\Wording\EntityWording;
+use HBM\Leadgen\Traits\ServiceDependencies\FormHelperDependencyTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\FormInterface;
@@ -20,15 +21,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractController extends BaseController {
 
-  /**
-   * @var AbstractServiceHelper
-   */
-  protected $sh;
-
-  /**
-   * @var AbstractDoctrineHelper
-   */
-  protected $dh;
+  use
+    SessionDependencyTrait,
+    FormHelperDependencyTrait,
+    ParameterBagDependencyTrait;
 
   /**
    * Render template and set default values.
@@ -167,19 +163,6 @@ abstract class AbstractController extends BaseController {
   }
 
   /**
-   * @param AbstractEntity $entity
-   * @param \Closure|null $closure
-   */
-  protected function persistAndFlushEntity(AbstractEntity $entity, \Closure $closure = NULL) : void {
-    $this->dh->getOM()->persist($entity);
-    $this->dh->getOM()->flush();
-
-    if ($closure) {
-      $closure();
-    }
-  }
-
-  /**
    * @param string $message
    * @param \Exception|null $exception
    */
@@ -194,9 +177,7 @@ abstract class AbstractController extends BaseController {
    * @param string $message
    */
   protected function addFlashMessage(string $type, string $message) : void {
-    if ($session = $this->sh->session()) {
-      $session->getFlashBag()->add($type, $message);
-    }
+    $this->session->getFlashBag()->add($type, $message);
   }
 
   /**
@@ -231,9 +212,7 @@ abstract class AbstractController extends BaseController {
    * @param array $data
    */
   protected function addFlashMessageFromTemplate(string $type, string $template, array $data = []) : void {
-    if ($session = $this->sh->session()) {
-      $session->getFlashBag()->add($type, $this->renderView($template, $data));
-    }
+    $this->session->getFlashBag()->add($type, $this->renderView($template, $data));
   }
 
   /**
@@ -262,7 +241,7 @@ abstract class AbstractController extends BaseController {
    * @return null|RedirectResponse|Response|FormInterface
    */
   protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen') {
-    $builder = $this->sh->formHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
+    $builder = $this->formHelper->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
     $form = $builder->getForm();
     $form->handleRequest($request);
 
@@ -309,8 +288,8 @@ abstract class AbstractController extends BaseController {
     $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage);
 
     if ($return instanceof FormInterface) {
-      return $this->renderCustom($this->sh->parameterBag()->get('hbm.basics')['confirm']['template'], [
-        'navi' => $this->sh->parameterBag()->get('hbm.basics')['confirm']['navi'],
+      return $this->renderCustom($this->pb->get('hbm.basics')['confirm']['template'], [
+        'navi' => $this->pb->get('hbm.basics')['confirm']['navi'],
         'formView' => $return->createView(),
         'title' => $confirmTitle,
         'details' => $confirmDetails,

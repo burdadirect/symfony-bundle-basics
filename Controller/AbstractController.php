@@ -5,12 +5,12 @@ namespace HBM\BasicsBundle\Controller;
 use Doctrine\ORM\EntityRepository;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
+use HBM\BasicsBundle\Service\FormHelper;
 use HBM\BasicsBundle\Traits\ServiceDependencies\ParameterBagDependencyTrait;
-use HBM\BasicsBundle\Traits\ServiceDependencies\SessionDependencyTrait;
+use HBM\BasicsBundle\Traits\ServiceDependencies\RequestStackDependencyTrait;
 use HBM\BasicsBundle\Util\AttributeMessage\AttributeMessage;
 use HBM\BasicsBundle\Util\Result\Result;
 use HBM\BasicsBundle\Util\Wording\EntityWording;
-use HBM\Leadgen\Traits\ServiceDependencies\FormHelperDependencyTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\FormInterface;
@@ -18,13 +18,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractController extends BaseController {
 
+  protected FormHelper $formHelper;
+
   use
-    SessionDependencyTrait,
-    FormHelperDependencyTrait,
-    ParameterBagDependencyTrait;
+    ParameterBagDependencyTrait,
+    RequestStackDependencyTrait;
 
   /**
    * Render template and set default values.
@@ -35,7 +37,14 @@ abstract class AbstractController extends BaseController {
    *
    * @return Response
    */
-  abstract protected function renderCustom(?string $template, array $data = [], Response $response = NULL) : Response;
+  abstract protected function renderCustom(?string $template, array $data = [], Response $response = NULL): Response;
+
+  /**
+   * Returns a session interface (probably from the request stack).
+   *
+   * @return SessionInterface
+   */
+  abstract protected function getSession(): SessionInterface;
 
   /****************************************************************************/
   /* OBJECTS                                                                  */
@@ -177,7 +186,7 @@ abstract class AbstractController extends BaseController {
    * @param string $message
    */
   protected function addFlashMessage(string $type, string $message) : void {
-    $this->session->getFlashBag()->add($type, $message);
+    $this->getSession()->getFlashBag()->add($type, $message);
   }
 
   /**
@@ -212,7 +221,7 @@ abstract class AbstractController extends BaseController {
    * @param array $data
    */
   protected function addFlashMessageFromTemplate(string $type, string $template, array $data = []) : void {
-    $this->session->getFlashBag()->add($type, $this->renderView($template, $data));
+    $this->getSession()->getFlashBag()->add($type, $this->renderView($template, $data));
   }
 
   /**

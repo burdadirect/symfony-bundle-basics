@@ -12,14 +12,33 @@ abstract class AbstractSerialCommand extends Command {
 
   public const STATE_IDLE = 'idle';
 
-  protected $serialExecution  = TRUE;
+  /****************************************************************************/
+  /* ABSTRACT FUNCTIONS                                                       */
+  /****************************************************************************/
 
-  /**************************************************************************/
-  /* HELPER                                                                 */
-  /**************************************************************************/
+  /**
+   * @return bool
+   */
+  abstract public function isSerial(): bool;
 
+  /**
+   * @param bool $create
+   *
+   * @return SettingInterface|null
+   */
   abstract protected function getStateSetting(bool $create = FALSE) : ?SettingInterface;
+
+  /**
+   * @param SettingInterface $setting
+   * @param string $state
+   *
+   * @return void
+   */
   abstract protected function updateStateSetting(SettingInterface $setting, string $state) : void;
+
+  /****************************************************************************/
+  /* HELPER                                                                   */
+  /****************************************************************************/
 
   /**
    * Mark command as busy.
@@ -29,13 +48,13 @@ abstract class AbstractSerialCommand extends Command {
    * @return bool
    */
   protected function markAsBusy(OutputInterface $output) : bool {
-    if (!$this->serialExecution) { return TRUE; }
+    if (!$this->isSerial()) { return TRUE; }
 
     // Find or create setting.
     $setting = $this->getStateSetting(TRUE);
 
     // Check setting state.
-    if ($setting->getVarValueParsed() === self::STATE_IDLE) {
+    if ($setting && ($setting->getVarValueParsed() === self::STATE_IDLE)) {
       // Set setting value to "busy"
       $this->updateStateSetting($setting, date('Y-m-d H:i:s'));
 
@@ -52,7 +71,7 @@ abstract class AbstractSerialCommand extends Command {
    * @return bool
    */
   protected function markAsIdle() : bool {
-    if (!$this->serialExecution) { return TRUE; }
+    if (!$this->isSerial()) { return TRUE; }
 
     // Find setting.
     $setting = $this->getStateSetting();

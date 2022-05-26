@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractController extends BaseController {
 
-  protected FormHelper $formHelper;
-
   use
     ParameterBagDependencyTrait,
     RequestStackDependencyTrait;
@@ -45,6 +43,11 @@ abstract class AbstractController extends BaseController {
    * @return SessionInterface
    */
   abstract protected function getSession(): SessionInterface;
+
+  /**
+   * @return FormHelper
+   */
+  abstract protected function getFormHelper(): FormHelper;
 
   /****************************************************************************/
   /* OBJECTS                                                                  */
@@ -250,7 +253,7 @@ abstract class AbstractController extends BaseController {
    * @return null|RedirectResponse|Response|FormInterface
    */
   protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen') {
-    $builder = $this->formHelper->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
+    $builder = $this->getFormHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
     $form = $builder->getForm();
     $form->handleRequest($request);
 

@@ -19,7 +19,7 @@ abstract class AbstractSerialCommand extends Command {
   /**
    * @return bool
    */
-  abstract public function isSerial(): bool;
+  abstract protected function isSerial(): bool;
 
   /**
    * @param bool $create

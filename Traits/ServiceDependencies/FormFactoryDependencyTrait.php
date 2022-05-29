@@ -16,7 +16,7 @@ trait FormFactoryDependencyTrait {
    * @return void
    */
   public function setFormFactory(FormFactoryInterface $formFactory): void {
-    $this->pb = $formFactory;
+    $this->formFactory = $formFactory;
   }
 
 }

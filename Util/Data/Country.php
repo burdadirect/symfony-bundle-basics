@@ -1543,11 +1543,11 @@ class Country extends AbstractData {
     ],
   ];
 
-  public static function sort(array $countryKeys, string $field = 'de', string $locale = 'de_DE.UTF-8') {
+  public static function sort(array $countryKeys, string $field = 'de', string $locale = 'de_DE.UTF-8'): array {
     setlocale(LC_CTYPE, $locale);
 
     $countries = static::flatten($field, NULL, NULL, $countryKeys);
-    $countriesTransliterated = array_map(function($value) {
+    $countriesTransliterated = array_map(static function($value) {
       $value = str_replace(['Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß'], ['Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'], $value);
       return iconv('UTF-8', 'ASCII//TRANSLIT', $value);
     }, $countries);

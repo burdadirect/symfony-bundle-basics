@@ -7,8 +7,10 @@
         <th class="fixed-10-center">ID</th>
         {{ block('hbm_basics_notices_level_mode_th') }}
         {{ block('hbm_basics_notices_columns_th') }}
-        <th>Titel</th>
-        <th>Nachricht</th>
+        {% block hbm_basics_notices_system_title_message_th %}
+          <th>Titel</th>
+          <th>Nachricht</th>
+        {% endblock hbm_basics_notices_system_title_message_th %}
         <th class="fixed-10">Ersteller</th>
         <th class="fixed-10">Erstellt</th>
       </tr>
@@ -41,8 +43,10 @@
         <th class="fixed-10-center">ID</th>
         {{ block('hbm_basics_notices_level_mode_th') }}
         {{ block('hbm_basics_notices_columns_th') }}
-        <th>Titel</th>
-        <th>Nachricht</th>
+        {% block hbm_basics_notices_manual_title_message_th %}
+          <th>Titel</th>
+          <th>Nachricht</th>
+        {% endblock hbm_basics_notices_manual_title_message_th %}
         <th class="fixed-10">Ersteller</th>
         <th class="fixed-10">Erstellt</th>
         <th class="fixed-10-center">Aktionen</th>

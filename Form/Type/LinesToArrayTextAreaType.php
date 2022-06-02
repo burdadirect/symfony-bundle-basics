@@ -10,11 +10,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class LinesToArrayTextAreaType extends AbstractType {
 
-  public function buildForm(FormBuilderInterface $builder, array $options) {
+  public function buildForm(FormBuilderInterface $builder, array $options): void {
     $builder->addModelTransformer(new StringToArrayTransformer("\n"));
   }
 
-  public function getParent() {
+  public function getParent(): string {
     return TextareaType::class;
   }
 

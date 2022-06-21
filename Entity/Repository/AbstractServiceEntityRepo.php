@@ -88,6 +88,20 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   /**
    * @inheritDoc
    */
+  public function searchManyToManyNull(QueryBuilder $qb, string $alias, string $field, string $joinAlias, bool $isNull = null): QueryBuilder {
+    if ($isNull === TRUE) {
+      $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
+      $qb->andWhere($qb->expr()->isNull($joinAlias));
+    } elseif ($isNull === FALSE) {
+      $qb->andWhere($qb->expr()->isNotNull($joinAlias));
+    }
+
+    return $qb;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function searchSelection(QueryBuilder $qb, string $alias, string $field, array $selections = NULL, string $prefix = 'selections'): QueryBuilder {
     if (count($selections) > 0) {
       $qb->andWhere($qb->expr()->in($alias.'.'.$field, ':'.$prefix))->setParameter($prefix, $selections);

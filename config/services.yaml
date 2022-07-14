@@ -9,6 +9,6 @@ services:
         arguments: ['@form.factory', '@router', '%hbm.basics.form%']
 
     HBM\BasicsBundle\Command\:
-        resource: '../../Command'
+        resource: '../Command'
         tags:
             - { name: console.command }

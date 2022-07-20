@@ -1,6 +1,5 @@
 <?php
 
-
 namespace HBM\BasicsBundle\Form\Type;
 
 use HBM\BasicsBundle\Form\DataTransformer\StringToArrayTransformer;

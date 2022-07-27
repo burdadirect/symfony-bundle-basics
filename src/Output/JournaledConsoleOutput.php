@@ -34,8 +34,9 @@ class JournaledConsoleOutput extends ConsoleOutput {
   public function setJournalPath(string $journalPath = null): self {
     $this->journalPath = str_replace(':', '-', $journalPath);
 
-    if (!mkdir($concurrentDirectory = dirname($this->journalPath)) && !is_dir($concurrentDirectory)) {
-      throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+    $dir = dirname($this->journalPath);
+    if (!is_dir($dir) && !mkdir($dir) && !is_dir($dir)) {
+      throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
     }
 
     return $this;

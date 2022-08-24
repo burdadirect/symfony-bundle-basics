@@ -105,14 +105,14 @@ abstract class AbstractData {
 
   /**
    * @param string|null $field
-   * @param string|null $default
+   * @param string|array|mixed|null $default
    * @param string|null $filter
    * @param array|null $keys
    * @param string|null $prefix
    *
    * @return array
    */
-  public static function flatten(string $field = NULL, string $default = NULL, string $filter = NULL, array $keys = NULL, string $prefix = NULL) : array {
+  public static function flatten(string $field = NULL, $default = NULL, string $filter = NULL, array $keys = NULL, string $prefix = NULL) : array {
     $array = [];
     foreach (static::filter($filter, $keys) as $key => $value) {
       $array[$prefix.$key] = $value[$field ?: static::$label] ?? $default;

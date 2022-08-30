@@ -164,8 +164,8 @@ class Result {
   /* CUSTOM                                                                   */
   /****************************************************************************/
 
-  public function addMessageByString($level, $message) : void {
-    $this->addMessage(new Message($message, $level));
+  public function addMessageByString($level, $message) : self {
+    return $this->addMessage(new Message($message, $level));
   }
 
   public function getMessagesPlain() : array {

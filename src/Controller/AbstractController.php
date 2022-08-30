@@ -220,6 +220,18 @@ abstract class AbstractController extends BaseController {
 
   /**
    * @param string $type
+   * @param string $message
+   * @param Result $result
+   */
+  protected function addFlashMessageFromResult(string $type, string $message, Result $result) : void {
+    $this->addFlashMessage($type, $this->renderView('@HBMBasics/flash-messages/result-messages.html.twig', [
+      'message' => $message,
+      'result' => $result,
+    ]));
+  }
+
+  /**
+   * @param string $type
    * @param string $template
    * @param array $data
    */

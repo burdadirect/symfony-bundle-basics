@@ -1,0 +1,8 @@
+{{ message }}
+<div class="normal">
+  <ul class="list-group list-group-narrow">
+    {% for message in result.messages %}
+      <li class="list-group-item list-group-item-{{ message.alertLevel }}">{{ message.message|raw }}</li>
+    {% endfor %}
+  </ul>
+</div>

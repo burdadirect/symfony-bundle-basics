@@ -91,6 +91,8 @@ abstract class AbstractSerialCommand extends Command {
    * @param OutputInterface $output
    */
   protected function prettifyOutput(OutputInterface $output) : void {
+    // error, info, comment, questions are already defined by symfony.
+
     $style = new OutputFormatterStyle('cyan', NULL, ['bold']);
     $output->getFormatter()->setStyle('note', $style);
 
@@ -105,6 +107,28 @@ abstract class AbstractSerialCommand extends Command {
 
     $style = new OutputFormatterStyle('red', NULL, ['bold']);
     $output->getFormatter()->setStyle('failure', $style);
+  }
+
+  /**
+   * @param string $message
+   *
+   * @return string
+   */
+  protected function htmlifyOutput(string $message): string {
+    $replacements = [
+      '<failure>'    => '<strong style="color:#FF0000;">',
+      '</failure>'   => '</strong>',
+      '<success>'    => '<strong style="color:#008811;">',
+      '</success>'   => '</strong>',
+      '<section>'    => '<strong style="color:#8844AA;">',
+      '</section>'   => '</strong>',
+      '<highlight>'  => '<strong style="color:#FFAA00">',
+      '</highlight>' => '</strong>',
+      '<note>'       => '<strong style="color:#6699EE;">',
+      '</note>'      => '</strong>',
+    ];
+
+    return str_replace(array_keys($replacements), array_values($replacements), $message);
   }
 
   /**************************************************************************/

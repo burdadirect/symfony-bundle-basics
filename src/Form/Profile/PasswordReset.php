@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PasswordReset extends AbstractType {
 
@@ -22,6 +23,9 @@ class PasswordReset extends AbstractType {
     $group_default
       ->add('email', EmailType::class, [
         'label' => 'E-Mail-Adresse',
+        'constraints' => [
+          new NotBlank(),
+        ],
       ]);
 
     return $group_default;

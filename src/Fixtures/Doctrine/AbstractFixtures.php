@@ -32,6 +32,8 @@ abstract class AbstractFixtures extends Fixture {
    */
   public static $keys;
 
+  protected array $combinations = [];
+
   /**
    * AbstractFixtures constructor.
    */
@@ -109,6 +111,7 @@ abstract class AbstractFixtures extends Fixture {
   /**
    * @param ObjectManager $manager
    * @param string|null $key
+   * @param bool $flush
    *
    * @return mixed
    */
@@ -128,6 +131,23 @@ abstract class AbstractFixtures extends Fixture {
   /****************************************************************************/
 
   /**
+   * Get references for keys.
+   *
+   * @param $fixture
+   * @param array $keys
+   *
+   * @return array
+   */
+  protected function getRefs($fixture, array $keys): array {
+    $refs = [];
+    foreach ($keys as $key) {
+      $refs[] = $this->getRef($fixture, $key);
+    }
+
+    return $refs;
+  }
+
+  /**
    * Get random number of references of a certain type of fixture.
    *
    * @param $fixture
@@ -137,21 +157,8 @@ abstract class AbstractFixtures extends Fixture {
    *
    * @return array
    */
-  protected function getRandomRefs($fixture, int $min = 1, int $max = NULL, bool $unique = TRUE) : array {
-    if ($max === NULL) {
-      $max = $min;
-    }
-
-    $number = $this->faker->numberBetween($min, $max);
-
-    $keys = $this->faker->randomElements($this->getKeys($fixture), $number, !$unique);
-
-    $refs = [];
-    foreach ($keys as $key) {
-      $refs[] = $this->getRef($fixture, $key);
-    }
-
-    return $refs;
+  protected function getRandomRefs($fixture, int $min = 1, int $max = NULL, bool $unique = TRUE): array {
+    return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique));
   }
 
   /**
@@ -162,7 +169,38 @@ abstract class AbstractFixtures extends Fixture {
    * @return object
    */
   protected function getRandomRef($fixture) {
-    return $this->getRef($fixture, $this->faker->randomElement($this->getKeys($fixture)));
+    return $this->getRef($fixture, $this->getRandomRefKey($fixture));
+  }
+
+  /**
+   * Get a random reference key of a certain type of fixture.
+   *
+   * @param $fixture
+   *
+   * @return string
+   */
+  protected function getRandomRefKey($fixture): string {
+    return $this->faker->randomElement($this->getKeys($fixture));
+  }
+
+  /**
+   * Get random number of reference keys of a certain type of fixture.
+   *
+   * @param $fixture
+   * @param int $min
+   * @param int|NULL $max
+   * @param bool $unique
+   *
+   * @return array
+   */
+  protected function getRandomRefKeys($fixture, int $min = 1, int $max = NULL, bool $unique = TRUE): array {
+    if ($max === NULL) {
+      $max = $min;
+    }
+
+    $number = $this->faker->numberBetween($min, $max);
+
+    return $this->faker->randomElements($this->getKeys($fixture), $number, !$unique);
   }
 
   /**
@@ -172,7 +210,7 @@ abstract class AbstractFixtures extends Fixture {
    *
    * @return array
    */
-  protected function getMatchingRefs(string $pattern) : array {
+  protected function getMatchingRefs(string $pattern): array {
     $refs = [];
     foreach ($this->referenceRepository->getReferences() as $name => $reference) {
       if (preg_match($pattern, $name)) {
@@ -180,6 +218,38 @@ abstract class AbstractFixtures extends Fixture {
       }
     }
     return $refs;
+  }
+
+  /****************************************************************************/
+  /* UNIQUE                                                                   */
+  /****************************************************************************/
+
+  /**
+   * @param string $name
+   * @param callable $value
+   * @param callable|null $key
+   * @param int $maxRetries
+   *
+   * @return mixed
+   */
+  protected function unique(string $name, callable $value, ?callable $key = null, int $maxRetries = 100) {
+    $key = $key ?: static function ($result) {
+      return serialize($result);
+    };
+
+    $this->combinations[$name] = [];
+
+    $i = 0;
+    do {
+      $valueResolved = $value();
+      $keyResolved = $key($valueResolved);
+      if ($i++ > $maxRetries) {
+        throw new \OverflowException(sprintf('Maximum retries of %d reached without finding a unique combination', $maxRetries));
+      }
+    } while (array_key_exists($keyResolved, $this->combinations[$name]));
+    $this->combinations[$name][$keyResolved]= $valueResolved;
+
+    return $valueResolved;
   }
 
 }

@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractSerialCommand extends Command {
 
   public const STATE_IDLE = 'idle';
+  public const STATE_INTERRUPTED = 'interrupted';
 
   /****************************************************************************/
   /* ABSTRACT FUNCTIONS                                                       */

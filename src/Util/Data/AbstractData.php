@@ -136,12 +136,14 @@ abstract class AbstractData {
    * @param string $key
    * @param string $format
    * @param string|null $default
+   * @param array|null $fields
    *
    * @return string|null
    */
-  public static function format(string $key, string $format, string $default = NULL) : ?string {
+  public static function format(string $key, string $format, string $default = NULL, ?array $fields = null) : ?string {
     if ($data = static::_data()[$key] ?? NULL) {
-      return sprintf($format, ...array_values($data));
+      $values = $fields ? self::fields($key, $fields) : $data;
+      return sprintf($format, ...array_values($values));
     }
     return $default;
   }
@@ -150,12 +152,14 @@ abstract class AbstractData {
    * @param string $key
    * @param string $format
    * @param string|null $default
+   * @param array|null $fields
    *
    * @return string|null
    */
-  public static function formatWithKey(string $key, string $format, string $default = NULL) : ?string {
+  public static function formatWithKey(string $key, string $format, string $default = NULL, ?array $fields = null) : ?string {
     if ($data = static::_data()[$key] ?? NULL) {
-      return sprintf($format, $key, ...array_values($data));
+      $values = $fields ? self::fields($key, $fields) : $data;
+      return sprintf($format, $key, ...array_values($values));
     }
     return $default;
   }
@@ -164,12 +168,14 @@ abstract class AbstractData {
    * @param string $key
    * @param callable $callback
    * @param string|null $default
+   * @param array|null $fields
    *
    * @return string|null
    */
-  public static function formatCallback(string $key, callable $callback, string $default = NULL) : ?string {
+  public static function formatCallback(string $key, callable $callback, string $default = NULL, ?array $fields = null) : ?string {
     if ($data = static::_data()[$key] ?? NULL) {
-      return $callback(...array_values($data));
+      $values = $fields ? self::fields($key, $fields) : $data;
+      return $callback(...array_values($values));
     }
     return $default;
   }
@@ -200,6 +206,25 @@ abstract class AbstractData {
   public static function field(string $key = NULL, string $field = NULL, $default = NULL) {
     if (($key !== NULL) && (isset(static::_data()[$key][$field ?: static::$label]))) {
       return static::_data()[$key][$field ?: static::$label];
+    }
+    return $default;
+  }
+
+  /**
+   * @param string|null $key
+   * @param array|null $fields
+   * @param mixed|null $default
+   *
+   * @return mixed|string|null
+   */
+  public static function fields(string $key = NULL, array $fields = [], $default = NULL) {
+    if (($key !== NULL) && (isset(static::_data()[$key]))) {
+      $fieldsAll = static::_data()[$key];
+      $fieldsFiltered = [];
+      foreach ($fields as $field) {
+        $fieldsFiltered[$field] = $fieldsAll[$field] ?? $default;
+      }
+      return $fieldsFiltered;
     }
     return $default;
   }

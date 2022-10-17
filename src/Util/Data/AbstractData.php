@@ -2,7 +2,9 @@
 
 namespace HBM\BasicsBundle\Util\Data;
 
-abstract class AbstractData {
+use HBM\BasicsBundle\Util\Data\Interfaces\DataInterface;
+
+abstract class AbstractData implements DataInterface {
 
   protected static string $filter = 'filter';
   protected static string $label = 'text';

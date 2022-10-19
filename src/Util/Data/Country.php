@@ -256,7 +256,7 @@ class Country extends AbstractData {
   public const ZM = 'ZM';
   public const ZW = 'ZW';
 
-  public static $data = [
+  public static array $data = [
     self::AD => [
       'text' => 'AD',
       'de' => 'Andorra',

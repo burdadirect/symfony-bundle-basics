@@ -9,7 +9,7 @@ class State extends AbstractData {
   public const PENDING =  0;
   public const ACTIVE  =  1;
 
-  public static $data = [
+  public static array $data = [
     self::REVIEW => [
       'text' => 'zurückgestellt',
     ],

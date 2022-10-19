@@ -9,7 +9,7 @@ class Level extends AbstractData {
   public const WARNING = 'warning';
   public const ERROR   = 'error';
 
-  public static $data = [
+  public static array $data = [
     self::INFO => [
       'text' => 'info',
       'alert' => 'info',

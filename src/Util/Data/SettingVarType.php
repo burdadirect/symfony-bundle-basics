@@ -12,7 +12,7 @@ class SettingVarType extends AbstractData {
   public const CSV     = 'csv';
   public const JSON    = 'json';
 
-  public static $data = [
+  public static array $data = [
     self::INT => [
       'text' => 'Ganzzahl',
     ],

@@ -9,7 +9,7 @@ class Gender extends AbstractData {
   public const D  =  'd';
   public const T  =  't';
 
-  public static $data = [
+  public static array $data = [
     self::M => [
       'text' => 'männlich',
       'short' => 'männlich',

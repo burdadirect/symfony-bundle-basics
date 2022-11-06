@@ -9,6 +9,10 @@ use Doctrine\ORM\QueryBuilder;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
 
+/**
+ * @template T
+ * @template-extends ServiceEntityRepository<T>
+ */
 abstract class AbstractServiceEntityRepo extends ServiceEntityRepository implements ExtendedEntityRepo {
 
   public function updateFields(AbstractEntity $entity, array $fields) {
@@ -27,7 +31,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
    */
   public function findRandomBy(array $criteria, $limit = null) : array {
     try {
-      $limitCap = ($limit === NULL) ? 0 : $limit;
+      $limitCap = $limit ?? 0;
       $randomOffset = random_int(0, max(0, $this->count($criteria) - $limitCap));
     } catch (\Exception $e) {
       $randomOffset = 0;
@@ -74,7 +78,14 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   }
 
   /**
-   * @inheritDoc
+   * @param QueryBuilder $qb
+   * @param string $alias
+   * @param string $field
+   * @param string $joinAlias
+   * @param array|NULL $relations
+   * @param string $prefix
+   *
+   * @return QueryBuilder
    */
   public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, array $relations = NULL, string $prefix = 'relations'): QueryBuilder {
     if (count($relations) > 0) {
@@ -86,7 +97,13 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   }
 
   /**
-   * @inheritDoc
+   * @param QueryBuilder $qb
+   * @param string $alias
+   * @param string $field
+   * @param string $joinAlias
+   * @param bool|NULL $isNull
+   *
+   * @return QueryBuilder
    */
   public function searchManyToManyNull(QueryBuilder $qb, string $alias, string $field, string $joinAlias, bool $isNull = null): QueryBuilder {
     if ($isNull === TRUE) {
@@ -126,13 +143,13 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   }
 
   /**
-   * @param $qb
-   * @param $condGroups
+   * @param QueryBuilder $qb
+   * @param array|Composite[] $condGroups
    * @param bool $all
    *
    * @return QueryBuilder
    */
-  public function addCondGroup($qb, $condGroups, $all = FALSE) : QueryBuilder {
+  public function addCondGroup(QueryBuilder $qb, array $condGroups, bool $all = FALSE) : QueryBuilder {
     $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
 
     foreach ($condGroups as $condGroup) {
@@ -162,7 +179,16 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
   }
 
   /**
-   * @inheritDoc
+   * @param QueryBuilder $qb
+   * @param array $fields
+   * @param array $words
+   * @param string $prefix
+   * @param string $format
+   * @param string $method
+   * @param bool $allWords
+   * @param bool $allFields
+   *
+   * @return Composite
    */
   public function getSearchFieldsConditions(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = TRUE, bool $allFields = FALSE) : Composite {
     $condWords = $allWords ? $qb->expr()->andX() : $qb->expr()->orX();

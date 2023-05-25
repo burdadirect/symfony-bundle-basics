@@ -264,7 +264,7 @@ class FormHelper {
 
     $form->get('group_buttons')->add($name, SubmitType::class, array_merge([
       'label' => $label,
-      'label_raw' => TRUE,
+      'label_html' => TRUE,
       'attr' => ['class' => $class ?: $this->getButtonClasses('primary')],
     ], $optionsButton));
   }

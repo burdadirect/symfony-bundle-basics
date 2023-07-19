@@ -25,7 +25,7 @@ final class UrlsProvider extends BaseProvider {
         $generator = $generator->unique(TRUE);
       }
       for ($i = 0; $i < $numberOfUrls; $i++) {
-        $urls[] = $generator->url;
+        $urls[] = $generator->url();
       }
     }
 

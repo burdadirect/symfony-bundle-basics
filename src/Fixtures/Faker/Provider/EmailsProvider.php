@@ -25,7 +25,7 @@ final class EmailsProvider extends BaseProvider {
         $generator = $generator->unique(TRUE);
       }
       for ($i = 0; $i < $numberOfUrls; $i++) {
-        $urls[] = $generator->email;
+        $urls[] = $generator->email();
       }
     }
 

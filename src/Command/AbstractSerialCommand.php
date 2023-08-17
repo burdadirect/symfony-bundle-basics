@@ -149,7 +149,7 @@ abstract class AbstractSerialCommand extends Command {
 
     // Mark as busy
     if (!$this->markAsBusy($output)) {
-      return 1;
+      return Command::FAILURE;
     }
 
 

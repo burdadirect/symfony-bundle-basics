@@ -18,11 +18,7 @@ class Configuration implements ConfigurationInterface {
   public function getConfigTreeBuilder(): TreeBuilder {
     $treeBuilder = new TreeBuilder('hbm_basics');
 
-    if (method_exists($treeBuilder, 'getRootNode')) {
-      $rootNode = $treeBuilder->getRootNode();
-    } else {
-      $rootNode = $treeBuilder->root('hbm_basics');
-    }
+    $rootNode = $treeBuilder->getRootNode();
 
     $rootNode
       ->children()

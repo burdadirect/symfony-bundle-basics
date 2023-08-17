@@ -54,7 +54,7 @@ class TranslationConvertPhpToYaml extends Command {
       $output->writeln($yaml);
     }
 
-    return 0;
+    return Command::SUCCESS;
   }
 
   protected function insertIntoArray(array $array, array $keys, $value) : array {

@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class SettingType extends AbstractType {
 
-  public function buildForm(FormBuilderInterface $builder, array $options) {
+  public function buildForm(FormBuilderInterface $builder, array $options): void {
     parent::buildForm($builder, $options);
 
     $builder

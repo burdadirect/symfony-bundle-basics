@@ -20,11 +20,11 @@ class Login extends AbstractType {
   /**
    * {@inheritdoc}
    */
-  public function configureOptions(OptionsResolver $resolver) {
+  public function configureOptions(OptionsResolver $resolver): void {
     $resolver->setDefined(['togglePassword']);
   }
 
-  public function buildForm(FormBuilderInterface $builder, array $options) {
+  public function buildForm(FormBuilderInterface $builder, array $options): void {
     $this->togglePassword = $options['togglePassword'] ?? false;
 
     $builder

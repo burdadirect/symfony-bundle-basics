@@ -2,6 +2,7 @@
 
 namespace HBM\BasicsBundle\Traits\ServiceDependencies;
 
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait TranslatorDependencyTrait {
@@ -9,12 +10,11 @@ trait TranslatorDependencyTrait {
   protected TranslatorInterface $translator;
 
   /**
-   * @required
-   *
    * @param TranslatorInterface $translator
    *
    * @return void
    */
+  #[Required]
   public function setTranslator(TranslatorInterface $translator): void {
     $this->translator = $translator;
   }

@@ -2,7 +2,7 @@
 
 namespace HBM\BasicsBundle\Traits\ServiceDependencies;
 
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Service\Attribute\Required;
 
 trait SecurityDependencyTrait {

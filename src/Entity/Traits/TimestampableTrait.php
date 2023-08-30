@@ -2,85 +2,81 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-trait TimestampableTrait {
+trait TimestampableTrait
+{
+    /** @var \DateTime */
+    protected $created;
 
-  /**
-   * @var \DateTime
-   */
-  protected $created;
+    /** @var \DateTime */
+    protected $modified;
 
-  /**
-   * @var \DateTime
-   */
-  protected $modified;
+    /**
+     * Set created
+     *
+     * @param \DateTime|string $created
+     *
+     * @throws \Exception
+     *
+     * @return self
+     */
+    public function setCreated($created)
+    {
+        if (is_string($created)) {
+            $created = new \DateTime($created);
+        }
 
-  /**
-   * Set created
-   *
-   * @param \DateTime|string $created
-   *
-   * @return self
-   *
-   * @throws \Exception
-   */
-  public function setCreated($created) {
-    if (is_string($created)) {
-      $created = new \DateTime($created);
+        $this->created = $created;
+
+        return $this;
     }
 
-    $this->created = $created;
-
-    return $this;
-  }
-
-  /**
-   * Get created
-   *
-   * @return \DateTime
-   */
-  public function getCreated() : ?\DateTime {
-    return $this->created;
-  }
-
-  /**
-   * Set modified
-   *
-   * @param \DateTime|string $modified
-   *
-   * @return self
-   *
-   * @throws \Exception
-   */
-  public function setModified($modified) {
-    if (is_string($modified)) {
-      $modified = new \DateTime($modified);
+    /**
+     * Get created
+     */
+    public function getCreated(): ?\DateTime
+    {
+        return $this->created;
     }
 
-    $this->modified = $modified;
+    /**
+     * Set modified
+     *
+     * @param \DateTime|string $modified
+     *
+     * @throws \Exception
+     *
+     * @return self
+     */
+    public function setModified($modified)
+    {
+        if (is_string($modified)) {
+            $modified = new \DateTime($modified);
+        }
 
-    return $this;
-  }
+        $this->modified = $modified;
 
-  /**
-   * Get modified
-   *
-   * @return \DateTime
-   */
-  public function getModified() : ?\DateTime {
-    return $this->modified;
-  }
-
-  /**
-   * Lifecycle callback
-   *
-   * @throws \Exception
-   */
-  public function updateTimestamps() : void {
-    $this->setModified(new \DateTime('now'));
-
-    if($this->getCreated() === null) {
-      $this->setCreated(new \DateTime('now'));
+        return $this;
     }
-  }
 
+    /**
+     * Get modified
+     */
+    public function getModified(): ?\DateTime
+    {
+        return $this->modified;
+    }
+
+    /**
+     * Lifecycle callback
+     *
+     * @throws \Exception
+     */
+    public function updateTimestamps(): void
+    {
+        $this->setModified(new \DateTime('now'));
+
+        if ($this->getCreated() === null) {
+            $this->setCreated(new \DateTime('now'));
+        }
+    }
 }

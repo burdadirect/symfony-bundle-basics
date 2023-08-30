@@ -12,22 +12,22 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class HBMBasicsExtension extends Extension {
+class HBMBasicsExtension extends Extension
+{
+    /**
+     * {@inheritdoc}
+     *
+     * @throws \Exception
+     */
+    public function load(array $configs, ContainerBuilder $container): void
+    {
+        $configuration = new Configuration();
+        $config        = $this->processConfiguration($configuration, $configs);
 
-  /**
-   * {@inheritdoc}
-   *
-   * @throws \Exception
-   */
-  public function load(array $configs, ContainerBuilder $container): void {
-    $configuration = new Configuration();
-    $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter('hbm.basics', $config);
+        $container->setParameter('hbm.basics.form', $config['form']);
 
-    $container->setParameter('hbm.basics', $config);
-    $container->setParameter('hbm.basics.form', $config['form']);
-
-    $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
-    $loader->load('services.yaml');
-  }
-
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+        $loader->load('services.yaml');
+    }
 }

@@ -2,122 +2,101 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-trait SessionTrait {
+trait SessionTrait
+{
+    /* PROPERTIES */
 
-  /****************************************************************************/
-  /* PROPERTIES                                                               */
-  /****************************************************************************/
+    /** @var string */
+    protected $sessionId;
 
-  /**
-   * @var string
-   */
-  protected $sessionId;
+    /** @var string */
+    protected $sessionData;
 
-  /**
-   * @var string
-   */
-  protected $sessionData;
+    /** @var int */
+    protected $sessionTime;
 
-  /**
-   * @var int
-   */
-  protected $sessionTime;
+    /** @var int */
+    protected $sessionLifetime;
 
-  /**
-   * @var int
-   */
-  protected $sessionLifetime;
+    /* CONSTRUCTOR / GETTER / SETTER */
 
-  /****************************************************************************/
-  /* CONSTRUCTOR / GETTER / SETTER                                            */
-  /****************************************************************************/
+    /**
+     * Set sessionId
+     *
+     * @param string $sessionId
+     */
+    public function setSessionId($sessionId): self
+    {
+        $this->sessionId = $sessionId;
 
-  /**
-   * Set sessionId
-   *
-   * @param string $sessionId
-   *
-   * @return self
-   */
-  public function setSessionId($sessionId) : self {
-    $this->sessionId = $sessionId;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get sessionId
+     */
+    public function getSessionId(): string
+    {
+        return $this->sessionId;
+    }
 
-  /**
-   * Get sessionId
-   *
-   * @return string
-   */
-  public function getSessionId() : string {
-    return $this->sessionId;
-  }
+    /**
+     * Set sessionData
+     *
+     * @param string $sessionData
+     */
+    public function setSessionData($sessionData): self
+    {
+        $this->sessionData = $sessionData;
 
-  /**
-   * Set sessionData
-   *
-   * @param string $sessionData
-   *
-   * @return self
-   */
-  public function setSessionData($sessionData) : self {
-    $this->sessionData = $sessionData;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get sessionData
+     */
+    public function getSessionData(): string
+    {
+        return $this->sessionData;
+    }
 
-  /**
-   * Get sessionData
-   *
-   * @return string
-   */
-  public function getSessionData() : string {
-    return $this->sessionData;
-  }
+    /**
+     * Set sessionTime
+     *
+     * @param int $sessionTime
+     */
+    public function setSessionTime($sessionTime): self
+    {
+        $this->sessionTime = $sessionTime;
 
-  /**
-   * Set sessionTime
-   *
-   * @param int $sessionTime
-   *
-   * @return self
-   */
-  public function setSessionTime($sessionTime) : self {
-    $this->sessionTime = $sessionTime;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get sessionTime
+     */
+    public function getSessionTime(): int
+    {
+        return $this->sessionTime;
+    }
 
-  /**
-   * Get sessionTime
-   *
-   * @return int
-   */
-  public function getSessionTime() : int {
-    return $this->sessionTime;
-  }
+    /**
+     * Set sessionLifetime
+     *
+     * @param int $sessionLifetime
+     */
+    public function setSessionLifetime($sessionLifetime): self
+    {
+        $this->sessionLifetime = $sessionLifetime;
 
-  /**
-   * Set sessionLifetime
-   *
-   * @param int $sessionLifetime
-   *
-   * @return self
-   */
-  public function setSessionLifetime($sessionLifetime) : self {
-    $this->sessionLifetime = $sessionLifetime;
+        return $this;
+    }
 
-    return $this;
-  }
-
-  /**
-   * Get sessionLifetime
-   *
-   * @return int
-   */
-  public function getSessionLifetime() : int {
-    return $this->sessionLifetime;
-  }
-
+    /**
+     * Get sessionLifetime
+     */
+    public function getSessionLifetime(): int
+    {
+        return $this->sessionLifetime;
+    }
 }

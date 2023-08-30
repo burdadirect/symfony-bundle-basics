@@ -10,247 +10,181 @@ use HBM\BasicsBundle\Fixtures\Faker\Provider\EmailsProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\RandomArrayProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
 
-abstract class AbstractFixtures extends Fixture {
+abstract class AbstractFixtures extends Fixture
+{
+    /** @var CustomGenerator */
+    protected $faker;
 
-  /**
-   * @var CustomGenerator
-   */
-  protected $faker;
+    /** @var string */
+    public static $ref;
 
-  /**
-   * @var string
-   */
-  public static $ref;
+    /** @var int */
+    public static $num;
 
-  /**
-   * @var int
-   */
-  public static $num;
+    /** @var array */
+    public static $keys;
 
-  /**
-   * @var array
-   */
-  public static $keys;
+    protected array $combinations = [];
 
-  protected array $combinations = [];
-
-  /**
-   * AbstractFixtures constructor.
-   */
-  public function __construct() {
-    $this->faker = Factory::create('de_DE');
-    $this->faker->addProvider(new RandomArrayProvider($this->faker));
-    $this->faker->addProvider(new UrlsProvider($this->faker));
-    $this->faker->addProvider(new EmailsProvider($this->faker));
-  }
-
-  /**
-   * Get keys for this fixtures.
-   *
-   * @param $fixture
-   *
-   * @return array
-   */
-  protected function getKeys($fixture) : array {
-    if (is_array($fixture::$keys)) {
-      return static::$keys;
+    /**
+     * AbstractFixtures constructor.
+     */
+    public function __construct()
+    {
+        $this->faker = Factory::create('de_DE');
+        $this->faker->addProvider(new RandomArrayProvider($this->faker));
+        $this->faker->addProvider(new UrlsProvider($this->faker));
+        $this->faker->addProvider(new EmailsProvider($this->faker));
     }
 
-    return range(1, $fixture::$num);
-  }
+    /**
+     * Get keys for this fixtures.
+     */
+    protected function getKeys($fixture): array
+    {
+        if (is_array($fixture::$keys)) {
+            return static::$keys;
+        }
 
-  /**
-   * @param $fixture
-   * @param $key
-   *
-   * @return string
-   */
-  protected function getRefId($fixture, $key) : string {
-    return $fixture::$ref.':'.$key;
-  }
-
-  /**
-   * @param $fixture
-   * @param $key
-   *
-   * @return object
-   */
-  public function getRef($fixture, $key) {
-    return $this->getReference($this->getRefId($fixture, $key));
-  }
-
-  /****************************************************************************/
-  /* CREATE AND LOAD                                                          */
-  /****************************************************************************/
-
-  /**
-   * @param ObjectManager|null $manager
-   * @param string|null $key
-   *
-   * @return mixed
-   */
-  abstract protected function createObject(ObjectManager $manager = NULL, string $key = NULL);
-
-  /**
-   * @param ObjectManager $manager
-   */
-  public function load(ObjectManager $manager) : void {
-    $keys = $this->getKeys(static::class);
-
-    foreach ($keys as $key) {
-      $object = $this->createObject($manager, (string) $key);
-
-      $manager->persist($object);
-
-      $this->addReference($this->getRefId(static::class, $key), $object);
+        return range(1, $fixture::$num);
     }
 
-    $manager->flush();
-  }
-
-  /**
-   * @param ObjectManager $manager
-   * @param string|null $key
-   * @param bool $flush
-   *
-   * @return mixed
-   */
-  public function single(ObjectManager $manager, string $key = NULL, bool $flush = true) {
-    $object = $this->createObject($manager, $key);
-    $manager->persist($object);
-
-    if ($flush) {
-      $manager->flush();
+    protected function getRefId($fixture, $key): string
+    {
+        return $fixture::$ref . ':' . $key;
     }
 
-    return $object;
-  }
-
-  /****************************************************************************/
-  /* REFERENCES                                                               */
-  /****************************************************************************/
-
-  /**
-   * Get references for keys.
-   *
-   * @param $fixture
-   * @param array $keys
-   *
-   * @return array
-   */
-  protected function getRefs($fixture, array $keys): array {
-    $refs = [];
-    foreach ($keys as $key) {
-      $refs[] = $this->getRef($fixture, $key);
+    /**
+     * @return object
+     */
+    public function getRef($fixture, $key)
+    {
+        return $this->getReference($this->getRefId($fixture, $key));
     }
 
-    return $refs;
-  }
+    /* CREATE AND LOAD */
 
-  /**
-   * Get random number of references of a certain type of fixture.
-   *
-   * @param $fixture
-   * @param int $min
-   * @param int|NULL $max
-   * @param bool $unique
-   *
-   * @return array
-   */
-  protected function getRandomRefs($fixture, int $min = 1, int $max = NULL, bool $unique = TRUE): array {
-    return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique));
-  }
+    abstract protected function createObject(ObjectManager $manager = null, string $key = null);
 
-  /**
-   * Get a random reference of a certain type of fixture.
-   *
-   * @param $fixture
-   *
-   * @return object
-   */
-  protected function getRandomRef($fixture) {
-    return $this->getRef($fixture, $this->getRandomRefKey($fixture));
-  }
+    public function load(ObjectManager $manager): void
+    {
+        $keys = $this->getKeys(static::class);
 
-  /**
-   * Get a random reference key of a certain type of fixture.
-   *
-   * @param $fixture
-   *
-   * @return string
-   */
-  protected function getRandomRefKey($fixture): string {
-    return $this->faker->randomElement($this->getKeys($fixture));
-  }
+        foreach ($keys as $key) {
+            $object = $this->createObject($manager, (string) $key);
 
-  /**
-   * Get random number of reference keys of a certain type of fixture.
-   *
-   * @param $fixture
-   * @param int $min
-   * @param int|NULL $max
-   * @param bool $unique
-   *
-   * @return array
-   */
-  protected function getRandomRefKeys($fixture, int $min = 1, int $max = NULL, bool $unique = TRUE): array {
-    if ($max === NULL) {
-      $max = $min;
+            $manager->persist($object);
+
+            $this->addReference($this->getRefId(static::class, $key), $object);
+        }
+
+        $manager->flush();
     }
 
-    $number = $this->faker->numberBetween($min, $max);
+    public function single(ObjectManager $manager, string $key = null, bool $flush = true)
+    {
+        $object = $this->createObject($manager, $key);
+        $manager->persist($object);
 
-    return $this->faker->randomElements($this->getKeys($fixture), $number, !$unique);
-  }
+        if ($flush) {
+            $manager->flush();
+        }
 
-  /**
-   * Get references with a given name pattern.
-   *
-   * @param string $pattern
-   *
-   * @return array
-   */
-  protected function getMatchingRefs(string $pattern): array {
-    $refs = [];
-    foreach ($this->referenceRepository->getReferences() as $name => $reference) {
-      if (preg_match($pattern, $name)) {
-        $refs[$name] = $reference;
-      }
+        return $object;
     }
-    return $refs;
-  }
 
-  /****************************************************************************/
-  /* UNIQUE                                                                   */
-  /****************************************************************************/
+    /* REFERENCES */
 
-  /**
-   * @param string $name
-   * @param callable $value
-   * @param callable|null $key
-   * @param int $maxRetries
-   *
-   * @return mixed
-   */
-  protected function unique(string $name, callable $value, ?callable $key = null, int $maxRetries = 100) {
-    $key = $key ?: static function ($result) {
-      return serialize($result);
-    };
+    /**
+     * Get references for keys.
+     */
+    protected function getRefs($fixture, array $keys): array
+    {
+        $refs = [];
+        foreach ($keys as $key) {
+            $refs[] = $this->getRef($fixture, $key);
+        }
 
-    $this->combinations[$name] = [];
+        return $refs;
+    }
 
-    $i = 0;
-    do {
-      $valueResolved = $value();
-      $keyResolved = $key($valueResolved);
-      if ($i++ > $maxRetries) {
-        throw new \OverflowException(sprintf('Maximum retries of %d reached without finding a unique combination', $maxRetries));
-      }
-    } while (array_key_exists($keyResolved, $this->combinations[$name]));
-    $this->combinations[$name][$keyResolved]= $valueResolved;
+    /**
+     * Get random number of references of a certain type of fixture.
+     */
+    protected function getRandomRefs($fixture, int $min = 1, int $max = null, bool $unique = true): array
+    {
+        return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique));
+    }
 
-    return $valueResolved;
-  }
+    /**
+     * Get a random reference of a certain type of fixture.
+     *
+     * @return object
+     */
+    protected function getRandomRef($fixture)
+    {
+        return $this->getRef($fixture, $this->getRandomRefKey($fixture));
+    }
 
+    /**
+     * Get a random reference key of a certain type of fixture.
+     */
+    protected function getRandomRefKey($fixture): string
+    {
+        return $this->faker->randomElement($this->getKeys($fixture));
+    }
+
+    /**
+     * Get random number of reference keys of a certain type of fixture.
+     */
+    protected function getRandomRefKeys($fixture, int $min = 1, int $max = null, bool $unique = true): array
+    {
+        if ($max === null) {
+            $max = $min;
+        }
+
+        $number = $this->faker->numberBetween($min, $max);
+
+        return $this->faker->randomElements($this->getKeys($fixture), $number, !$unique);
+    }
+
+    /**
+     * Get references with a given name pattern.
+     */
+    protected function getMatchingRefs(string $pattern): array
+    {
+        $refs = [];
+        foreach ($this->referenceRepository->getReferences() as $name => $reference) {
+            if (preg_match($pattern, $name)) {
+                $refs[$name] = $reference;
+            }
+        }
+
+        return $refs;
+    }
+
+    /* UNIQUE */
+
+    protected function unique(string $name, callable $value, callable $key = null, int $maxRetries = 100)
+    {
+        $key = $key ?: static function ($result) {
+            return serialize($result);
+        };
+
+        $this->combinations[$name] = [];
+
+        $i = 0;
+
+        do {
+            $valueResolved = $value();
+            $keyResolved   = $key($valueResolved);
+
+            if ($i++ > $maxRetries) {
+                throw new \OverflowException(sprintf('Maximum retries of %d reached without finding a unique combination', $maxRetries));
+            }
+        } while (array_key_exists($keyResolved, $this->combinations[$name]));
+        $this->combinations[$name][$keyResolved] = $valueResolved;
+
+        return $valueResolved;
+    }
 }
-

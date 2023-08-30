@@ -4,247 +4,205 @@ namespace HBM\BasicsBundle\Entity\Traits;
 
 use HBM\BasicsBundle\Util\Data\SettingVarType;
 
-trait SettingTrait {
+trait SettingTrait
+{
+    /* PROPERTIES */
 
-  /****************************************************************************/
-  /* PROPERTIES                                                               */
-  /****************************************************************************/
+    /** @var string */
+    protected $varType;
 
-  /**
-   * @var string
-   */
-  protected $varType;
+    /** @var string */
+    protected $varNature;
 
-  /**
-   * @var string
-   */
-  protected $varNature;
+    /** @var string */
+    protected $varKey;
 
-  /**
-   * @var string
-   */
-  protected $varKey;
+    protected $varValue;
 
-  /**
-   * @var mixed
-   */
-  protected $varValue;
+    /** @var bool */
+    protected $editable = false;
 
-  /**
-   * @var bool
-   */
-  protected $editable = FALSE;
+    /** @var bool */
+    private $previewable = true;
 
-  /**
-   * @var bool
-   */
-  private $previewable = TRUE;
+    /** @var string */
+    protected $notice;
 
-  /**
-   * @var string
-   */
-  protected $notice;
+    /* CONSTRUCTOR / GETTER / SETTER */
 
-  /****************************************************************************/
-  /* CONSTRUCTOR / GETTER / SETTER                                            */
-  /****************************************************************************/
+    /**
+     * Set varType
+     *
+     * @param string $varType
+     */
+    public function setVarType($varType): self
+    {
+        $this->varType = $varType;
 
-  /**
-   * Set varType
-   *
-   * @param string $varType
-   *
-   * @return self
-   */
-  public function setVarType($varType) : self {
-    $this->varType = $varType;
-
-    return $this;
-  }
-
-  /**
-   * Get varType
-   *
-   * @return string|null
-   */
-  public function getVarType() : ?string {
-    return $this->varType;
-  }
-
-  /**
-   * Set varNature
-   *
-   * @param string $varNature
-   *
-   * @return self
-   */
-  public function setVarNature($varNature) : self {
-    $this->varNature = $varNature;
-
-    return $this;
-  }
-
-  /**
-   * Get varNature
-   *
-   * @return string|null
-   */
-  public function getVarNature() : ?string {
-    return $this->varNature;
-  }
-
-  /**
-   * Set varKey
-   *
-   * @param string $varKey
-   *
-   * @return self
-   */
-  public function setVarKey($varKey) : self {
-    $this->varKey = $varKey;
-
-    return $this;
-  }
-
-  /**
-   * Get varKey
-   *
-   * @return string
-   */
-  public function getVarKey() : ?string {
-    return $this->varKey;
-  }
-
-  /**
-   * Set varValue
-   *
-   * @param mixed $varValue
-   *
-   * @return self
-   */
-  public function setVarValue($varValue) : self {
-    $this->varValue = $varValue;
-
-    return $this;
-  }
-
-  /**
-   * Get varValue
-   *
-   * @return mixed|float|int|string|bool
-   */
-  public function getVarValue() {
-    return $this->varValue;
-  }
-
-  /**
-   * Set editable.
-   *
-   * @param bool $editable
-   *
-   * @return self
-   */
-  public function setEditable($editable) : self {
-    $this->editable = $editable;
-
-    return $this;
-  }
-
-  /**
-   * Get editable
-   *
-   * @return bool|null
-   */
-  public function getEditable() : ?bool {
-    return $this->editable;
-  }
-
-  /**
-   * Set previewable.
-   *
-   * @param bool $previewable
-   *
-   * @return self
-   */
-  public function setPreviewable(bool $previewable = NULL) : self {
-    $this->previewable = $previewable;
-
-    return $this;
-  }
-
-  /**
-   * Get previewable.
-   *
-   * @return bool|null
-   */
-  public function getPreviewable() : ?bool {
-    return $this->previewable;
-  }
-
-  /**
-   * Set notice
-   *
-   * @param string $notice
-   *
-   * @return self
-   */
-  public function setNotice($notice) : self {
-    $this->notice = $notice;
-
-    return $this;
-  }
-
-  /**
-   * Get notice
-   *
-   * @return string|null
-   */
-  public function getNotice() : ?string {
-    return $this->notice;
-  }
-
-  /****************************************************************************/
-  /* CUSTOM                                                                   */
-  /****************************************************************************/
-
-  /**
-   * @param string|null $default
-   * @return string|null
-   */
-  public function getVarTypeLabel(string $default = NULL) : ?string {
-    return SettingVarType::label($this->getVarType(), $default);
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getVarValueParsed() {
-    if ($this->getVarType() === SettingVarType::INT) {
-      return (int) $this->getVarValue();
+        return $this;
     }
 
-    if ($this->getVarType() === SettingVarType::FLOAT) {
-      return (float) $this->getVarValue();
+    /**
+     * Get varType
+     */
+    public function getVarType(): ?string
+    {
+        return $this->varType;
     }
 
-    if ($this->getVarType() === SettingVarType::BOOLEAN) {
-      return (bool) $this->getVarValue();
+    /**
+     * Set varNature
+     *
+     * @param string $varNature
+     */
+    public function setVarNature($varNature): self
+    {
+        $this->varNature = $varNature;
+
+        return $this;
     }
 
-    if ($this->getVarType() === SettingVarType::CSV) {
-      $lines = explode("\n", trim($this->getVarValue()));
-      $rows = [];
-      foreach ($lines as $line) {
-        $rows[] = array_map('trim', explode(';', $line));
-      }
-      return $rows;
+    /**
+     * Get varNature
+     */
+    public function getVarNature(): ?string
+    {
+        return $this->varNature;
     }
 
-    if ($this->getVarType() === SettingVarType::JSON) {
-      return json_decode($this->getVarValue(), TRUE);
+    /**
+     * Set varKey
+     *
+     * @param string $varKey
+     */
+    public function setVarKey($varKey): self
+    {
+        $this->varKey = $varKey;
+
+        return $this;
     }
 
-    return $this->getVarValue();
-  }
+    /**
+     * Get varKey
+     */
+    public function getVarKey(): ?string
+    {
+        return $this->varKey;
+    }
 
+    /**
+     * Set varValue
+     */
+    public function setVarValue($varValue): self
+    {
+        $this->varValue = $varValue;
+
+        return $this;
+    }
+
+    /**
+     * Get varValue
+     *
+     * @return bool|float|int|mixed|string
+     */
+    public function getVarValue()
+    {
+        return $this->varValue;
+    }
+
+    /**
+     * Set editable.
+     *
+     * @param bool $editable
+     */
+    public function setEditable($editable): self
+    {
+        $this->editable = $editable;
+
+        return $this;
+    }
+
+    /**
+     * Get editable
+     */
+    public function getEditable(): ?bool
+    {
+        return $this->editable;
+    }
+
+    /**
+     * Set previewable.
+     */
+    public function setPreviewable(bool $previewable = null): self
+    {
+        $this->previewable = $previewable;
+
+        return $this;
+    }
+
+    /**
+     * Get previewable.
+     */
+    public function getPreviewable(): ?bool
+    {
+        return $this->previewable;
+    }
+
+    /**
+     * Set notice
+     *
+     * @param string $notice
+     */
+    public function setNotice($notice): self
+    {
+        $this->notice = $notice;
+
+        return $this;
+    }
+
+    /**
+     * Get notice
+     */
+    public function getNotice(): ?string
+    {
+        return $this->notice;
+    }
+
+    /* CUSTOM */
+
+    public function getVarTypeLabel(string $default = null): ?string
+    {
+        return SettingVarType::label($this->getVarType(), $default);
+    }
+
+    public function getVarValueParsed()
+    {
+        if ($this->getVarType() === SettingVarType::INT) {
+            return (int) $this->getVarValue();
+        }
+
+        if ($this->getVarType() === SettingVarType::FLOAT) {
+            return (float) $this->getVarValue();
+        }
+
+        if ($this->getVarType() === SettingVarType::BOOLEAN) {
+            return (bool) $this->getVarValue();
+        }
+
+        if ($this->getVarType() === SettingVarType::CSV) {
+            $lines = explode("\n", trim($this->getVarValue()));
+            $rows  = [];
+            foreach ($lines as $line) {
+                $rows[] = array_map('trim', explode(';', $line));
+            }
+
+            return $rows;
+        }
+
+        if ($this->getVarType() === SettingVarType::JSON) {
+            return json_decode($this->getVarValue(), true);
+        }
+
+        return $this->getVarValue();
+    }
 }

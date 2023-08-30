@@ -2,46 +2,27 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
-interface Stateable extends Addressable {
+interface Stateable extends Addressable
+{
+    /**
+     * Set state.
+     *
+     * @return self
+     */
+    public function setState(int $state);
 
-  /**
-   * Set state.
-   *
-   * @param int $state
-   *
-   * @return self
-   */
-  public function setState(int $state);
+    /**
+     * Get state.
+     */
+    public function getState(): int;
 
-  /**
-   * Get state.
-   *
-   * @return int
-   */
-  public function getState() : int;
+    /* CUSTOM */
 
-  /****************************************************************************/
-  /* CUSTOM                                                                   */
-  /****************************************************************************/
+    public function isActive(): bool;
 
-  /**
-   * @return bool
-   */
-  public function isActive() : bool;
+    public function isPending(): bool;
 
-  /**
-   * @return bool
-   */
-  public function isPending() : bool;
+    public function isReview(): bool;
 
-  /**
-   * @return bool
-   */
-  public function isReview() : bool;
-
-  /**
-   * @return bool
-   */
-  public function isBlocked() : bool;
-
+    public function isBlocked(): bool;
 }

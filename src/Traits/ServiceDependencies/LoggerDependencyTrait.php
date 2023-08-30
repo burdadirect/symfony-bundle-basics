@@ -5,18 +5,13 @@ namespace HBM\BasicsBundle\Traits\ServiceDependencies;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
-trait LoggerDependencyTrait {
+trait LoggerDependencyTrait
+{
+    protected LoggerInterface $logger;
 
-  protected LoggerInterface $logger;
-
-  /**
-   * @param LoggerInterface $logger
-   *
-   * @return void
-   */
-  #[Required]
-  public function setLogger(LoggerInterface $logger): void {
-    $this->logger = $logger;
-  }
-
+    #[Required]
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
 }

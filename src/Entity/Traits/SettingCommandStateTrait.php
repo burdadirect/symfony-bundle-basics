@@ -5,25 +5,28 @@ namespace HBM\BasicsBundle\Entity\Traits;
 use HBM\BasicsBundle\Command\AbstractSerialCommand;
 
 /**
- * @method string|null getVarNature()
- * @method mixed getVarValueParsed()
+ * @method null|string getVarNature()
+ * @method mixed       getVarValueParsed()
  */
-trait SettingCommandStateTrait {
+trait SettingCommandStateTrait
+{
+    public function isCommandState(): bool
+    {
+        return $this->getVarNature() === 'state';
+    }
 
-  public function isCommandState(): bool {
-    return $this->getVarNature() === 'state';
-  }
+    public function isIdle(): bool
+    {
+        return $this->getVarValueParsed() === AbstractSerialCommand::STATE_IDLE;
+    }
 
-  public function isIdle(): bool {
-    return $this->getVarValueParsed() === AbstractSerialCommand::STATE_IDLE;
-  }
+    public function isInterrupted(): bool
+    {
+        return $this->getVarValueParsed() === AbstractSerialCommand::STATE_INTERRUPTED;
+    }
 
-  public function isInterrupted(): bool {
-    return $this->getVarValueParsed() === AbstractSerialCommand::STATE_INTERRUPTED;
-  }
-
-  public function isRunning(): bool {
-    return !$this->isIdle() && !$this->isInterrupted();
-  }
-
+    public function isRunning(): bool
+    {
+        return !$this->isIdle() && !$this->isInterrupted();
+    }
 }

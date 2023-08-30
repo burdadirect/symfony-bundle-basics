@@ -2,27 +2,20 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
-interface NoticeInterface extends Addressable {
+interface NoticeInterface extends Addressable
+{
+    /**
+     * Get title.
+     */
+    public function getTitle(): ?string;
 
-  /**
-   * Get title.
-   *
-   * @return string|null
-   */
-  public function getTitle() : ?string;
+    /**
+     * Get message.
+     */
+    public function getMessage(): ?string;
 
-  /**
-   * Get message.
-   *
-   * @return string|null
-   */
-  public function getMessage() : ?string;
-
-  /**
-   * Get alert level.
-   *
-   * @return string
-   */
-  public function getAlertLevel() : string;
-
+    /**
+     * Get alert level.
+     */
+    public function getAlertLevel(): string;
 }

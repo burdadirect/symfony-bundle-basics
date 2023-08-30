@@ -4,65 +4,54 @@ namespace HBM\BasicsBundle\Util\AttributeMessage;
 
 use HBM\BasicsBundle\Util\Result\Message;
 
-class AttributeMessage {
+class AttributeMessage
+{
+    private ?string $attribute;
 
-  private ?string $attribute;
+    private ?Message $message;
 
-  private ?Message $message;
+    /**
+     * VoterWrapper constructor.
+     */
+    public function __construct(string $attribute = null, Message $message = null)
+    {
+        $this->attribute = $attribute;
+        $this->message   = $message;
+    }
 
-  /**
-   * VoterWrapper constructor.
-   *
-   * @param string|null $attribute
-   * @param Message|null $message
-   */
-  public function __construct(string $attribute = NULL, Message $message = NULL) {
-    $this->attribute = $attribute;
-    $this->message = $message;
-  }
+    /**
+     * Set attribute.
+     */
+    public function setAttribute(?string $attribute): self
+    {
+        $this->attribute = $attribute;
 
-  /**
-   * Set attribute.
-   *
-   * @param string|null $attribute
-   *
-   * @return self
-   */
-  public function setAttribute(?string $attribute) : self {
-    $this->attribute = $attribute;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get attribute.
+     */
+    public function getAttribute(): ?string
+    {
+        return $this->attribute;
+    }
 
-  /**
-   * Get attribute.
-   *
-   * @return string|null
-   */
-  public function getAttribute() : ?string {
-    return $this->attribute;
-  }
+    /**
+     * Set message.
+     */
+    public function setMessage(?Message $message): self
+    {
+        $this->message = $message;
 
-  /**
-   * Set message.
-   *
-   * @param Message|null $message
-   *
-   * @return self
-   */
-  public function setMessage(?Message $message) : self {
-    $this->message = $message;
+        return $this;
+    }
 
-    return $this;
-  }
-
-  /**
-   * Get message.
-   *
-   * @return Message|null
-   */
-  public function getMessage() : ?Message {
-    return $this->message;
-  }
-
+    /**
+     * Get message.
+     */
+    public function getMessage(): ?Message
+    {
+        return $this->message;
+    }
 }

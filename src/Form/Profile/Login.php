@@ -10,54 +10,57 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Login extends AbstractType {
+class Login extends AbstractType
+{
+    /** @var bool */
+    private $togglePassword;
 
-  /**
-   * @var boolean
-   */
-  private $togglePassword;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function configureOptions(OptionsResolver $resolver): void {
-    $resolver->setDefined(['togglePassword']);
-  }
-
-  public function buildForm(FormBuilderInterface $builder, array $options): void {
-    $this->togglePassword = $options['togglePassword'] ?? false;
-
-    $builder
-      ->add($this->getSubFormDefault($builder));
-  }
-
-  protected function getSubFormDefault(FormBuilderInterface $builder) {
-    $group_default = $builder->create('group_default', FormType::class, [
-      'inherit_data' => true,
-    ]);
-
-    $attrPassword = [];
-    if ($this->togglePassword) {
-      $attrPassword['data-toggable-password'] = true;
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefined(['togglePassword']);
     }
 
-    $group_default
-      ->add('email', EmailType::class, [
-        'label' => 'E-Mail-Adresse',
-      ])
-      ->add('password', PasswordType::class, [
-        'label' => 'Passwort',
-        'attr' => $attrPassword,
-      ])
-      ->add('rememberMe', CheckboxType::class, [
-        'label' => 'Eingeloggt bleiben?',
-        'required' => FALSE,
-      ]);
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $this->togglePassword = $options['togglePassword'] ?? false;
 
-    return $group_default;
-  }
+        $builder
+          ->add($this->getSubFormDefault($builder));
+    }
 
-  public function getBlockPrefix(): string {
-    return 'hbm_basics_form_profile_login';
-  }
+    protected function getSubFormDefault(FormBuilderInterface $builder)
+    {
+        $group_default = $builder->create('group_default', FormType::class, [
+          'inherit_data' => true,
+        ]);
+
+        $attrPassword = [];
+
+        if ($this->togglePassword) {
+            $attrPassword['data-toggable-password'] = true;
+        }
+
+        $group_default
+          ->add('email', EmailType::class, [
+            'label' => 'E-Mail-Adresse',
+          ])
+          ->add('password', PasswordType::class, [
+            'label' => 'Passwort',
+            'attr'  => $attrPassword,
+          ])
+          ->add('rememberMe', CheckboxType::class, [
+            'label'    => 'Eingeloggt bleiben?',
+            'required' => false,
+          ]);
+
+        return $group_default;
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'hbm_basics_form_profile_login';
+    }
 }

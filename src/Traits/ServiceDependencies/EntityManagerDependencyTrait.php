@@ -5,18 +5,13 @@ namespace HBM\BasicsBundle\Traits\ServiceDependencies;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
-trait EntityManagerDependencyTrait {
+trait EntityManagerDependencyTrait
+{
+    protected EntityManagerInterface $em;
 
-  protected EntityManagerInterface $em;
-
-  /**
-   * @param EntityManagerInterface $entityManager
-   *
-   * @return void
-   */
-  #[Required]
-  public function setEntityManager(EntityManagerInterface $entityManager): void {
-    $this->em = $entityManager;
-  }
-
+    #[Required]
+    public function setEntityManager(EntityManagerInterface $entityManager): void
+    {
+        $this->em = $entityManager;
+    }
 }

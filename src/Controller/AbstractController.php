@@ -238,7 +238,7 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen')
+    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [])
     {
         $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage);
 
@@ -248,6 +248,7 @@ abstract class AbstractController extends BaseController
               'formView' => $return->createView(),
               'title'    => $confirmTitle,
               'details'  => $confirmDetails,
+              'titleParts' => $titleParts,
             ]);
         }
 
@@ -262,9 +263,9 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null)
+    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [])
     {
-        return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen');
+        return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen', titleParts: $titleParts);
     }
 
     /* HELPER */

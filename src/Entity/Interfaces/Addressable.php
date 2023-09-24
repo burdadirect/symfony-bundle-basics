@@ -2,13 +2,10 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
-interface Addressable {
-
-  /**
-   * Get id
-   *
-   * @return int|null
-   */
-  public function getId() : ?int;
-
+interface Addressable
+{
+    /**
+     * Get id
+     */
+    public function getId(): ?int;
 }

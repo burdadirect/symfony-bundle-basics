@@ -2,20 +2,15 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
-interface SettingInterface extends Addressable {
+interface SettingInterface extends Addressable
+{
+    /**
+     * Get varType.
+     */
+    public function getVarType(): ?string;
 
-  /**
-   * Get varType.
-   *
-   * @return string|null
-   */
-  public function getVarType() : ?string;
-
-  /**
-   * Get varValueParsed.
-   *
-   * @return mixed
-   */
-  public function getVarValueParsed();
-
+    /**
+     * Get varValueParsed.
+     */
+    public function getVarValueParsed();
 }

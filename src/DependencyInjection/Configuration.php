@@ -10,39 +10,39 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
-class Configuration implements ConfigurationInterface {
+class Configuration implements ConfigurationInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfigTreeBuilder(): TreeBuilder
+    {
+        $treeBuilder = new TreeBuilder('hbm_basics');
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfigTreeBuilder(): TreeBuilder {
-    $treeBuilder = new TreeBuilder('hbm_basics');
+        $rootNode = $treeBuilder->getRootNode();
 
-    $rootNode = $treeBuilder->getRootNode();
-
-    $rootNode
-      ->children()
-        ->arrayNode('confirm')->addDefaultsIfNotSet()
+        $rootNode
           ->children()
-            ->scalarNode('template')->defaultValue('partials/confirm.html.twig')->end()
-            ->scalarNode('navi')->defaultValue('default')->end()
-          ->end()
-        ->end()
-        ->arrayNode('form')->addDefaultsIfNotSet()
-          ->children()
-            ->arrayNode('submit_button_classes')->addDefaultsIfNotSet()
+            ->arrayNode('confirm')->addDefaultsIfNotSet()
               ->children()
-                ->scalarNode('default')->defaultValue('btn btn-lg btn-block')->end()
-                ->scalarNode('primary')->defaultValue('btn-primary')->end()
-                ->scalarNode('affirm')->defaultValue('btn-success')->end()
-                ->scalarNode('decline')->defaultValue('btn-danger')->end()
+                ->scalarNode('template')->defaultValue('partials/confirm.html.twig')->end()
+                ->scalarNode('navi')->defaultValue('default')->end()
               ->end()
             ->end()
-          ->end()
-        ->end()
-      ->end();
+            ->arrayNode('form')->addDefaultsIfNotSet()
+              ->children()
+                ->arrayNode('submit_button_classes')->addDefaultsIfNotSet()
+                  ->children()
+                    ->scalarNode('default')->defaultValue('btn btn-lg btn-block')->end()
+                    ->scalarNode('primary')->defaultValue('btn-primary')->end()
+                    ->scalarNode('affirm')->defaultValue('btn-success')->end()
+                    ->scalarNode('decline')->defaultValue('btn-danger')->end()
+                  ->end()
+                ->end()
+              ->end()
+            ->end()
+          ->end();
 
-    return $treeBuilder;
-  }
-
+        return $treeBuilder;
+    }
 }

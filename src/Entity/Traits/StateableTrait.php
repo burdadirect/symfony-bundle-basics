@@ -4,48 +4,47 @@ namespace HBM\BasicsBundle\Entity\Traits;
 
 use HBM\BasicsBundle\Util\Data\State;
 
-trait StateableTrait {
+trait StateableTrait
+{
+    /**
+     * Set state.
+     *
+     * @return self
+     */
+    public function setState(int $state)
+    {
+        $this->state = $state;
 
-  /**
-   * Set state.
-   *
-   * @param int $state
-   *
-   * @return self
-   */
-  public function setState(int $state) {
-    $this->state = $state;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get state.
+     */
+    public function getState(): int
+    {
+        return $this->state;
+    }
 
-  /**
-   * Get state.
-   *
-   * @return int
-   */
-  public function getState() : int {
-    return $this->state;
-  }
+    /* CUSTOM */
 
-  /****************************************************************************/
-  /* CUSTOM                                                                   */
-  /****************************************************************************/
+    public function isActive(): bool
+    {
+        return $this->getState() === State::ACTIVE;
+    }
 
-  public function isActive() : bool {
-    return $this->getState() === State::ACTIVE;
-  }
+    public function isPending(): bool
+    {
+        return $this->getState() === State::PENDING;
+    }
 
-  public function isPending() : bool {
-    return $this->getState() === State::PENDING;
-  }
+    public function isReview(): bool
+    {
+        return $this->getState() === State::REVIEW;
+    }
 
-  public function isReview() : bool {
-    return $this->getState() === State::REVIEW;
-  }
-
-  public function isBlocked() : bool {
-    return $this->getState() === State::BLOCKED;
-  }
-
+    public function isBlocked(): bool
+    {
+        return $this->getState() === State::BLOCKED;
+    }
 }

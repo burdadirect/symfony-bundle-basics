@@ -5,18 +5,13 @@ namespace HBM\BasicsBundle\Traits\ServiceDependencies;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
-trait RouterDependencyTrait {
+trait RouterDependencyTrait
+{
+    protected RouterInterface $router;
 
-  protected RouterInterface $router;
-
-  /**
-   * @param RouterInterface $router
-   *
-   * @return void
-   */
-  #[Required]
-  public function setRouter(RouterInterface $router): void {
-    $this->router = $router;
-  }
-
+    #[Required]
+    public function setRouter(RouterInterface $router): void
+    {
+        $this->router = $router;
+    }
 }

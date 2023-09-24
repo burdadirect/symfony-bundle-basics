@@ -82,11 +82,11 @@ abstract class AbstractData implements DataInterface
     /**
      * @param null|array|mixed|string $default
      */
-    public static function flatten(string $field = null, $default = null, string $filter = null, array $keys = null, string $prefix = null): array
+    public static function flatten(string $field = null, $default = null, string $filter = null, array $keys = null, string $prefix = null, string $postfix = null): array
     {
         $array = [];
         foreach (static::filter($filter, $keys) as $key => $value) {
-            $array[$prefix . $key] = $value[$field ?: static::$label] ?? $default;
+            $array[$prefix . $key . $postfix] = $value[$field ?: static::$label] ?? $default;
         }
 
         return $array;

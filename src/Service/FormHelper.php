@@ -30,6 +30,10 @@ class FormHelper
         $this->config               = $config;
     }
 
+    protected function getTranslationDomain(?string $formType = null): string|false {
+      return false;
+    }
+
     /**
      * Create form.
      */
@@ -53,7 +57,7 @@ class FormHelper
     {
         $optionsDefault = [
           'method'             => 'POST',
-          'translation_domain' => false,
+          'translation_domain' => $this->getTranslationDomain(),
         ];
 
         if ($route) {
@@ -77,9 +81,9 @@ class FormHelper
     /**
      * Creates a form to confirm/decline an action
      */
-    public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo): FormBuilderInterface
+    public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo, array $options = []): FormBuilderInterface
     {
-        $formBuilder = $this->initFormBuilder($url);
+        $formBuilder = $this->initFormBuilder($url, null, $options);
 
         $this->addSubmitButton($formBuilder, $buttonTextYes, 'submit_and_yes', $this->getButtonClasses('affirm'));
         $this->addSubmitButton($formBuilder, $buttonTextNo, 'submit_and_no', $this->getButtonClasses('decline'));
@@ -93,12 +97,12 @@ class FormHelper
      * @param $id    integer The entity id
      * @param $route string The name of the route
      */
-    public function createFormBuilderDeletion($id, $route): FormBuilderInterface
+    public function createFormBuilderDeletion($id, $route, array $options = []): FormBuilderInterface
     {
-        $formBuilder = $this->initFormBuilder(null, null, [
+        $formBuilder = $this->initFormBuilder(null, null, array_merge([
           'action' => $this->generateOrReturnUrl($route, ['id' => $id]),
           'method' => 'DELETE',
-        ]);
+        ], $options));
 
         $this->addSubmitButton($formBuilder, 'Löschen');
 
@@ -110,11 +114,11 @@ class FormHelper
      */
     public function createFormType(string $formType, $data, string $route = null, array $options = [], ?string $button = 'Abschicken', string $buttonClass = null): FormInterface
     {
-        $form = $this->createForm($formType, $data, array_merge($options, [
+        $form = $this->createForm($formType, $data, array_merge([
           'action'             => $this->generateOrReturnUrl($route),
           'method'             => 'POST',
-          'translation_domain' => false,
-        ]));
+          'translation_domain' => $this->getTranslationDomain($formType),
+        ], $options));
 
         if ($button) {
             $this->addSubmitButton($form, $button, 'submit', $buttonClass);
@@ -128,11 +132,11 @@ class FormHelper
      */
     public function createFormTypeCreation(string $formType, Addressable $entity = null, string $route = null, array $options = [], ?string $button = 'Erzeugen', string $buttonClass = null): FormInterface
     {
-        $form = $this->createForm($formType, $entity, array_merge($options, [
+        $form = $this->createForm($formType, $entity, array_merge([
           'action'             => $this->generateOrReturnUrl($route),
           'method'             => 'POST',
-          'translation_domain' => false,
-        ]));
+          'translation_domain' => $this->getTranslationDomain($formType),
+        ], $options));
 
         if ($button) {
             $this->addSubmitButton($form, $button, 'submit', $buttonClass);
@@ -146,11 +150,11 @@ class FormHelper
      */
     public function createFormTypeEditing(string $formType, Addressable $entity = null, string $route = null, array $options = [], ?string $button = 'Speichern', string $buttonClass = null): FormInterface
     {
-        $form = $this->createForm($formType, $entity, array_merge($options, [
+        $form = $this->createForm($formType, $entity, array_merge([
           'action'             => $this->generateOrReturnUrl($route, $entity ? ['id' => $entity->getId()] : []),
           'method'             => 'PUT',
-          'translation_domain' => false,
-        ]));
+          'translation_domain' => $this->getTranslationDomain($formType),
+        ], $options));
 
         if ($button) {
             $this->addSubmitButton($form, $button, 'submit', $buttonClass);

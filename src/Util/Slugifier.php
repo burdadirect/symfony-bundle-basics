@@ -33,7 +33,7 @@ class Slugifier
           $slug
         );
         // Convert remaining letters to closest ascii match.
-        $slug = iconv('utf-8', 'ascii//TRANSLIT', $slug);
+        $slug = iconv('utf-8', 'ascii//TRANSLIT//IGNORE', $slug);
         // Replace spaces with dashes.
         $slug = str_replace([' '], ['-'], $slug);
         // Replace everthings thats not allowed: https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html

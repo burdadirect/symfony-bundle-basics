@@ -10,6 +10,11 @@ trait TimestampableTrait
     /** @var \DateTime */
     protected $modified;
 
+    public array $updateTimestamps = [
+      'created' => true,
+      'modified' => true,
+    ];
+
     /**
      * Set created
      *
@@ -73,9 +78,11 @@ trait TimestampableTrait
      */
     public function updateTimestamps(): void
     {
-        $this->setModified(new \DateTime('now'));
+        if ($this->updateTimestamps['modified']) {
+            $this->setModified(new \DateTime('now'));
+        }
 
-        if ($this->getCreated() === null) {
+        if ($this->updateTimestamps['created'] && ($this->getCreated() === null)) {
             $this->setCreated(new \DateTime('now'));
         }
     }

@@ -3,13 +3,12 @@
 namespace HBM\BasicsBundle\Command\Traits;
 
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
+use HBM\BasicsBundle\Command\Interfaces\SerialCommandInterface;
 use HBM\BasicsBundle\Entity\Interfaces\SettingInterface;
 use Symfony\Component\Console\Command\Command;
 
 trait SerialCommandTrait
 {
-    public const STATE_IDLE   = 'idle';
-    public const STATE_PAUSED = 'paused';
 
     /* ABSTRACT FUNCTIONS */
 
@@ -36,7 +35,7 @@ trait SerialCommandTrait
         $setting = $this->getStateSetting(true);
 
         // Check setting state.
-        if ($setting && ($setting->getVarValueParsed() === self::STATE_IDLE)) {
+        if ($setting && ($setting->getVarValueParsed() === SerialCommandInterface::STATE_IDLE)) {
             // Set setting value to "busy"
             $this->updateStateSetting($setting, date('Y-m-d H:i:s'));
 
@@ -58,7 +57,7 @@ trait SerialCommandTrait
 
         // Try setting value to "idle".
         if ($setting = $this->getStateSetting()) {
-            $this->updateStateSetting($setting, self::STATE_IDLE);
+            $this->updateStateSetting($setting, SerialCommandInterface::STATE_IDLE);
 
             return true;
         }

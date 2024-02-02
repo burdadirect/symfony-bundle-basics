@@ -66,20 +66,20 @@ trait ErrorLoggerCommandTrait
 
     private function addContextFromAttributedMethodsOrProperties(array $context = []): array
     {
-        $reflection = new \ReflectionObject($this);
-        foreach ($reflection->getMethods() as $method) {
-            $attributes = $method->getAttributes(LogContext::class);
+        $reflectionClass = new \ReflectionObject($this);
+        foreach ($reflectionClass->getMethods() as $reflectionMethod) {
+            $attributes = $reflectionMethod->getAttributes(LogContext::class);
 
             if (count($attributes) > 0) {
-                $context = $this->addContextFromAttributedMethodOrProperty($this->{$method}(), $attributes[0], $context);
+                $context = $this->addContextFromAttributedMethodOrProperty($this->{$reflectionMethod->getName()}(), $attributes[0], $context);
             }
         }
 
-        foreach ($reflection->getProperties() as $property) {
-            $attributes = $property->getAttributes(LogContext::class);
+        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
+            $attributes = $reflectionProperty->getAttributes(LogContext::class);
 
             if (count($attributes) > 0) {
-                $context = $this->addContextFromAttributedMethodOrProperty($this->{$property}, $attributes[0], $context);
+                $context = $this->addContextFromAttributedMethodOrProperty($this->{$reflectionProperty->getName()}, $attributes[0], $context);
             }
         }
 
@@ -88,8 +88,8 @@ trait ErrorLoggerCommandTrait
 
     private function addContextFromAttributedMethodOrProperty(mixed $value, \ReflectionAttribute $attribute, array $context): array
     {
-        $key    = $attribute->getArguments()['key'] ?? null;
-        $method = $attribute->getArguments()['method'] ?? null;
+        $key    = $attribute->getArguments()[0] ?? null;
+        $method = $attribute->getArguments()[1] ?? null;
 
         if (is_object($value) && is_string($method)) {
             $value = $value->{$method}();

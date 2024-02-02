@@ -1,6 +1,6 @@
 <?php
 
-namespac  e HBM\BasicsBundle\Output;
+namespace HBM\BasicsBundle\Output;
 
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;

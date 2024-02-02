@@ -36,6 +36,7 @@
     "symfony/http-kernel": "^6.3",
     "symfony/monolog-bundle": "^3.4",
     "symfony/security-bundle": "^6.3",
+    "symfony/stopwatch": "^6.3",
     "symfony/twig-bundle": "^6.3",
     "symfony/validator": "^6.3",
     "symfony/yaml": "^6.3"

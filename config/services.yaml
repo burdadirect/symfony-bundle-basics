@@ -10,5 +10,9 @@ services:
 
     HBM\BasicsBundle\Command\:
         resource: '../src/Command'
+        exclude:
+            - '../src/Command/Attributes'
+            - '../src/Command/Interfaces'
+            - '../src/Command/Traits'
         tags:
             - { name: console.command }

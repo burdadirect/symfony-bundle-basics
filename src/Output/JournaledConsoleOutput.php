@@ -9,6 +9,8 @@ class JournaledConsoleOutput extends ConsoleOutput
 {
     private string $journalPath;
 
+    private bool $writeToFile = true;
+
     public function __construct(OutputInterface $output, string $journalPath)
     {
         parent::__construct($output->getVerbosity(), $output->isDecorated(), $output->getFormatter());
@@ -37,13 +39,15 @@ class JournaledConsoleOutput extends ConsoleOutput
     {
         parent::doWrite($message, $newline);
 
-        $journalMessage = $this->removeAnsiEscapeSequences($message);
+        if ($this->writeToFile) {
+            $journalMessage = $this->removeAnsiEscapeSequences($message);
 
-        if ($newline) {
-            $journalMessage .= PHP_EOL;
+            if ($newline) {
+                $journalMessage .= PHP_EOL;
+            }
+
+            file_put_contents($this->getJournalPath(), $journalMessage, FILE_APPEND);
         }
-
-        file_put_contents($this->getJournalPath(), $journalMessage, FILE_APPEND);
     }
 
     protected function removeAnsiEscapeSequences(string $subject): string
@@ -54,13 +58,20 @@ class JournaledConsoleOutput extends ConsoleOutput
         return preg_replace('/[\x03|\x1a]/', '', $subject);
     }
 
-    public function markAsUsed(): void
+    public function writeToFile(bool $flag): void
     {
-        $this->write('');
+        $this->writeToFile = $flag;
     }
 
-    public function hasBeenUsed(): bool
+    public function deleteJournal(): bool {
+      if (!is_file($this->getJournalPath())) {
+        return true;
+      }
+      return unlink($this->getJournalPath());
+    }
+
+    public function isEmpty(): bool
     {
-        return is_file($this->getJournalPath());
+        return !is_file($this->getJournalPath()) || (filesize($this->getJournalPath()) === 0);
     }
 }

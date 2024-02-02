@@ -55,14 +55,17 @@ trait JournaledCommandTrait
             return true;
         }
 
-        if ($this->keepEmptyJournals()) {
-            $output->markAsUsed();
+        // Clean up empty logs, if necessary.
+        if (!$this->keepEmptyJournals() && $output->isEmpty()) {
+          $output->deleteJournal();
         }
 
-        if ($output->hasBeenUsed()) {
-            $output->writeln($this->journalStopwatch->stop($command->getName()));
-        }
+        // Disable journaling, if journaling file is empty.
+        $output->writeToFile($this->keepEmptyJournals() || !$output->isEmpty());
+        $output->writeln($this->journalStopwatch->stop($command->getName()));
 
         return true;
     }
+
+
 }

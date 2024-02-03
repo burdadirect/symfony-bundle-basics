@@ -2,7 +2,7 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-use HBM\BasicsBundle\Command\AbstractSerialCommand;
+use HBM\BasicsBundle\Command\Interfaces\SerialCommandInterface;
 
 /**
  * @method null|string getVarNature()
@@ -17,16 +17,21 @@ trait SettingCommandStateTrait
 
     public function isIdle(): bool
     {
-        return $this->getVarValueParsed() === AbstractSerialCommand::STATE_IDLE;
+        return $this->getVarValueParsed() === SerialCommandInterface::STATE_IDLE;
+    }
+
+    public function isPaused(): bool
+    {
+        return $this->getVarValueParsed() === SerialCommandInterface::STATE_PAUSED;
     }
 
     public function isInterrupted(): bool
     {
-        return $this->getVarValueParsed() === AbstractSerialCommand::STATE_INTERRUPTED;
+        return $this->getVarValueParsed() === SerialCommandInterface::STATE_INTERRUPTED;
     }
 
     public function isRunning(): bool
     {
-        return !$this->isIdle() && !$this->isInterrupted();
+        return !$this->isIdle() && !$this->isPaused() && !$this->isInterrupted();
     }
 }

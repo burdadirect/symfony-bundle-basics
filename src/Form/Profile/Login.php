@@ -12,8 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Login extends AbstractType
 {
-    /** @var bool */
-    private $togglePassword;
+    private bool|array $togglePassword = false;
 
     /**
      * {@inheritdoc}
@@ -31,7 +30,7 @@ class Login extends AbstractType
           ->add($this->getSubFormDefault($builder));
     }
 
-    protected function getSubFormDefault(FormBuilderInterface $builder)
+    protected function getSubFormDefault(FormBuilderInterface $builder): FormBuilderInterface
     {
         $group_default = $builder->create('group_default', FormType::class, [
           'inherit_data' => true,
@@ -39,8 +38,8 @@ class Login extends AbstractType
 
         $attrPassword = [];
 
-        if ($this->togglePassword) {
-            $attrPassword['data-toggable-password'] = true;
+        if (false !== $this->togglePassword) {
+            $attrPassword['data-toggable-password'] = is_array($this->togglePassword) ? json_encode($this->togglePassword) : true;
         }
 
         $group_default

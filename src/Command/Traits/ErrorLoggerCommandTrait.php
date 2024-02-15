@@ -64,7 +64,7 @@ trait ErrorLoggerCommandTrait
 
     /* HELPER: Context */
 
-    private function addContextFromAttributedMethodsOrProperties(array $context = []): array
+    protected function addContextFromAttributedMethodsOrProperties(array $context = []): array
     {
         $reflectionClass = new \ReflectionObject($this);
         foreach ($reflectionClass->getMethods() as $reflectionMethod) {

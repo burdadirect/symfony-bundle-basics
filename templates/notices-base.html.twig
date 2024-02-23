@@ -13,6 +13,7 @@
         {% endblock hbm_basics_notices_system_title_message_th %}
         <th class="fixed-10">Ersteller</th>
         <th class="fixed-10">Erstellt</th>
+        {{ block('hbm_basics_notices_columns_actions_th') }}
       </tr>
       </thead>
       <tbody>
@@ -27,6 +28,7 @@
           <td>{% block hbm_basics_notices_system_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_system_message %}</td>
           <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
           <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
+          {{ block('hbm_basics_notices_columns_actions_td') }}
         </tr>
       {% endfor %}
       </tbody>

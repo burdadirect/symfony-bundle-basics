@@ -81,7 +81,7 @@ trait EnumTrait
 
         foreach (self::casesData() as $caseWithData) {
             // Filter by string.
-            $excludeByFilter = is_string($filter) && !in_array($filter, $caseWithData['case']->fieldFilters(), true);
+            $excludeByFilter = is_string($filter) && !in_array($filter, $caseWithData['case']->filter(), true);
 
             // Filter by cases.
             $excludeByCase = is_array($cases) && !in_array($caseWithData['case'], $cases, true);

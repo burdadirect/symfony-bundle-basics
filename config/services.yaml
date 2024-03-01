@@ -16,3 +16,8 @@ services:
             - '../src/Command/Traits'
         tags:
             - { name: console.command }
+
+    HBM\BasicsBundle\EnvVarProcessor\:
+        resource: '../src/EnvVarProcessor'
+        tags:
+            - { name: container.env_var_processor }

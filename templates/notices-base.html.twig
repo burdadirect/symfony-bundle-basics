@@ -1,77 +1,81 @@
 {% if object.noticesSystem|length > 0 %}
   <div class="mt-5 hbm-notices hbm-notices-system">
     <h2>System-Nachrichten</h2>
-    <table class="table {{ table_class|default('table-striped') }}">
-      <thead class="{{ thead_class|default('') }}">
-      <tr>
-        <th class="fixed-10-center">ID</th>
-        {{ block('hbm_basics_notices_level_mode_th') }}
-        {{ block('hbm_basics_notices_columns_th') }}
-        {% block hbm_basics_notices_system_title_message_th %}
-          <th>Titel</th>
-          <th>Nachricht</th>
-        {% endblock hbm_basics_notices_system_title_message_th %}
-        <th class="fixed-10">Ersteller</th>
-        <th class="fixed-10">Erstellt</th>
-        {{ block('hbm_basics_notices_columns_actions_th') }}
-      </tr>
-      </thead>
-      <tbody>
-      {% for notice in object.noticesSystem %}
+    <div class="hbm-table-wrapper">
+      <table class="table {{ table_class|default('table-striped') }}">
+        <thead class="{{ thead_class|default('') }}">
         <tr>
-          <td>
-            {% block hbm_basics_notices_system_id %}{{ notice.id }}{% endblock hbm_basics_notices_system_id %}
-          </td>
-          {{ block('hbm_basics_notices_level_mode_td') }}
-          {{ block('hbm_basics_notices_columns_td') }}
-          <td>{% block hbm_basics_notices_system_title %}{{ notice.title }}{% endblock hbm_basics_notices_system_title %}</td>
-          <td>{% block hbm_basics_notices_system_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_system_message %}</td>
-          <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
-          <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
-          {{ block('hbm_basics_notices_columns_actions_td') }}
+          <th class="fixed-10-center">ID</th>
+          {{ block('hbm_basics_notices_level_mode_th') }}
+          {{ block('hbm_basics_notices_columns_th') }}
+          {% block hbm_basics_notices_system_title_message_th %}
+            <th>Titel</th>
+            <th>Nachricht</th>
+          {% endblock hbm_basics_notices_system_title_message_th %}
+          <th class="fixed-10">Ersteller</th>
+          <th class="fixed-10">Erstellt</th>
+          {{ block('hbm_basics_notices_columns_actions_th') }}
         </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        {% for notice in object.noticesSystem %}
+          <tr>
+            <td>
+              {% block hbm_basics_notices_system_id %}{{ notice.id }}{% endblock hbm_basics_notices_system_id %}
+            </td>
+            {{ block('hbm_basics_notices_level_mode_td') }}
+            {{ block('hbm_basics_notices_columns_td') }}
+            <td>{% block hbm_basics_notices_system_title %}{{ notice.title }}{% endblock hbm_basics_notices_system_title %}</td>
+            <td>{% block hbm_basics_notices_system_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_system_message %}</td>
+            <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+            <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
+            {{ block('hbm_basics_notices_columns_actions_td') }}
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endif %}
 
 {% if object.noticesManual|length > 0 %}
   <div class="mt-5 hbm-notices hbm-notices-manual">
     <h2>Notizen</h2>
-    <table class="table {{ table_class|default('table-striped') }}">
-      <thead>
-      <tr>
-        <th class="fixed-10-center">ID</th>
-        {{ block('hbm_basics_notices_level_mode_th') }}
-        {{ block('hbm_basics_notices_columns_th') }}
-        {% block hbm_basics_notices_manual_title_message_th %}
-          <th>Titel</th>
-          <th>Nachricht</th>
-        {% endblock hbm_basics_notices_manual_title_message_th %}
-        <th class="fixed-10">Ersteller</th>
-        <th class="fixed-10">Erstellt</th>
-        <th class="fixed-10-center">Aktionen</th>
-      </tr>
-      </thead>
-      <tbody>
-      {% for notice in object.noticesManual %}
+    <div class="hbm-table-wrapper">
+      <table class="table {{ table_class|default('table-striped') }}">
+        <thead>
         <tr>
-          <td>
-            {% block hbm_basics_notices_manual_id %}{{ notice.id }}{% endblock hbm_basics_notices_manual_id %}
-          </td>
-          {{ block('hbm_basics_notices_level_mode_td') }}
-          {{ block('hbm_basics_notices_columns_td') }}
-          <td>{% block hbm_basics_notices_manual_title %}{{ notice.title }}{% endblock hbm_basics_notices_manual_title %}</td>
-          <td>{% block hbm_basics_notices_manual_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_manual_message %}</td>
-          <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
-          <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
-          <td>
-            {% block hbm_basics_notices_actions %}{% endblock hbm_basics_notices_actions %}
-          </td>
+          <th class="fixed-10-center">ID</th>
+          {{ block('hbm_basics_notices_level_mode_th') }}
+          {{ block('hbm_basics_notices_columns_th') }}
+          {% block hbm_basics_notices_manual_title_message_th %}
+            <th>Titel</th>
+            <th>Nachricht</th>
+          {% endblock hbm_basics_notices_manual_title_message_th %}
+          <th class="fixed-10">Ersteller</th>
+          <th class="fixed-10">Erstellt</th>
+          <th class="fixed-10-center">Aktionen</th>
         </tr>
-      {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        {% for notice in object.noticesManual %}
+          <tr>
+            <td>
+              {% block hbm_basics_notices_manual_id %}{{ notice.id }}{% endblock hbm_basics_notices_manual_id %}
+            </td>
+            {{ block('hbm_basics_notices_level_mode_td') }}
+            {{ block('hbm_basics_notices_columns_td') }}
+            <td>{% block hbm_basics_notices_manual_title %}{{ notice.title }}{% endblock hbm_basics_notices_manual_title %}</td>
+            <td>{% block hbm_basics_notices_manual_message %}{{ notice.message|raw }}{% endblock hbm_basics_notices_manual_message %}</td>
+            <td class="no-wrap">{% include '@HBMBasics/table-columns/table-column-creator.html.twig' with { 'obj': notice } %}</td>
+            <td class="no-wrap">{{ notice.created|date('Y-m-d H:i:s') }}</td>
+            <td>
+              {% block hbm_basics_notices_actions %}{% endblock hbm_basics_notices_actions %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endif %}

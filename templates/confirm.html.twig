@@ -1,20 +1,43 @@
-<h1 class="mt-0">Achtung</h1>
-<h3  id="confirm-title">{{ title|raw }}</h3>
+{% block hbm_confirm_headline %}
+  <h1 class="mt-0">Achtung</h1>
+{% endblock %}
 
-{% if details %}
-  <div id="confirm-details">{{ details|raw }}</div>
-{% endif %}
+{% block hbm_confirm_title %}
+  <h3  id="confirm-title">{{ title|raw }}</h3>
+{% endblock %}
 
-<div class="mt-4">
-  {{ form_start(formView) }}
-  <div class="hbm-form-buttons row">
-    <div class="col-md-3 offset-md-2">
-      {{ form_widget(formView.group_buttons.submit_and_no) }}
-    </div>
-    <div class="col-md-3 offset-md-2">
-      {{ form_widget(formView.group_buttons.submit_and_yes) }}
-    </div>
+{% block hbm_confirm_details %}
+  {% if details %}
+    <div id="confirm-details">{{ details|raw }}</div>
+  {% endif %}
+{% endblock %}
+
+
+{% block hbm_confirm_form %}
+  <div class="mt-4">
+    {{ form_start(formView) }}
+
+    {% block hbm_confirm_form_top %}{% endblock %}
+
+    {% block hbm_confirm_form_buttons %}
+      <div class="hbm-form-buttons row">
+        {% block hbm_confirm_form_button_no %}
+          <div class="col-md-3 offset-md-2">
+            {{ form_widget(formView.group_buttons.submit_and_no) }}
+          </div>
+        {% endblock %}
+
+        {% block hbm_confirm_form_button_yes %}
+          <div class="col-md-3 offset-md-2">
+            {{ form_widget(formView.group_buttons.submit_and_yes) }}
+          </div>
+        {% endblock %}
+      </div>
+    {% endblock %}
+
+    {% block hbm_confirm_form_bottom %}{% endblock %}
+
+    {{ form_rest(formView) }}
+    {{ form_end(formView) }}
   </div>
-  {{ form_rest(formView) }}
-  {{ form_end(formView) }}
-</div>
+{% endblock %}

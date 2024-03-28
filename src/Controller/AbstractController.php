@@ -198,10 +198,15 @@ abstract class AbstractController extends BaseController
      *
      * @return null|FormInterface|RedirectResponse|Response
      */
-    protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen')
+    protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen', ?callable $formBuilderCallback = null)
     {
         $builder = $this->getFormHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
-        $form    = $builder->getForm();
+
+        if ($formBuilderCallback !== null) {
+          $formBuilderCallback($builder);
+        }
+
+        $form = $builder->getForm();
         $form->handleRequest($request);
 
         try {
@@ -238,18 +243,20 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [])
+    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null)
     {
-        $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage);
+        $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage, $formBuilderCallback);
 
         if ($return instanceof FormInterface) {
-            return $this->renderCustom($this->pb->get('hbm.basics')['confirm']['template'], [
+            return $this->renderCustom(
+              $confirmTemplate ?? $this->pb->get('hbm.basics')['confirm']['template'],
+              array_merge([
               'navi'     => $this->pb->get('hbm.basics')['confirm']['navi'],
-              'formView' => $return->createView(),
+              'formView' => $return,
               'title'    => $confirmTitle,
               'details'  => $confirmDetails,
               'titleParts' => $titleParts,
-            ]);
+            ], $confirmTemplateVars));
         }
 
         return $return;
@@ -263,9 +270,9 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [])
+    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null)
     {
-        return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen', titleParts: $titleParts);
+        return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen', titleParts: $titleParts, confirmTemplate: $confirmTemplate, confirmTemplateVars: $confirmTemplateVars, formBuilderCallback: $formBuilderCallback);
     }
 
     /* HELPER */

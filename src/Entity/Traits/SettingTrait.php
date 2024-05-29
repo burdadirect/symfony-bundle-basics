@@ -177,20 +177,25 @@ trait SettingTrait
 
     public function getVarValueParsed()
     {
-        if ($this->getVarType() === SettingVarType::INT) {
-            return (int) $this->getVarValue();
+        return $this->getVarValueParsedInternal($this->getVarType(), $this->getVarValue());
+    }
+
+    protected function getVarValueParsedInternal(string $varType, ?string $varValue): mixed
+    {
+        if ($varType === SettingVarType::INT) {
+            return (int) $varValue;
         }
 
-        if ($this->getVarType() === SettingVarType::FLOAT) {
-            return (float) $this->getVarValue();
+        if ($varType === SettingVarType::FLOAT) {
+            return (float) $varValue;
         }
 
-        if ($this->getVarType() === SettingVarType::BOOLEAN) {
-            return (bool) $this->getVarValue();
+        if ($varType === SettingVarType::BOOLEAN) {
+            return (bool) $varValue;
         }
 
-        if ($this->getVarType() === SettingVarType::CSV) {
-            $lines = explode("\n", trim($this->getVarValue()));
+        if ($varType === SettingVarType::CSV) {
+            $lines = explode("\n", trim($varValue));
             $rows  = [];
             foreach ($lines as $line) {
                 $rows[] = array_map('trim', explode(';', $line));
@@ -199,10 +204,11 @@ trait SettingTrait
             return $rows;
         }
 
-        if ($this->getVarType() === SettingVarType::JSON) {
-            return json_decode($this->getVarValue(), true);
+        if ($varType === SettingVarType::JSON) {
+            return json_decode($varValue, true);
         }
 
-        return $this->getVarValue();
+        return $varValue;
     }
+
 }

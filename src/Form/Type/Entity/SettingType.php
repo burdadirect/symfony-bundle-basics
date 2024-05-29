@@ -33,17 +33,6 @@ class SettingType extends AbstractType
         /** @var SettingInterface $setting */
         $setting = $builder->getData();
 
-        if ($setting->getVarType() === SettingVarType::JSON) {
-            $editorMode     = 'ace/mode/json';
-            $editorTextarea = false;
-        } elseif ($setting->getVarType() === SettingVarType::HTML) {
-            $editorMode     = 'ace/mode/html';
-            $editorTextarea = false;
-        } else {
-            $editorMode     = 'ace/mode/text';
-            $editorTextarea = true;
-        }
-
         $group
           ->add('varNature', TextType::class, [
             'label'    => 'Art',
@@ -60,16 +49,11 @@ class SettingType extends AbstractType
           ->add('varKey', TextType::class, [
             'label'    => 'Schlüssel',
             'required' => true,
-          ])
-          ->add('varValue', TextareaType::class, [
-            'label'    => 'Wert',
-            'required' => false,
-            'attr'     => [
-              'rows'             => '5',
-              'data-ace-id'      => 'editor-twig-settings',
-              'data-ace-options' => json_encode(['ace' => ['mode' => $editorMode], 'general' => ['textarea' => $editorTextarea]]),
-            ],
-          ])
+          ]);
+
+        $this->addVarValue($group, $setting);
+
+        $group
           ->add('notice', TextareaType::class, [
             'label'    => 'Notiz',
             'required' => false,
@@ -97,6 +81,29 @@ class SettingType extends AbstractType
           ]);
 
         return $group;
+    }
+
+    protected function addVarValue(FormBuilderInterface $group, SettingInterface $setting): void {
+        if ($setting->getVarType() === SettingVarType::JSON) {
+            $editorMode     = 'ace/mode/json';
+            $editorTextarea = false;
+        } elseif ($setting->getVarType() === SettingVarType::HTML) {
+            $editorMode     = 'ace/mode/html';
+            $editorTextarea = false;
+        } else {
+            $editorMode     = 'ace/mode/text';
+            $editorTextarea = true;
+        }
+
+        $group->add('varValue', TextareaType::class, [
+          'label'    => 'Wert',
+          'required' => false,
+          'attr'     => [
+            'rows'             => '5',
+            'data-ace-id'      => 'editor-twig-settings',
+            'data-ace-options' => json_encode(['ace' => ['mode' => $editorMode], 'general' => ['textarea' => $editorTextarea]]),
+          ],
+        ]);
     }
 
     public function getBlockPrefix(): string

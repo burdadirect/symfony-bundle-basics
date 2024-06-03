@@ -46,14 +46,15 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
     /**
      * {@inheritDoc}
      */
-    public function addSortations(QueryBuilder $qb, array $sortations, array $default = []): QueryBuilder
-    {
-        if (\count($sortations) === 0) {
-            $sortations = $default;
-        }
-
+    public function addSortations(QueryBuilder $qb, array $sortations, array $default = [], bool $forceDefaults = true): QueryBuilder {
         foreach ($sortations as $key => $value) {
             $qb->addOrderBy($key, $value);
+        }
+
+        if ($forceDefaults || (\count($sortations) === 0)) {
+            foreach ($default as $key => $value) {
+                $qb->addOrderBy($key, $value);
+            }
         }
 
         return $qb;

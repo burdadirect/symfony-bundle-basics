@@ -9,7 +9,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
      *
      * @param mixed $literal the literal value
      */
-    public static function escapeLike($literal): string
+    public static function escapeLike(mixed $literal): string
     {
         if (\is_numeric($literal) && !\is_string($literal)) {
             return (string) $literal;

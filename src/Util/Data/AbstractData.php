@@ -3,16 +3,34 @@
 namespace HBM\BasicsBundle\Util\Data;
 
 use HBM\BasicsBundle\Util\Data\Interfaces\DataInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractData implements DataInterface
 {
+    private static array $data = [];
+
     protected static string $filter = 'filter';
 
     protected static string $label = 'text';
 
     protected static bool $filterAndKeys = false;
 
-    private static array $data = [];
+    protected static array $fieldsToTranslate = [];
+
+    protected static bool $translated = false;
+
+    protected static ?TranslatorInterface $translator = null;
+    protected static array $translatorParameters = [];
+    protected static ?string $translatorDomain = null;
+    protected static ?string $translatorLocale = null;
+
+    public static function setTranslator(?TranslatorInterface $translator, array $parameters = [], ?string $domain = null, ?string $locale = null): static {
+        self::$translator = $translator;
+        self::$translatorParameters = $parameters;
+        self::$translatorDomain = $domain;
+        self::$translatorLocale = $locale;
+        return new static();
+    }
 
     public static function keys(string $filter = null): array
     {
@@ -33,6 +51,16 @@ abstract class AbstractData implements DataInterface
 
     public static function _data(): array
     {
+        if (static::$translator && !static::$translated && count(static::$fieldsToTranslate) > 0) {
+          foreach (static::$data as $dataKey => $dataValue) {
+            foreach ($dataValue as $fieldKey => $fieldValue) {
+              if (in_array($fieldKey, static::$fieldsToTranslate, true)) {
+                static::$data[$dataKey][$fieldKey] = static::$translator->trans($fieldValue, static::$translatorParameters, static::$translatorDomain, static::$translatorLocale);
+              }
+            }
+          }
+          static::$translated = true;
+        }
         return static::$data;
     }
 
@@ -97,9 +125,9 @@ abstract class AbstractData implements DataInterface
         return static::_data()[$key] ?? null;
     }
 
-    public static function format(string|int|bool $key, string $format, string $default = null, array $fields = null): ?string
+    public static function format(string|int|bool|null $key, string $format, string $default = null, array $fields = null): ?string
     {
-        if ($data = static::_data()[$key] ?? null) {
+        if (($key !== null) && ($data = static::_data()[$key] ?? null)) {
             $values = $fields ? self::fields($key, $fields) : $data;
 
             return sprintf($format, ...array_values($values));
@@ -191,4 +219,5 @@ abstract class AbstractData implements DataInterface
     {
         return count(self::keys($filter));
     }
+
 }

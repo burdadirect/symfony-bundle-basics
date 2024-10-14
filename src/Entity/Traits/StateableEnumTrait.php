@@ -2,7 +2,6 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-use HBM\BasicsBundle\Util\Data\State;
 use HBM\BasicsBundle\Util\Enum\Interfaces\EnumStateInterface;
 
 /**

@@ -5,6 +5,7 @@ namespace HBM\BasicsBundle\Fixtures\Doctrine;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Faker\Generator;
 use HBM\BasicsBundle\Fixtures\Faker\Generator\CustomGenerator;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\EmailsProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\RandomArrayProvider;
@@ -12,17 +13,11 @@ use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
 
 abstract class AbstractFixtures extends Fixture
 {
-    /** @var CustomGenerator */
-    protected $faker;
+    protected Generator|CustomGenerator $faker;
 
-    /** @var string */
-    public static $ref;
-
-    /** @var int */
-    public static $num;
-
-    /** @var array */
-    public static $keys;
+    public static string $ref;
+    public static int $num;
+    public static ?array $keys = null;
 
     protected array $combinations = [];
 
@@ -37,9 +32,6 @@ abstract class AbstractFixtures extends Fixture
         $this->faker->addProvider(new EmailsProvider($this->faker));
     }
 
-    /**
-     * Get keys for this fixtures.
-     */
     protected function getKeys($fixture): array
     {
         if (is_array($fixture::$keys)) {
@@ -51,15 +43,12 @@ abstract class AbstractFixtures extends Fixture
 
     protected function getRefId($fixture, $key): string
     {
-        return $fixture::$ref . ':' . $key;
+        return $fixture::$ref.':'.$key;
     }
 
-    /**
-     * @return object
-     */
-    public function getRef($fixture, $key)
+    public function getRef($fixture, $key, string $class): object
     {
-        return $this->getReference($this->getRefId($fixture, $key));
+        return $this->getReference($this->getRefId($fixture, $key), $class);
     }
 
     /* CREATE AND LOAD */
@@ -98,11 +87,11 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get references for keys.
      */
-    protected function getRefs($fixture, array $keys): array
+    protected function getRefs($fixture, array $keys, string $class): array
     {
         $refs = [];
         foreach ($keys as $key) {
-            $refs[] = $this->getRef($fixture, $key);
+            $refs[] = $this->getRef($fixture, $key, $class);
         }
 
         return $refs;
@@ -111,19 +100,17 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get random number of references of a certain type of fixture.
      */
-    protected function getRandomRefs($fixture, int $min = 1, int $max = null, bool $unique = true): array
+    protected function getRandomRefs($fixture, string $class, int $min = 1, int $max = null, bool $unique = true): array
     {
-        return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique));
+        return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique), $class);
     }
 
     /**
      * Get a random reference of a certain type of fixture.
-     *
-     * @return object
      */
-    protected function getRandomRef($fixture)
+    protected function getRandomRef($fixture, string $class): object
     {
-        return $this->getRef($fixture, $this->getRandomRefKey($fixture));
+        return $this->getRef($fixture, $this->getRandomRefKey($fixture), $class);
     }
 
     /**
@@ -146,21 +133,6 @@ abstract class AbstractFixtures extends Fixture
         $number = $this->faker->numberBetween($min, $max);
 
         return $this->faker->randomElements($this->getKeys($fixture), $number, !$unique);
-    }
-
-    /**
-     * Get references with a given name pattern.
-     */
-    protected function getMatchingRefs(string $pattern): array
-    {
-        $refs = [];
-        foreach ($this->referenceRepository->getReferences() as $name => $reference) {
-            if (preg_match($pattern, $name)) {
-                $refs[$name] = $reference;
-            }
-        }
-
-        return $refs;
     }
 
     /* UNIQUE */

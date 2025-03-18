@@ -19,7 +19,7 @@ class Result
 
     protected ?array $payloads;
 
-    public ?string $error;
+    public ?string $error = null;
 
     /**
      * Result constructor.

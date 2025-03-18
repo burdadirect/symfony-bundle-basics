@@ -11,6 +11,7 @@ use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractWebTestCase extends WebTestCase
@@ -107,19 +108,19 @@ abstract class AbstractWebTestCase extends WebTestCase
 
         try {
             $numOfUsers = $qb->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException|NonUniqueResultException) {
         }
 
         $randomOffset = 0;
 
         try {
             $randomOffset = random_int(0, max(0, $numOfUsers - 1));
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         try {
             return $qb->select('u')->setFirstResult($randomOffset)->setMaxResults(1)->getQuery()->getSingleResult();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return null;
         }
     }
@@ -174,7 +175,7 @@ abstract class AbstractWebTestCase extends WebTestCase
             $redirect = static::REDIRECT_LOGIN;
         }
 
-        $client->request('GET', $url);
+        $client->request(Request::METHOD_GET, $url);
         $resp = $client->getResponse();
 
         if ($redirection) {
@@ -186,7 +187,7 @@ abstract class AbstractWebTestCase extends WebTestCase
 
     protected function assertSuccessfulResponse(KernelBrowser $client, string $url, array $parameters = []): void
     {
-        $client->request('GET', $url, $parameters);
+        $client->request(Request::METHOD_GET, $url, $parameters);
         $resp = $client->getResponse();
         self::assertTrue($resp->isSuccessful(), '"' . $url . '" should be successful.' . $this->getResponseMessageHint($resp));
     }

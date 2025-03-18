@@ -336,7 +336,7 @@ class ConfirmMessage
             if ($router) {
                 try {
                     return $router->generate($this->route, ['id' => $item->getId()]);
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                 }
             }
         }

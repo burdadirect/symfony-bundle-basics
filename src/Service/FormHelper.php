@@ -221,7 +221,7 @@ class FormHelper
         if ($form->has('group_buttons') && $form->get('group_buttons')->has($name)) {
             try {
                 $button = $form->get('group_buttons')->get($name);
-            } catch (\OutOfBoundsException $oobe) {
+            } catch (\OutOfBoundsException) {
             }
         }
 

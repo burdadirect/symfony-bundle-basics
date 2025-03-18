@@ -36,7 +36,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         try {
             $limitCap     = $limit ?? 0;
             $randomOffset = random_int(0, max(0, $this->count($criteria) - $limitCap));
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $randomOffset = 0;
         }
 

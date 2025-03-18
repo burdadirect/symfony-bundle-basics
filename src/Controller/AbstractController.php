@@ -214,7 +214,7 @@ abstract class AbstractController extends BaseController
             $submitAndNo = $form->get('group_buttons')->get('submit_and_no');
             /** @var ClickableInterface $submitAndYes */
             $submitAndYes = $form->get('group_buttons')->get('submit_and_yes');
-        } catch (\OutOfBoundsException $oobe) {
+        } catch (\OutOfBoundsException) {
             $this->addFlashMessage('info', 'Antwort wurde nicht erkannt. Aktion abgebrochen!');
 
             return $this->redirect($urlNo);

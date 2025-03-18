@@ -35,7 +35,7 @@ class TranslationConvertPhpToYaml extends Command
             $value = trim($value);
 
             // Handle id keys.
-            if ($input->getOption('grouped') && (strpos($key, ' ') === false)) {
+            if ($input->getOption('grouped') && (!str_contains($key, ' '))) {
                 $keyParts              = explode('.', $key);
                 $translationsRegrouped = $this->insertIntoArray($translationsRegrouped, $keyParts, $value);
             } else {

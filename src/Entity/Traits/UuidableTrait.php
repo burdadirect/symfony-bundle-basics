@@ -33,7 +33,7 @@ trait UuidableTrait
     {
         try {
             $uuid = uniqid('', true) . random_int(1000, 9999);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $uuid = uniqid('', true) . '5000';
         }
 

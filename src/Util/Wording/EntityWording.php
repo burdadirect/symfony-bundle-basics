@@ -140,7 +140,7 @@ class EntityWording
         if ($object && $this->getFunction()) {
             try {
                 $name = $object->{$this->getFunction()}();
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
             }
         }
 

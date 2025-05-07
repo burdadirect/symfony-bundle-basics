@@ -16,6 +16,11 @@ use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
  */
 abstract class AbstractServiceEntityRepo extends ServiceEntityRepository implements ExtendedEntityRepo
 {
+
+    public static function uniqueParam(?string $prefix = NULL, ?string $postfix = NULL): string {
+        return str_replace('.', '', $prefix.uniqid('', TRUE).$postfix);
+    }
+
     public function updateFields(AbstractEntity $entity, array $fields)
     {
         $qb = $this->createQueryBuilder('x');
@@ -57,6 +62,16 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
             }
         }
 
+        return $qb;
+    }
+
+    public function searchFromThru(QueryBuilder $qb, string $field, \DateTime $from, \DateTime $thru): QueryBuilder {
+        $paramNameFrom = self::uniqueParam('from');
+        $paramNameThru = self::uniqueParam('thru');
+
+        $qb->andWhere($qb->expr()->between($field, ':'.$paramNameFrom, ':'.$paramNameThru));
+        $qb->setParameter($paramNameFrom, $from);
+        $qb->setParameter($paramNameThru, $thru);
         return $qb;
     }
 

@@ -56,11 +56,11 @@ class EntityWording
     public function getNominative(bool $ucfirst = null): ?string
     {
         if ($ucfirst === true) {
-            return ucfirst($this->nominative);
+            return ucfirst($this->nominative ?? '');
         }
 
         if ($ucfirst === false) {
-            return lcfirst($this->nominative);
+            return lcfirst($this->nominative ?? '');
         }
 
         return $this->nominative;

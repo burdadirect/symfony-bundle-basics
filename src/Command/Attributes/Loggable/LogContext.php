@@ -12,7 +12,7 @@ namespace HBM\BasicsBundle\Command\Attributes\Loggable;
  *      The supplied method is used to get the value from the object.
  *      The result value will be treated like the two first cases.
  */
-#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY | \Attribute::TARGET_CLASS_CONSTANT)]
 class LogContext
 {
     public function __construct(public ?string $key = null, public ?string $method = null)

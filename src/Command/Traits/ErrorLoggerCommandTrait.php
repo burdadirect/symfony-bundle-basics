@@ -29,7 +29,7 @@ trait ErrorLoggerCommandTrait
 
     public function logError(string $error, array $context = []): void
     {
-        $contextGathered = $this->addContextFromAttributedMethodsOrProperties($context);
+        $contextGathered = $this->addContextFromAttributedTargets($context);
 
         $this->getLogger()->critical(...LogObject::arguments($error, $contextGathered));
         $this->loggerOutput?->writeln($error);
@@ -64,31 +64,39 @@ trait ErrorLoggerCommandTrait
 
     /* HELPER: Context */
 
-    protected function addContextFromAttributedMethodsOrProperties(array $context = []): array
+    protected function addContextFromAttributedTargets(array $context = []): array
     {
         $reflectionClass = new \ReflectionObject($this);
-        foreach ($reflectionClass->getMethods() as $reflectionMethod) {
-            $attributes = $reflectionMethod->getAttributes(LogContext::class);
+        foreach ($reflectionClass->getMethods() as $rm) {
+            $attributes = $rm->getAttributes(LogContext::class);
 
             if (count($attributes) > 0) {
-                $context = $this->addContextFromAttributedMethodOrProperty($this->{$reflectionMethod->getName()}(), $attributes[0], $context);
+                $context = $this->addContextFromAttributedTarget($this->{$rm->getName()}(), $rm->getName(), $attributes[0], $context);
             }
         }
 
-        foreach ($reflectionClass->getProperties() as $reflectionProperty) {
-            $attributes = $reflectionProperty->getAttributes(LogContext::class);
+        foreach ($reflectionClass->getProperties() as $rp) {
+            $attributes = $rp->getAttributes(LogContext::class);
 
             if (count($attributes) > 0) {
-                $context = $this->addContextFromAttributedMethodOrProperty($this->{$reflectionProperty->getName()}, $attributes[0], $context);
+                $context = $this->addContextFromAttributedTarget($this->{$rp->getName()}, $rp->getName(), $attributes[0], $context);
+            }
+        }
+
+        foreach ($reflectionClass->getReflectionConstants() as $rc) {
+            $attributes = $rc->getAttributes(LogContext::class);
+
+            if (count($attributes) > 0) {
+                $context = $this->addContextFromAttributedTarget($rc->getValue(), $rc->getName(), $attributes[0], $context);
             }
         }
 
         return $context;
     }
 
-    private function addContextFromAttributedMethodOrProperty(mixed $value, \ReflectionAttribute $attribute, array $context): array
+    private function addContextFromAttributedTarget(mixed $value, string $name, \ReflectionAttribute $attribute, array $context): array
     {
-        $key    = $attribute->getArguments()[0] ?? null;
+        $key    = $attribute->getArguments()[0] ?? $name;
         $method = $attribute->getArguments()[1] ?? null;
 
         if (is_object($value) && is_string($method)) {

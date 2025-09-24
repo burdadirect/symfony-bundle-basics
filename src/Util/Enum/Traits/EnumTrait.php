@@ -107,11 +107,15 @@ trait EnumTrait
         return array_column($result, 'case', 'value');
     }
 
-    public static function casesFlat(string $field = null, mixed $default = null, string $filter = null, array $cases = null, string $sortByField = null, string $prefix = null, string $postfix = null): array
+    public static function casesFlat(string $field = null, mixed $default = null, string $filter = null, array $cases = null, string $sortByField = null, string $prefix = null, string $postfix = null, string $method = null): array
     {
         $array = [];
         foreach (self::casesFiltered($filter, $cases, $sortByField) as $case) {
-            $array[$prefix.$case->value.$postfix] = $case->field($field, $default);
+            if ($method && method_exists($case, $method)) {
+                $array[$prefix.$case->value.$postfix] = $case->{$method}() ?? $default;
+            } else {
+                $array[$prefix.$case->value.$postfix] = $case->field($field, $default);
+            }
         }
 
         return $array;

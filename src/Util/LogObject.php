@@ -70,9 +70,9 @@ class LogObject
         return $this;
     }
 
-    public function pinpoint(string $methodOrFunction): LogObject
+    public function pinpoint(string $methodOrFunction, string|int|null $line = null): LogObject
     {
-        return $this->addContext('pinpoint', $methodOrFunction);
+        return $this->addContext('pinpoint', $methodOrFunction . ($line !== null ? '[' . $line . ']' : ''));
     }
 
     public function toLoggerArgumentsArray(): array
@@ -95,7 +95,7 @@ class LogObject
         return [strip_tags($this->getMessage()), $context];
     }
 
-    public static function arguments(string $message = null, array $contexts = [], array $entities = []): array
+    public static function arguments(?string $message = null, array $contexts = [], array $entities = []): array
     {
         return (new LogObject($message, $contexts, $entities))->toLoggerArgumentsArray();
     }

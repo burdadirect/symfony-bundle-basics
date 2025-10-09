@@ -7,5 +7,8 @@
     {{ macros.messages(app.session.flashbag.get('warning'), 'alert-warning') }}
     {{ macros.messages(app.session.flashbag.get('info'), 'alert-info') }}
     {{ macros.messages(app.session.flashbag.get('success'), 'alert-success') }}
+    {% for key in app.session.flashbag.keys %}
+      {{ macros.messages(app.session.flashbag.get(key), 'alert-' ~ key) }}
+    {% endfor %}
   {% endif %}
 {% endif %}

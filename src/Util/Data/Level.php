@@ -13,18 +13,22 @@ class Level extends AbstractData
       self::INFO => [
         'text'  => 'info',
         'alert' => 'info',
+        'console' => 'note',
       ],
       self::SUCCESS => [
         'text'  => 'success',
         'alert' => 'success',
+        'console' => 'success',
       ],
       self::WARNING => [
         'text'  => 'warning',
         'alert' => 'warning',
+        'console' => 'warning',
       ],
       self::ERROR => [
         'text'  => 'error',
         'alert' => 'danger',
+        'console' => 'failure',
       ],
     ];
 

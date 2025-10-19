@@ -40,8 +40,10 @@ trait StyledCommandTrait
           '</success>'   => '</strong>',
           '<section>'    => '<strong style="color:#8844AA;">',
           '</section>'   => '</strong>',
-          '<highlight>'  => '<strong style="color:#FFAA00">',
+          '<highlight>'  => '<strong style="color:#FF69B4">',
           '</highlight>' => '</strong>',
+          '<warning>'  => '<strong style="color:#FFAA00">',
+          '</warning>' => '</strong>',
           '<note>'       => '<strong style="color:#6699EE;">',
           '</note>'      => '</strong>',
         ];

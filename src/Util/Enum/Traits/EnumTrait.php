@@ -2,14 +2,11 @@
 
 namespace HBM\BasicsBundle\Util\Enum\Traits;
 
-/**
- * @method static array cases()
- */
 trait EnumTrait
 {
     abstract public function fields(): array;
 
-    public function fieldsFiltered(array $fields = null, callable $callback = null, bool $withCaseValue = false, bool $withCaseName = false): array
+    public function fieldsFiltered(?array $fields = null, ?callable $callback = null, bool $withCaseValue = false, bool $withCaseName = false): array
     {
         $data = $this->fields();
 
@@ -24,12 +21,13 @@ trait EnumTrait
         if ($withCaseName) {
             array_unshift($data, $this->name);
         }
+
         if ($withCaseValue) {
             array_unshift($data, $this->value);
         }
 
         if (is_callable($callback)) {
-             return $callback(...array_values($data));
+            return $callback(...array_values($data));
         }
 
         return $data;
@@ -45,7 +43,7 @@ trait EnumTrait
         return $this->field('filter', []);
     }
 
-    public function format(string $format, array $fields = null, callable $callback = null, bool $withCaseValue = false, bool $withCaseName = false): string
+    public function format(string $format, ?array $fields = null, ?callable $callback = null, bool $withCaseValue = false, bool $withCaseName = false): string
     {
         return sprintf($format, ...array_values($this->fieldsFiltered($fields, $callback, $withCaseName, $withCaseValue)));
     }
@@ -63,19 +61,20 @@ trait EnumTrait
         $casesData = [];
         foreach (self::cases() as $case) {
             $casesData[$case->value] = [
-              'case'  => $case,
-              'name'  => $case->name,
-              'value' => $case->value,
-              'fields'  => $case->fields(),
+                'case'   => $case,
+                'name'   => $case->name,
+                'value'  => $case->value,
+                'fields' => $case->fields(),
             ];
         }
+
         return $casesData;
     }
 
     /**
      * @return array<string, self>
      */
-    public static function casesFiltered(string $filter = null, array $cases = null, string $sortByField = null): array
+    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null): array
     {
         $result = [];
 
@@ -107,28 +106,29 @@ trait EnumTrait
         return array_column($result, 'case', 'value');
     }
 
-    public static function casesFlat(string $field = null, mixed $default = null, string $filter = null, array $cases = null, string $sortByField = null, string $prefix = null, string $postfix = null, string $method = null): array
+    public static function casesFlat(?string $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $prefix = null, ?string $postfix = null, ?string $method = null): array
     {
         $array = [];
         foreach (self::casesFiltered($filter, $cases, $sortByField) as $case) {
             if ($method && method_exists($case, $method)) {
-                $array[$prefix.$case->value.$postfix] = $case->{$method}() ?? $default;
+                $array[$prefix . $case->value . $postfix] = $case->{$method}() ?? $default;
             } else {
-                $array[$prefix.$case->value.$postfix] = $case->field($field, $default);
+                $array[$prefix . $case->value . $postfix] = $case->field($field, $default);
             }
         }
 
         return $array;
     }
 
-    public static function random(string $filter = null): ?self
+    public static function random(?string $filter = null): ?self
     {
         $cases = self::casesFiltered($filter);
         shuffle($cases);
+
         return reset($cases) ?: null;
     }
 
-    public static function count(string $filter = null): int
+    public static function count(?string $filter = null): int
     {
         return count(self::casesFiltered($filter));
     }

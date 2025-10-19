@@ -101,6 +101,31 @@ abstract class AbstractData implements DataInterface
         return static::_data()[$key] ?? null;
     }
 
+    public static function getBy(array $criteria): ?array
+    {
+        return array_filter(static::_data(), function ($value) use ($criteria) {
+          foreach ($criteria as $criteriaKey => $criteriaValue) {
+            if (!isset($value[$criteriaKey])) {
+              return false;
+            }
+            if ($value[$criteriaKey] !== $criteriaValue) {
+              return false;
+            }
+          }
+          return true;
+        });
+    }
+
+    public static function getOneBy(array $criteria): ?array
+    {
+        $dataFiltered = static::getBy($criteria);
+        if (count($dataFiltered) !== 1) {
+          trigger_error('Expected exactly one result, got '.count($dataFiltered), E_USER_WARNING);
+        }
+
+        return reset($dataFiltered) ?: null;
+    }
+
     public static function format(string|int|bool $key, string $format, string $default = null, array $fields = null): ?string
     {
         if ($data = static::_data()[$key] ?? null) {

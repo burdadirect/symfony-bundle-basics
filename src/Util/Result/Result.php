@@ -188,6 +188,9 @@ class Result
     public function merge(Result $result): self
     {
         $this->addMessages($result->getMessages());
+        foreach ($result->getPayloads() as $payloadKey => $payloadValue) {
+          $this->setPayload($payloadKey, $payloadValue);
+        }
 
         if (($this->getReturn() === false) || ($result->getReturn() === false)) {
             $this->setReturn(false);

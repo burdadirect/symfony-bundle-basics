@@ -59,11 +59,22 @@ class Message
 
     public function formatMessage(): ?string
     {
+        $message = $this->getMessage();
         if (func_num_args() > 0) {
-            return sprintf($this->getMessage(), ...func_get_args());
+            $message = sprintf($message, ...func_get_args());
         }
 
-        return $this->getMessage();
+        return $message;
+    }
+
+    public function formatMessageConsole(): ?string
+    {
+        $format = '%s';
+        if ($console = Level::field($this->getLevel(), 'console')) {
+            $format = '<' . $console . '>%s</' . $console . '>';
+        }
+
+        return sprintf($format, $this->formatMessage(...func_get_args()));
     }
 
     public function getAlertLevel(): string

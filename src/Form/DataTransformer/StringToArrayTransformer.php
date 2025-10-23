@@ -15,12 +15,12 @@ class StringToArrayTransformer implements DataTransformerInterface
         $this->glue      = $glue ?: $separator;
     }
 
-    public function transform(mixed $value): mixed
+    public function transform(mixed $value): string
     {
         return implode($this->glue, $value);
     }
 
-    public function reverseTransform(mixed $value): mixed
+    public function reverseTransform(mixed $value): array
     {
         return array_map('trim', explode($this->separator, $value));
     }

@@ -16,9 +16,9 @@ use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
  */
 abstract class AbstractServiceEntityRepo extends ServiceEntityRepository implements ExtendedEntityRepo
 {
-
-    public static function uniqueParam(?string $prefix = NULL, ?string $postfix = NULL): string {
-        return str_replace('.', '', $prefix.uniqid('', TRUE).$postfix);
+    public static function uniqueParam(?string $prefix = null, ?string $postfix = null): string
+    {
+        return str_replace('.', '', $prefix . uniqid('', true) . $postfix);
     }
 
     public function updateFields(AbstractEntity $entity, array $fields)
@@ -33,10 +33,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb->getQuery()->execute();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function findRandomBy(array $criteria, $limit = null): array
+    public function findRandomBy(array $criteria, ?int $limit = null): array
     {
         try {
             $limitCap     = $limit ?? 0;
@@ -48,10 +45,8 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $this->findBy($criteria, [], $limit, $randomOffset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function addSortations(QueryBuilder $qb, array $sortations, array $default = [], bool $forceDefaults = true): QueryBuilder {
+    public function addSortations(QueryBuilder $qb, array $sortations, array $default = [], bool $forceDefaults = true): QueryBuilder
+    {
         foreach ($sortations as $key => $value) {
             $qb->addOrderBy($key, $value);
         }
@@ -65,20 +60,19 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    public function searchFromThru(QueryBuilder $qb, string $field, \DateTime $from, \DateTime $thru): QueryBuilder {
+    public function searchFromThru(QueryBuilder $qb, string $field, \DateTime $from, \DateTime $thru): QueryBuilder
+    {
         $paramNameFrom = self::uniqueParam('from');
         $paramNameThru = self::uniqueParam('thru');
 
-        $qb->andWhere($qb->expr()->between($field, ':'.$paramNameFrom, ':'.$paramNameThru));
+        $qb->andWhere($qb->expr()->between($field, ':' . $paramNameFrom, ':' . $paramNameThru));
         $qb->setParameter($paramNameFrom, $from);
         $qb->setParameter($paramNameThru, $thru);
+
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchValue(QueryBuilder $qb, string $alias, string $field, $value = null, string $prefix = 'value'): QueryBuilder
+    public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value'): QueryBuilder
     {
         if ($value !== null) {
             $qb->andWhere($qb->expr()->eq($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $value);
@@ -87,10 +81,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchChoices(QueryBuilder $qb, string $alias, string $field, array $choices = null, string $prefix = 'choices'): QueryBuilder
+    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices'): QueryBuilder
     {
         if (count($choices) > 0) {
             $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $choices);
@@ -99,7 +90,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, array $relations = null, string $prefix = 'relations'): QueryBuilder
+    public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, ?array $relations = null, string $prefix = 'relations'): QueryBuilder
     {
         if (count($relations) > 0) {
             $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
@@ -109,7 +100,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    public function searchManyToManyNull(QueryBuilder $qb, string $alias, string $field, string $joinAlias, bool $isNull = null): QueryBuilder
+    public function searchManyToManyNull(QueryBuilder $qb, string $alias, string $field, string $joinAlias, ?bool $isNull = null): QueryBuilder
     {
         if ($isNull === true) {
             $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
@@ -121,10 +112,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchSelection(QueryBuilder $qb, string $alias, string $field, array $selections = null, string $prefix = 'selections'): QueryBuilder
+    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections'): QueryBuilder
     {
         if (count($selections) > 0) {
             $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $selections);
@@ -135,10 +123,7 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchNull(QueryBuilder $qb, string $alias, string $field, bool $isNull = null): QueryBuilder
+    public function searchNull(QueryBuilder $qb, string $alias, string $field, ?bool $isNull = null): QueryBuilder
     {
         if ($isNull === true) {
             $qb->andWhere($qb->expr()->isNull($alias . '.' . $field));
@@ -169,9 +154,6 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = true, bool $allFields = false): QueryBuilder
     {
         $condWords = $this->getSearchFieldsConditions($qb, $fields, $words, $prefix, $format, $method, $allWords, $allFields);
@@ -208,9 +190,6 @@ abstract class AbstractServiceEntityRepo extends ServiceEntityRepository impleme
         return $condWords;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function leftJoinOnce(QueryBuilder $qb, string $alias, string $field, string $joinAlias, $conditionType = null, $condition = null, $indexBy = null): QueryBuilder
     {
         /** @var Join[] $joins */

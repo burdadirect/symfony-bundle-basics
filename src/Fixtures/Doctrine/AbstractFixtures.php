@@ -16,7 +16,9 @@ abstract class AbstractFixtures extends Fixture
     protected Generator|CustomGenerator $faker;
 
     public static string $ref;
+
     public static int $num;
+
     public static ?array $keys = null;
 
     protected array $combinations = [];
@@ -43,7 +45,7 @@ abstract class AbstractFixtures extends Fixture
 
     protected function getRefId($fixture, $key): string
     {
-        return $fixture::$ref.':'.$key;
+        return $fixture::$ref . ':' . $key;
     }
 
     public function getRef($fixture, $key, string $class): object
@@ -53,7 +55,7 @@ abstract class AbstractFixtures extends Fixture
 
     /* CREATE AND LOAD */
 
-    abstract protected function createObject(ObjectManager $manager = null, string $key = null);
+    abstract protected function createObject(?ObjectManager $manager = null, ?string $key = null);
 
     public function load(ObjectManager $manager): void
     {
@@ -70,7 +72,7 @@ abstract class AbstractFixtures extends Fixture
         $manager->flush();
     }
 
-    public function single(ObjectManager $manager, string $key = null, bool $flush = true)
+    public function single(ObjectManager $manager, ?string $key = null, bool $flush = true)
     {
         $object = $this->createObject($manager, $key);
         $manager->persist($object);
@@ -100,7 +102,7 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get random number of references of a certain type of fixture.
      */
-    protected function getRandomRefs($fixture, string $class, int $min = 1, int $max = null, bool $unique = true): array
+    protected function getRandomRefs($fixture, string $class, int $min = 1, ?int $max = null, bool $unique = true): array
     {
         return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique), $class);
     }
@@ -124,7 +126,7 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get random number of reference keys of a certain type of fixture.
      */
-    protected function getRandomRefKeys($fixture, int $min = 1, int $max = null, bool $unique = true): array
+    protected function getRandomRefKeys($fixture, int $min = 1, ?int $max = null, bool $unique = true): array
     {
         if ($max === null) {
             $max = $min;
@@ -137,7 +139,7 @@ abstract class AbstractFixtures extends Fixture
 
     /* UNIQUE */
 
-    protected function unique(string $name, callable $value, callable $key = null, int $maxRetries = 100)
+    protected function unique(string $name, callable $value, ?callable $key = null, int $maxRetries = 100)
     {
         $key = $key ?: static function ($result) {
             return serialize($result);

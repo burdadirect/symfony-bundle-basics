@@ -22,10 +22,7 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb->getQuery()->execute();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function findRandomBy(array $criteria, $limit = null): array
+    public function findRandomBy(array $criteria, ?int $limit = null): array
     {
         try {
             $limitCap     = $limit ?? 0;
@@ -37,9 +34,6 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $this->findBy($criteria, [], $limit, $randomOffset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function addSortations(QueryBuilder $qb, array $sortations, array $default = []): QueryBuilder
     {
         if (count($sortations) === 0) {
@@ -53,10 +47,7 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchValue(QueryBuilder $qb, string $alias, string $field, $value = null, string $prefix = 'value'): QueryBuilder
+    public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value'): QueryBuilder
     {
         if ($value !== null) {
             $qb->andWhere($qb->expr()->eq($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $value);
@@ -65,10 +56,7 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchChoices(QueryBuilder $qb, string $alias, string $field, array $choices = null, string $prefix = 'choices'): QueryBuilder
+    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices'): QueryBuilder
     {
         if (count($choices) > 0) {
             $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $choices);
@@ -77,10 +65,7 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchSelection(QueryBuilder $qb, string $alias, string $field, array $selections = null, string $prefix = 'selections'): QueryBuilder
+    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections'): QueryBuilder
     {
         if (count($selections) > 0) {
             $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $selections);
@@ -91,10 +76,7 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function searchNull(QueryBuilder $qb, string $alias, string $field, bool $isNull = null): QueryBuilder
+    public function searchNull(QueryBuilder $qb, string $alias, string $field, ?bool $isNull = null): QueryBuilder
     {
         if ($isNull === true) {
             $qb->andWhere($qb->expr()->isNull($alias . '.' . $field));
@@ -105,9 +87,6 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like'): QueryBuilder
     {
         $and = $qb->expr()->andX();
@@ -137,9 +116,6 @@ abstract class AbstractEntityRepo extends EntityRepository implements ExtendedEn
         return $qb;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function leftJoinOnce(QueryBuilder $qb, string $alias, string $field, string $joinAlias): QueryBuilder
     {
         /** @var Join[] $joins */

@@ -54,16 +54,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         return $this->databaseTool->loadFixtures($classNames, $append);
     }
 
-    /**
-     * Log in.
-     *
-     * @param bool|int|object|string $user
-     *
-     * @throws \Exception
-     *
-     * @return null|bool|object
-     */
-    protected function logIn(KernelBrowser $client, $user = true, array $roles = ['ROLE_USER'])
+    protected function logIn(KernelBrowser $client, object|bool|int|string|null $user = true, array $roles = ['ROLE_USER']): ?object
     {
         if (is_bool($user)) {
             $user = $this->randomUserWithRoles($roles);
@@ -72,11 +63,11 @@ abstract class AbstractWebTestCase extends WebTestCase
         }
 
         if ($user === null) {
-            throw new \Exception('No user found!');
+            throw new \RuntimeException('No user found!');
         }
         foreach ($roles as $role) {
             if (!in_array($role, $user->getRoles(), true)) {
-                throw new \Exception('User is missing the following role: ' . $role);
+                throw new \RuntimeException('User is missing the following role: ' . $role);
             }
         }
 
@@ -85,20 +76,14 @@ abstract class AbstractWebTestCase extends WebTestCase
         return $user;
     }
 
-    /**
-     * @return null|object
-     */
-    protected function randomUser()
+    protected function randomUser(): ?object
     {
         $users = $this->getUserRepository()->findRandomBy([], 1);
 
         return reset($users) ?: null;
     }
 
-    /**
-     * @return null|object
-     */
-    protected function randomUserWithRoles(array $roles = [])
+    protected function randomUserWithRoles(array $roles = []): ?object
     {
         $qb = $this->getUserRepository()->createQueryBuilder('u');
         foreach ($roles as $roleIndex => $roleName) {
@@ -125,13 +110,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         }
     }
 
-    /**
-     * @param null|string            $url
-     * @param bool|int|object|string $user
-     *
-     * @throws \Exception
-     */
-    protected function assertRoute(string $url, $user = null, string $redirect = null, bool $redirection = false): KernelBrowser
+    protected function assertRoute(string $url, object|bool|int|string|null $user = null, ?string $redirect = null, bool $redirection = false): KernelBrowser
     {
         $client = $this->getKernelBrowser();
 
@@ -155,12 +134,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         return $client;
     }
 
-    /**
-     * @param bool|int|object|string $user
-     *
-     * @throws \Exception
-     */
-    protected function assertRouteJson(string $url = null, $user = null, string $redirect = null, bool $redirection = false): KernelBrowser
+    protected function assertRouteJson(?string $url = null, object|bool|int|string|null $user = null, ?string $redirect = null, bool $redirection = false): KernelBrowser
     {
         $client = $this->assertRoute($url, $user, $redirect, $redirection);
         $resp   = $client->getResponse();
@@ -169,7 +143,7 @@ abstract class AbstractWebTestCase extends WebTestCase
         return $client;
     }
 
-    protected function assertRedirect(KernelBrowser $client, string $url, string $redirect = null, bool $redirection = false): void
+    protected function assertRedirect(KernelBrowser $client, string $url, ?string $redirect = null, bool $redirection = false): void
     {
         if ($redirect === null) {
             $redirect = static::REDIRECT_LOGIN;
@@ -203,9 +177,9 @@ abstract class AbstractWebTestCase extends WebTestCase
     protected function getResponseMessageHint(Response $response, string $prefix = ' '): string
     {
         $data = [
-          'Code'         => $response->getStatusCode(),
-          'Location'     => $response->headers->get('Location', 'n/a'),
-          'Content-Type' => $response->headers->get('Content-Type', 'n/a'),
+            'Code'         => $response->getStatusCode(),
+            'Location'     => $response->headers->get('Location', 'n/a'),
+            'Content-Type' => $response->headers->get('Content-Type', 'n/a'),
         ];
 
         array_walk($data, static function (&$value, $key) {

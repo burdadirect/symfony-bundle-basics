@@ -22,7 +22,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return \addcslashes($literal, '%_');
     }
 
-    public static function uniqueIdentifier(string $prefix, string $postfix = null): string
+    public static function uniqueIdentifier(string $prefix, ?string $postfix = null): string
     {
         return $prefix . \str_replace('.', '', \uniqid('', true)) . $postfix;
     }

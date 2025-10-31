@@ -12,12 +12,12 @@ abstract class AbstractDoctrineHelper
 
     /* OBJECT MANAGER */
 
-    public function getOM(string $name = null): ObjectManager
+    public function getOM(?string $name = null): ObjectManager
     {
         return $this->doctrine->getManager($name);
     }
 
-    public function resetOM(string $name = null): ObjectManager
+    public function resetOM(?string $name = null): ObjectManager
     {
         $this->doctrine->resetManager($name);
 
@@ -27,7 +27,7 @@ abstract class AbstractDoctrineHelper
     /**
      * @return Connection|object
      */
-    public function getConnection(string $name = null): Connection
+    public function getConnection(?string $name = null): Connection
     {
         return $this->doctrine->getConnection($name);
     }

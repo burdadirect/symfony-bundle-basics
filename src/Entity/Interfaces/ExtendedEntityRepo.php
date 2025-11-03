@@ -9,10 +9,8 @@ interface ExtendedEntityRepo extends ObjectRepository
 {
     /**
      * Creates a new QueryBuilder instance that is prepopulated for this entity name.
-     *
-     * @param null|string $indexBy the index for the from
      */
-    public function createQueryBuilder(string $alias, ?string $indexBy = null): QueryBuilder;
+    public function createQueryBuilderForAlias(string $alias): QueryBuilder;
 
     /**
      * Finds entities by a set of criteria.

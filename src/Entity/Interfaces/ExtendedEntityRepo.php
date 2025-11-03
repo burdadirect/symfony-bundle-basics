@@ -7,15 +7,7 @@ use Doctrine\Persistence\ObjectRepository;
 
 interface ExtendedEntityRepo extends ObjectRepository
 {
-    /**
-     * Creates a new QueryBuilder instance that is prepopulated for this entity name.
-     *
-     * @param string $alias
-     * @param string $indexBy the index for the from
-     *
-     * @return QueryBuilder
-     */
-    public function createQueryBuilder($alias, $indexBy = null);
+    public function createQueryBuilderForAlias(string $alias);
 
     /**
      * Finds entities by a set of criteria.

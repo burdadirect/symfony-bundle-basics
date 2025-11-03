@@ -99,7 +99,7 @@ abstract class AbstractWebTestCase extends WebTestCase
      */
     protected function randomUserWithRoles(array $roles = [])
     {
-        $qb = $this->getUserRepository()->createQueryBuilder('u');
+        $qb = $this->getUserRepository()->createQueryBuilderForAlias('u');
         foreach ($roles as $roleIndex => $roleName) {
             $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . $roleName . '"%');
         }

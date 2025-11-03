@@ -12,7 +12,7 @@ use HBM\BasicsBundle\Entity\AbstractEntity;
  * @method int          count(array $criteria = [])
  * @method array        findBy(array $criteria, array|null $orderBy = null, int|null $limit = null, int|null $offset = null)
  */
-trait ServiceEntityRepoTrait
+trait ExtendedEntityRepoTrait
 {
     public function createQueryBuilderForAlias(string $alias): QueryBuilder
     {

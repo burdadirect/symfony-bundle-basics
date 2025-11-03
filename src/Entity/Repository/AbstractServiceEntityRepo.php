@@ -12,5 +12,5 @@ use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
  */
 abstract class AbstractServiceEntityRepo extends ServiceEntityRepository implements ExtendedEntityRepo
 {
-    use ServiceEntityRepoTrait;
+    use ExtendedEntityRepoTrait;
 }

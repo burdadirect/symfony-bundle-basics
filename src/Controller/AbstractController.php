@@ -3,7 +3,6 @@
 namespace HBM\BasicsBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
-use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
 use HBM\BasicsBundle\Service\FormHelper;
 use HBM\BasicsBundle\Traits\ServiceDependencies\ParameterBagDependencyTrait;
@@ -28,7 +27,7 @@ abstract class AbstractController extends BaseController
     /**
      * Render template and set default values.
      */
-    abstract protected function renderCustom(?string $template, array $data = [], Response $response = null): Response;
+    abstract protected function renderCustom(?string $template, array $data = [], ?Response $response = null): Response;
 
     /**
      * Returns a session interface (probably from the request stack).
@@ -39,21 +38,14 @@ abstract class AbstractController extends BaseController
 
     /* OBJECTS */
 
-    /**
-     * @param null|AttributeMessage|string $attribute
-     * @param callable|string              $redirect
-     *
-     * @return null|JsonResponse|object|RedirectResponse
-     */
-    protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, $attribute = null, $redirect = '/')
+    protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, AttributeMessage|string|null $attribute = null, callable|string $redirect = '/'): ?object
     {
         $wording->setId($id);
 
-        /** @var AbstractEntity $object */
         $object = $id ? $repo->find($id) : null;
 
         if (is_callable($redirect)) {
-            $redirect = call_user_func($redirect, $object);
+            $redirect = $redirect($object);
         }
 
         // Check if object is null.
@@ -69,10 +61,7 @@ abstract class AbstractController extends BaseController
         return $object;
     }
 
-    /**
-     * @return null|JsonResponse|RedirectResponse
-     */
-    protected function checkForNull(Request $request, ?AbstractEntity $object, EntityWording $wording, string $redirect)
+    protected function checkForNull(Request $request, ?object $object, EntityWording $wording, string $redirect): ?Response
     {
         if ($object === null) {
             if ($request->isXmlHttpRequest()) {
@@ -87,12 +76,7 @@ abstract class AbstractController extends BaseController
         return null;
     }
 
-    /**
-     * @param null|AttributeMessage|string $attribute
-     *
-     * @return null|JsonResponse|RedirectResponse
-     */
-    protected function checkForAttribute(Request $request, AbstractEntity $object, EntityWording $wording, $attribute, string $redirect)
+    protected function checkForAttribute(Request $request, ?object $object, EntityWording $wording, AttributeMessage|string|null $attribute, string $redirect): ?Response
     {
         if (!($attribute instanceof AttributeMessage)) {
             $attribute = new AttributeMessage($attribute);
@@ -117,10 +101,10 @@ abstract class AbstractController extends BaseController
         return null;
     }
 
-    protected function tryToPersistEntity(callable $callable, array $params, ?string $messageSuccess, ?\Closure $responseSuccess, ?string $messageError, \Closure $responseError = null, array $sprintArgs = []): ?Response
+    protected function tryToPersistEntity(callable $callable, array $params, ?string $messageSuccess, ?\Closure $responseSuccess, ?string $messageError, ?\Closure $responseError = null, array $sprintArgs = []): ?Response
     {
         try {
-            call_user_func($callable, ...$params);
+            $callable(...$params);
 
             if ($messageSuccess) {
                 $this->addFlashMessage('success', sprintf($messageSuccess, ...$sprintArgs));
@@ -142,7 +126,7 @@ abstract class AbstractController extends BaseController
         return null;
     }
 
-    abstract protected function addFlashErrorsForException(string $message, \Exception $exception = null): void;
+    abstract protected function addFlashErrorsForException(string $message, ?\Exception $exception = null): void;
 
     /* MESSAGES */
 
@@ -154,7 +138,7 @@ abstract class AbstractController extends BaseController
     /**
      * @param array|NoticeInterface[] $notices
      */
-    protected function addFlashMessagesFromNotices(array $notices, string $prefix = null, string $postfix = null): void
+    protected function addFlashMessagesFromNotices(array $notices, ?string $prefix = null, ?string $postfix = null): void
     {
         foreach ($notices as $notice) {
             $string = $notice->getTitle();
@@ -166,7 +150,7 @@ abstract class AbstractController extends BaseController
         }
     }
 
-    protected function addFlashMessagesFromResult(Result $result, string $prefix = null, string $postfix = null): void
+    protected function addFlashMessagesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
     {
         foreach ($result->getMessages() as $message) {
             $this->addFlashMessage($message->getLevel(), $prefix . $message->getMessage() . $postfix);
@@ -176,8 +160,8 @@ abstract class AbstractController extends BaseController
     protected function addFlashMessageFromResult(string $type, string $message, Result $result): void
     {
         $this->addFlashMessage($type, $this->renderView('@HBMBasics/flash-messages/result-messages.html.twig', [
-          'message' => $message,
-          'result'  => $result,
+            'message' => $message,
+            'result'  => $result,
         ]));
     }
 
@@ -186,7 +170,7 @@ abstract class AbstractController extends BaseController
         $this->getSession()->getFlashBag()->add($type, $this->renderView($template, $data));
     }
 
-    protected function addFlashNoticesFromResult(Result $result, string $prefix = null, string $postfix = null): void
+    protected function addFlashNoticesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
     {
         $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
     }
@@ -195,15 +179,13 @@ abstract class AbstractController extends BaseController
 
     /**
      * Checks if a request has been confirmed (is post and contains confirmed flag).
-     *
-     * @return null|FormInterface|RedirectResponse|Response
      */
-    protected function prepareConfirmAction(Request $request, $urlYes, $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen', ?callable $formBuilderCallback = null)
+    protected function prepareConfirmAction(Request $request, string $urlYes, string $urlNo, string $textYes = 'Ja', string $textNo = 'nein', string $flashMessage = 'Aktion abgebrochen', ?callable $formBuilderCallback = null): Response|FormInterface|null
     {
         $builder = $this->getFormHelper()->createFormBuilderConfirmation($urlYes, $textYes, $textNo);
 
         if ($formBuilderCallback !== null) {
-          $formBuilderCallback($builder);
+            $formBuilderCallback($builder);
         }
 
         $form = $builder->getForm();
@@ -243,20 +225,21 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null)
+    protected function confirmActionHelper(Request $request, $urlYes, $urlNo, ?string $confirmTitle = null, ?string $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null): Response|FormInterface|null
     {
         $return = $this->prepareConfirmAction($request, $urlYes, $urlNo, $textYes, $textNo, $flashMessage, $formBuilderCallback);
 
         if ($return instanceof FormInterface) {
             return $this->renderCustom(
-              $confirmTemplate ?? $this->pb->get('hbm.basics')['confirm']['template'],
-              array_merge([
-              'navi'     => $this->pb->get('hbm.basics')['confirm']['navi'],
-              'formView' => $return,
-              'title'    => $confirmTitle,
-              'details'  => $confirmDetails,
-              'titleParts' => $titleParts,
-            ], $confirmTemplateVars));
+                $confirmTemplate ?? $this->pb->get('hbm.basics')['confirm']['template'],
+                array_merge([
+                    'navi'       => $this->pb->get('hbm.basics')['confirm']['navi'],
+                    'formView'   => $return,
+                    'title'      => $confirmTitle,
+                    'details'    => $confirmDetails,
+                    'titleParts' => $titleParts,
+                ], $confirmTemplateVars)
+            );
         }
 
         return $return;
@@ -270,7 +253,7 @@ abstract class AbstractController extends BaseController
      *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null)
+    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null): Response|FormInterface|null
     {
         return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen', titleParts: $titleParts, confirmTemplate: $confirmTemplate, confirmTemplateVars: $confirmTemplateVars, formBuilderCallback: $formBuilderCallback);
     }

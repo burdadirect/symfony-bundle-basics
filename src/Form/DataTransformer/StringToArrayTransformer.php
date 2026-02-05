@@ -22,6 +22,6 @@ class StringToArrayTransformer implements DataTransformerInterface
 
     public function reverseTransform(mixed $value): array
     {
-        return array_map('trim', explode($this->separator, $value));
+        return array_map('trim', explode($this->separator, $value ?? ''));
     }
 }

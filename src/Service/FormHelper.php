@@ -37,7 +37,7 @@ class FormHelper
     /**
      * Create form.
      */
-    private function createForm(string $type, $data = null, array $options = []): FormInterface
+    private function createForm(string $type, mixed $data = null, array $options = []): FormInterface
     {
         return $this->formFactoryInterface->create($type, $data, $options);
     }
@@ -45,7 +45,7 @@ class FormHelper
     /**
      * Create form builder.
      */
-    private function createFormBuilder($data = null, array $options = []): FormBuilderInterface
+    private function createFormBuilder(mixed $data = null, array $options = []): FormBuilderInterface
     {
         return $this->formFactoryInterface->createBuilder(FormType::class, $data, $options);
     }
@@ -53,7 +53,7 @@ class FormHelper
     /**
      * Prepare form builder.
      */
-    public function initFormBuilder($route, $data = null, array $options = []): FormBuilderInterface
+    public function initFormBuilder(?string $route, mixed $data = null, array $options = []): FormBuilderInterface
     {
         $optionsDefault = [
           'method'             => 'POST',
@@ -81,7 +81,7 @@ class FormHelper
     /**
      * Creates a form to confirm/decline an action
      */
-    public function createFormBuilderConfirmation($url, $buttonTextYes, $buttonTextNo, array $options = []): FormBuilderInterface
+    public function createFormBuilderConfirmation(?string $url, ?string $buttonTextYes, ?string $buttonTextNo, array $options = []): FormBuilderInterface
     {
         $formBuilder = $this->initFormBuilder($url, null, $options);
 
@@ -93,11 +93,8 @@ class FormHelper
 
     /**
      * Creates a form to delete an entity by id.
-     *
-     * @param $id    integer The entity id
-     * @param $route string The name of the route
      */
-    public function createFormBuilderDeletion($id, $route, array $options = []): FormBuilderInterface
+    public function createFormBuilderDeletion(string|int|null $id, ?string $route, array $options = []): FormBuilderInterface
     {
         $formBuilder = $this->initFormBuilder(null, null, array_merge([
           'action' => $this->generateOrReturnUrl($route, ['id' => $id]),
@@ -112,7 +109,7 @@ class FormHelper
     /**
      * Creates a form to create an entity.
      */
-    public function createFormType(string $formType, $data, string $route = null, array $options = [], ?string $button = 'Abschicken', string $buttonClass = null): FormInterface
+    public function createFormType(string $formType, mixed $data, string $route = null, array $options = [], ?string $button = 'Abschicken', string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $data, array_merge([
           'action'             => $this->generateOrReturnUrl($route),
@@ -182,14 +179,7 @@ class FormHelper
 
     /* FormInterface */
 
-    /**
-     * Add a submit button to a form.
-     *
-     * @param FormBuilderInterface|FormInterface $form
-     * @param string                             $label
-     * @param string                             $name
-     */
-    public function addSubmitButton($form, $label = 'Speichern', $name = 'submit', string $class = null, array $optionsButton = [], array $optionsGroup = []): void
+    public function addSubmitButton(FormInterface|FormBuilderInterface $form, ?string $label = 'Speichern', ?string $name = 'submit', string $class = null, array $optionsButton = [], array $optionsGroup = []): void
     {
         if (!$form->has('group_buttons')) {
             $form->add('group_buttons', FormType::class, array_merge([

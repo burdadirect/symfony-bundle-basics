@@ -3,6 +3,7 @@
 namespace HBM\BasicsBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\NoticeInterface;
 use HBM\BasicsBundle\Service\FormHelper;
 use HBM\BasicsBundle\Traits\ServiceDependencies\ParameterBagDependencyTrait;
@@ -38,10 +39,11 @@ abstract class AbstractController extends BaseController
 
     /* OBJECTS */
 
-    protected function findObject(Request $request, EntityRepository $repo, $id, EntityWording $wording, AttributeMessage|string|null $attribute = null, callable|string $redirect = '/'): ?object
+    protected function findObject(Request $request, EntityRepository $repo, string|int|null $id, EntityWording $wording, AttributeMessage|string|null $attribute = null, callable|string|null $redirect = '/'): ?object
     {
         $wording->setId($id);
 
+        /** @var AbstractEntity $object */
         $object = $id ? $repo->find($id) : null;
 
         if (is_callable($redirect)) {
@@ -170,7 +172,7 @@ abstract class AbstractController extends BaseController
         $this->getSession()->getFlashBag()->add($type, $this->renderView($template, $data));
     }
 
-    protected function addFlashNoticesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
+    protected function addFlashNoticesFromResult(Result $result, string $prefix = null, string $postfix = null): void
     {
         $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
     }

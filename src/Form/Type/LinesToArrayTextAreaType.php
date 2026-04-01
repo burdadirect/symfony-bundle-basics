@@ -6,12 +6,17 @@ use HBM\BasicsBundle\Form\DataTransformer\StringToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LinesToArrayTextAreaType extends AbstractType
 {
+  public function configureOptions(OptionsResolver $resolver): void {
+    $resolver->setDefined(['discard_empty_values']);
+  }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new StringToArrayTransformer("\n"));
+        $builder->addModelTransformer(new StringToArrayTransformer("\n", "\n", $options['discard_empty_values'] ?? false));
     }
 
     public function getParent(): string

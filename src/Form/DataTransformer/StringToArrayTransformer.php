@@ -8,11 +8,13 @@ class StringToArrayTransformer implements DataTransformerInterface
 {
     protected string $separator;
     protected string $glue;
+    protected bool $noEmpty;
 
-    public function __construct(string $separator, ?string $glue = null)
+    public function __construct(string $separator, ?string $glue = null, bool $noEmpty = false)
     {
         $this->separator = $separator;
         $this->glue      = $glue ?: $separator;
+        $this->noEmpty   = $noEmpty;
     }
 
     public function transform(mixed $value): string
@@ -22,6 +24,10 @@ class StringToArrayTransformer implements DataTransformerInterface
 
     public function reverseTransform(mixed $value): array
     {
-        return array_map('trim', explode($this->separator, $value ?? ''));
+        $data = array_map('trim', explode($this->separator, $value));
+        if ($this->noEmpty) {
+          $data = array_diff($data, ['', null]);
+        }
+        return $data;
     }
 }

@@ -63,7 +63,7 @@ abstract class AbstractController extends BaseController
         return $object;
     }
 
-    protected function checkForNull(Request $request, ?object $object, EntityWording $wording, string $redirect): ?Response
+    protected function checkForNull(Request $request, ?object $object, EntityWording $wording, string $redirect): JsonResponse|RedirectResponse|null
     {
         if ($object === null) {
             if ($request->isXmlHttpRequest()) {
@@ -78,7 +78,7 @@ abstract class AbstractController extends BaseController
         return null;
     }
 
-    protected function checkForAttribute(Request $request, ?object $object, EntityWording $wording, AttributeMessage|string|null $attribute, string $redirect): ?Response
+    protected function checkForAttribute(Request $request, ?object $object, EntityWording $wording, AttributeMessage|string|null $attribute, string $redirect): JsonResponse|RedirectResponse|null
     {
         if (!($attribute instanceof AttributeMessage)) {
             $attribute = new AttributeMessage($attribute);
@@ -172,7 +172,7 @@ abstract class AbstractController extends BaseController
         $this->getSession()->getFlashBag()->add($type, $this->renderView($template, $data));
     }
 
-    protected function addFlashNoticesFromResult(Result $result, string $prefix = null, string $postfix = null): void
+    protected function addFlashNoticesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
     {
         $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
     }
@@ -222,9 +222,6 @@ abstract class AbstractController extends BaseController
     /**
      * Checks if a request has been confirmed (is post and contains confirmed flag).
      *
-     * @param null $confirmTitle
-     * @param null $confirmDetails
-     *
      * @return null|RedirectResponse|Response
      */
     protected function confirmActionHelper(Request $request, $urlYes, $urlNo, ?string $confirmTitle = null, ?string $confirmDetails = null, string $textYes = 'Ja', string $textNo = 'Nein', string $flashMessage = 'Aktion abgebrochen', array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null): Response|FormInterface|null
@@ -250,12 +247,9 @@ abstract class AbstractController extends BaseController
     /**
      * Checks if a request has been confirmed (is post and contains confirmed flag).
      *
-     * @param null $confirmTitle
-     * @param null $confirmDetails
-     *
      * @return null|RedirectResponse|Response
      */
-    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, $confirmTitle = null, $confirmDetails = null, array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null): Response|FormInterface|null
+    protected function confirmDeleteActionHelper(Request $request, $urlYes, $urlNo, ?string $confirmTitle = null, ?string $confirmDetails = null, array $titleParts = [], ?string $confirmTemplate = null, array $confirmTemplateVars = [], ?callable $formBuilderCallback = null): Response|FormInterface|null
     {
         return $this->confirmActionHelper($request, $urlYes, $urlNo, $confirmTitle, $confirmDetails, 'Ja, löschen', 'Nein, doch nicht löschen', titleParts: $titleParts, confirmTemplate: $confirmTemplate, confirmTemplateVars: $confirmTemplateVars, formBuilderCallback: $formBuilderCallback);
     }

@@ -109,7 +109,7 @@ class FormHelper
     /**
      * Creates a form to create an entity.
      */
-    public function createFormType(string $formType, mixed $data, string $route = null, array $options = [], ?string $button = 'Abschicken', string $buttonClass = null): FormInterface
+    public function createFormType(string $formType, mixed $data, ?string $route = null, array $options = [], ?string $button = 'Abschicken', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $data, array_merge([
           'action'             => $this->generateOrReturnUrl($route),
@@ -127,7 +127,7 @@ class FormHelper
     /**
      * Creates a form to create an entity.
      */
-    public function createFormTypeCreation(string $formType, Addressable $entity = null, string $route = null, array $options = [], ?string $button = 'Erzeugen', string $buttonClass = null): FormInterface
+    public function createFormTypeCreation(string $formType, ?Addressable $entity = null, ?string $route = null, array $options = [], ?string $button = 'Erzeugen', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $entity, array_merge([
           'action'             => $this->generateOrReturnUrl($route),
@@ -145,7 +145,7 @@ class FormHelper
     /**
      * Creates a form to edit an entity.
      */
-    public function createFormTypeEditing(string $formType, Addressable $entity = null, string $route = null, array $options = [], ?string $button = 'Speichern', string $buttonClass = null): FormInterface
+    public function createFormTypeEditing(string $formType, ?Addressable $entity = null, ?string $route = null, array $options = [], ?string $button = 'Speichern', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $entity, array_merge([
           'action'             => $this->generateOrReturnUrl($route, $entity ? ['id' => $entity->getId()] : []),
@@ -179,7 +179,7 @@ class FormHelper
 
     /* FormInterface */
 
-    public function addSubmitButton(FormInterface|FormBuilderInterface $form, ?string $label = 'Speichern', ?string $name = 'submit', string $class = null, array $optionsButton = [], array $optionsGroup = []): void
+    public function addSubmitButton(FormInterface|FormBuilderInterface $form, ?string $label = 'Speichern', ?string $name = 'submit', ?string $class = null, array $optionsButton = [], array $optionsGroup = []): void
     {
         if (!$form->has('group_buttons')) {
             $form->add('group_buttons', FormType::class, array_merge([

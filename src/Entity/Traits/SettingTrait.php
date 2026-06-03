@@ -133,7 +133,7 @@ trait SettingTrait
     /**
      * Set previewable.
      */
-    public function setPreviewable(bool $previewable = null): self
+    public function setPreviewable(?bool $previewable = null): self
     {
         $this->previewable = $previewable;
 
@@ -170,7 +170,7 @@ trait SettingTrait
 
     /* CUSTOM */
 
-    public function getVarTypeLabel(string $default = null): ?string
+    public function getVarTypeLabel(?string $default = null): ?string
     {
         return SettingVarType::label($this->getVarType(), $default);
     }

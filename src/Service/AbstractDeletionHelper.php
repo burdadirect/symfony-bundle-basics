@@ -24,7 +24,7 @@ abstract class AbstractDeletionHelper
         return $confirmDetails;
     }
 
-    public function renderConfirmMessage(ConfirmMessage $confirmMessage, string $headline = null): string
+    public function renderConfirmMessage(ConfirmMessage $confirmMessage, ?string $headline = null): string
     {
         $message = '';
 

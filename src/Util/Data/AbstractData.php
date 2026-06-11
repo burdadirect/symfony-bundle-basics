@@ -14,19 +14,19 @@ abstract class AbstractData implements DataInterface
 
     private static array $data = [];
 
-    public static function keys(string $filter = null): array
+    public static function keys(?string $filter = null): array
     {
         return array_keys(static::filter($filter));
     }
 
-    public static function key(string|int|bool $key, string $filter = null, string $default = null): ?string
+    public static function key(string|int|bool $key, ?string $filter = null, ?string $default = null): ?string
     {
         $keys = static::keys($filter);
 
         return in_array($key, $keys, true) ? $key : $default;
     }
 
-    public static function data(string $filter = null, array $keys = null, string $sort = null): array
+    public static function data(?string $filter = null, ?array $keys = null, ?string $sort = null): array
     {
         return static::filter($filter, $keys, $sort);
     }
@@ -36,7 +36,7 @@ abstract class AbstractData implements DataInterface
         return static::$data;
     }
 
-    public static function filter(string $filter = null, array $keys = null, string $sort = null): array
+    public static function filter(?string $filter = null, ?array $keys = null, ?string $sort = null): array
     {
         $dataToUse = static::_data();
 
@@ -82,7 +82,7 @@ abstract class AbstractData implements DataInterface
     /**
      * @param null|array|mixed|string $default
      */
-    public static function flatten(string $field = null, mixed $default = null, string $filter = null, array $keys = null, string $prefix = null, string $postfix = null, string $method = null): array
+    public static function flatten(?string $field = null, mixed $default = null, ?string $filter = null, ?array $keys = null, ?string $prefix = null, ?string $postfix = null, ?string $method = null): array
     {
         $array = [];
         foreach (static::filter($filter, $keys) as $key => $value) {
@@ -126,7 +126,7 @@ abstract class AbstractData implements DataInterface
         return reset($dataFiltered) ?: null;
     }
 
-    public static function format(string|int|bool $key, string $format, string $default = null, array $fields = null): ?string
+    public static function format(string|int|bool $key, string $format, ?string $default = null, ?array $fields = null): ?string
     {
         if ($data = static::_data()[$key] ?? null) {
             $values = $fields ? self::fields($key, $fields) : $data;
@@ -137,7 +137,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    public static function formatWithKey(string|int|bool $key, string $format, string $default = null, array $fields = null): ?string
+    public static function formatWithKey(string|int|bool $key, string $format, ?string $default = null, ?array $fields = null): ?string
     {
         if ($data = static::_data()[$key] ?? null) {
             $values = $fields ? self::fields($key, $fields) : $data;
@@ -148,7 +148,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    public static function formatCallback(string|int|bool $key, callable $callback, string $default = null, array $fields = null): ?string
+    public static function formatCallback(string|int|bool $key, callable $callback, ?string $default = null, ?array $fields = null): ?string
     {
         if ($data = static::_data()[$key] ?? null) {
             $values = $fields ? self::fields($key, $fields) : $data;
@@ -162,7 +162,7 @@ abstract class AbstractData implements DataInterface
     /**
      * @param null|mixed $default
      */
-    public static function label(string|int|bool $key = null, $default = null, string $field = null): ?string
+    public static function label(string|int|bool|null $key = null, $default = null, ?string $field = null): ?string
     {
         if (($key !== null) && (isset(static::_data()[$key][$field ?: static::$label]))) {
             return static::_data()[$key][$field ?: static::$label];
@@ -176,7 +176,7 @@ abstract class AbstractData implements DataInterface
      *
      * @return null|mixed|string
      */
-    public static function field(string|int|bool $key = null, string $field = null, $default = null): mixed
+    public static function field(string|int|bool|null $key = null, ?string $field = null, $default = null): mixed
     {
         if (($key !== null) && (isset(static::_data()[$key][$field ?: static::$label]))) {
             return static::_data()[$key][$field ?: static::$label];
@@ -216,7 +216,7 @@ abstract class AbstractData implements DataInterface
         return reset($keys);
     }
 
-    public static function count(string $filter = null): int
+    public static function count(?string $filter = null): int
     {
         return count(self::keys($filter));
     }

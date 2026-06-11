@@ -40,7 +40,7 @@ class ConfirmMessage
 
     private $discard;
 
-    public function __construct($items = [], string $wording = null, $mode = null)
+    public function __construct($items = [], ?string $wording = null, $mode = null)
     {
         $this->items   = $items ?: [];
         $this->wording = $wording;
@@ -320,7 +320,7 @@ class ConfirmMessage
         return null;
     }
 
-    public function evalUrl(AbstractEntity $item, RouterInterface $router = null): ?string
+    public function evalUrl(AbstractEntity $item, ?RouterInterface $router = null): ?string
     {
         if ($this->route instanceof \Closure) {
             return call_user_func($this->route, $item, $router);
@@ -353,7 +353,7 @@ class ConfirmMessage
         return [];
     }
 
-    public function render(AbstractEntity $item, RouterInterface $router = null): string
+    public function render(AbstractEntity $item, ?RouterInterface $router = null): string
     {
         $id    = $this->evalId($item);
         $url   = $this->evalUrl($item, $router);

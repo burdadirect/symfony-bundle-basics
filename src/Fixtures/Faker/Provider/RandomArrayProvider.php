@@ -13,7 +13,7 @@ final class RandomArrayProvider extends BaseProvider
      * @param float    $chanceForEmptyArray the chance for a non empty array
      * @param bool     $allowDuplicates     Allow elements to be picked several times. Defaults to false.
      */
-    public function randomArray(array $array, int $min = null, int $max = null, float $chanceForEmptyArray = 0, bool $allowDuplicates = false): array
+    public function randomArray(array $array, ?int $min = null, ?int $max = null, float $chanceForEmptyArray = 0, bool $allowDuplicates = false): array
     {
         if ($min === null) {
             $min = 0;

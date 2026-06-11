@@ -13,7 +13,7 @@ class AttributeMessage
     /**
      * VoterWrapper constructor.
      */
-    public function __construct(string $attribute = null, Message $message = null)
+    public function __construct(?string $attribute = null, ?Message $message = null)
     {
         $this->attribute = $attribute;
         $this->message   = $message;

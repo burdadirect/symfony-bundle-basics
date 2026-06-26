@@ -1225,7 +1225,7 @@ enum Country: string implements EnumInterface
               'en'   => 'United States Minor Outlying Islands',
             ],
             self::USA => [
-              'de'   => 'USA',
+              'de'   => 'Vereinigste Staten (USA)',
               'en'   => 'United States',
             ],
             self::URY => [
@@ -1249,11 +1249,11 @@ enum Country: string implements EnumInterface
               'en'   => 'Venezuela',
             ],
             self::VGB => [
-              'de'   => 'Britische Jungferninseln',
+              'de'   => 'Jungferninseln, Britische',
               'en'   => 'Virgin Islands, British',
             ],
             self::VIR => [
-              'de'   => 'Amerikanische Jungferninseln',
+              'de'   => 'Jungferninseln, Amerikanische',
               'en'   => 'Virgin Islands, U.S.',
             ],
             self::VNM => [

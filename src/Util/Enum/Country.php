@@ -342,7 +342,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Barbados',
             ],
             self::BGD => [
-              'de'   => 'Bangladesh',
+              'de'   => 'Bangladesch',
               'en'   => 'Bangladesh',
             ],
             self::BEL => [
@@ -412,7 +412,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Botswana',
             ],
             self::BLR => [
-              'de'   => 'Weißrussland',
+              'de'   => 'Belarus',
               'en'   => 'Belarus',
             ],
             self::BLZ => [
@@ -428,8 +428,8 @@ enum Country: string implements EnumInterface
               'en'   => 'Cocos (Keeling) Islands',
             ],
             self::COD => [
-              'de'   => 'Congo, the Democratic Republic of the',
-              'en'   => 'Congo, the Democratic Republic of the',
+              'de'   => 'Demokratische Republik Kongo',
+              'en'   => 'Congo, Democratic Republic of the',
             ],
             self::CAF => [
               'de'   => 'Zentralafrikanische Republik',
@@ -445,8 +445,8 @@ enum Country: string implements EnumInterface
               'filter' => ['DACH'],
             ],
             self::CIV => [
-              'de'   => 'Elfenbeinküste',
-              'en'   => 'Cote D\'Ivoire',
+              'de'   => 'Côte d\'Ivoire',
+              'en'   => 'Côte d\'Ivoire',
             ],
             self::COK => [
               'de'   => 'Cookinseln',
@@ -482,7 +482,7 @@ enum Country: string implements EnumInterface
             ],
             self::CPV => [
               'de'   => 'Cabo Verde',
-              'en'   => 'Cape Verde',
+              'en'   => 'Cabo Verde',
             ],
             self::CUW => [
               'de'   => 'Curaçao',
@@ -498,8 +498,8 @@ enum Country: string implements EnumInterface
               'filter' => ['EU'],
             ],
             self::CZE => [
-              'de'   => 'Tschechische Republik',
-              'en'   => 'Czech Republic',
+              'de'   => 'Tschechien',
+              'en'   => 'Czechia',
               'filter' => ['EU'],
             ],
             self::DEU => [
@@ -572,7 +572,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Falkland Islands (Malvinas)',
             ],
             self::FSM => [
-              'de'   => 'Mikronesien',
+              'de'   => 'Mikronesien, Föderierte Staaten von',
               'en'   => 'Micronesia, Federated States of',
             ],
             self::FRO => [
@@ -589,9 +589,8 @@ enum Country: string implements EnumInterface
               'en'   => 'Gabon',
             ],
             self::GBR => [
-              'de'   => 'Großbritannien',
+              'de'   => 'Vereinigtes Königreich',
               'en'   => 'United Kingdom',
-              'filter' => ['EU'],
             ],
             self::GRD => [
               'de'   => 'Grenada',
@@ -835,10 +834,10 @@ enum Country: string implements EnumInterface
             ],
             self::LBY => [
               'de'   => 'Libyen',
-              'en'   => 'Libyan Arab Jamahiriya',
+              'en'   => 'Libya',
             ],
             self::MAR => [
-              'de'   => 'Morokko',
+              'de'   => 'Marokko',
               'en'   => 'Morocco',
             ],
             self::MCO => [
@@ -846,7 +845,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Monaco',
             ],
             self::MDA => [
-              'de'   => 'Moldawien',
+              'de'   => 'Republik Moldau',
               'en'   => 'Moldova, Republic of',
             ],
             self::MNE => [
@@ -866,8 +865,8 @@ enum Country: string implements EnumInterface
               'en'   => 'Marshall Islands',
             ],
             self::MKD => [
-              'de'   => 'Mazedonien',
-              'en'   => 'Macedonia, the Former Yugoslav Republic of',
+              'de'   => 'Nordmazedonien',
+              'en'   => 'North Macedonia',
             ],
             self::MLI => [
               'de'   => 'Mali',
@@ -1025,8 +1024,8 @@ enum Country: string implements EnumInterface
               'en'   => 'Puerto Rico',
             ],
             self::PSE => [
-              'de'   => 'Palestina',
-              'en'   => 'Palestinian Territory, Occupied',
+              'de'   => 'Palästina',
+              'en'   => 'Palestine, State of',
             ],
             self::PRT => [
               'de'   => 'Portugal',
@@ -1056,7 +1055,7 @@ enum Country: string implements EnumInterface
             ],
             self::SRB => [
               'de'   => 'Serbien',
-              'en'   => 'Serbien',
+              'en'   => 'Serbia',
             ],
             self::RUS => [
               'de'   => 'Russland',
@@ -1126,7 +1125,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Somalia',
             ],
             self::SUR => [
-              'de'   => 'Surinam',
+              'de'   => 'Suriname',
               'en'   => 'Suriname',
             ],
             self::STP => [
@@ -1146,8 +1145,8 @@ enum Country: string implements EnumInterface
               'en'   => 'Syrian Arab Republic',
             ],
             self::SWZ => [
-              'de'   => 'Swasiland',
-              'en'   => 'Swaziland',
+              'de'   => 'Eswatini',
+              'en'   => 'Eswatini',
             ],
             self::TCA => [
               'de'   => 'Turks- und Caicosinseln',
@@ -1186,7 +1185,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Turkmenistan',
             ],
             self::TUN => [
-              'de'   => 'Tunisien',
+              'de'   => 'Tunesien',
               'en'   => 'Tunisia',
             ],
             self::TON => [
@@ -1222,7 +1221,7 @@ enum Country: string implements EnumInterface
               'en'   => 'Uganda',
             ],
             self::UMI => [
-              'de'   => 'United States Minor Islands',
+              'de'   => 'Amerikanische Überseeinseln',
               'en'   => 'United States Minor Outlying Islands',
             ],
             self::USA => [
@@ -1250,16 +1249,16 @@ enum Country: string implements EnumInterface
               'en'   => 'Venezuela',
             ],
             self::VGB => [
-              'de'   => 'Jungferninseln, Britische',
+              'de'   => 'Britische Jungferninseln',
               'en'   => 'Virgin Islands, British',
             ],
             self::VIR => [
-              'de'   => 'Jungferninseln, Amerikanische',
-              'en'   => 'Virgin Islands, U.s.',
+              'de'   => 'Amerikanische Jungferninseln',
+              'en'   => 'Virgin Islands, U.S.',
             ],
             self::VNM => [
               'de'   => 'Vietnam',
-              'en'   => 'Viet Nam',
+              'en'   => 'Vietnam',
             ],
             self::VUT => [
               'de'   => 'Vanuatu',

@@ -264,23 +264,33 @@ enum Country: string implements EnumInterface
     {
         $data = match ($this) {
             self::CIV => [
-              'aliases_de' => 'Elfenbeinküste',
-              'aliases_en' => 'Ivory Coast',
+              'aliases' => [
+                'de' => ['Elfenbeinküste'],
+                'en' => ['Ivory Coast'],
+              ],
             ],
             self::PSE => [
-              'aliases_de' => ['Palästina', 'Westjordanland', 'Gazastreifen'],
-              'aliases_en' => ['Palestine', 'West Bank', 'Gaza Strip'],
+              'aliases' => [
+                'de' => ['Palästina', 'Westjordanland', 'Gazastreifen'],
+                'en' => ['Palestine', 'West Bank', 'Gaza Strip'],
+              ],
             ],
             self::USA => [
-              'aliases_de'   => 'USA',
-              'aliases_en'   => 'USA',
+              'aliases' => [
+                'de' => ['USA'],
+                'en' => ['USA'],
+              ],
             ],
             default => [
-              'aliases_de' => [],
-              'aliases_en' => [],
+              'aliases' => [
+                'de' => [],
+                'en' => [],
+              ],
             ]
         };
 
+        $data['iso2'] = $this->value;
+        $data['iso3'] = $this->name;
         $data['filter'] = [];
 
         if (in_array($this, [self::AUT, self::CHE, self::DEU])) {
@@ -300,9 +310,6 @@ enum Country: string implements EnumInterface
             $data['filter'][] = 'EU';
         }
 
-        $data['iso2'] = $this->value;
-        $data['iso3'] = $this->name;
-
         $localeBackup = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, locale_get_default());
 
@@ -318,8 +325,11 @@ enum Country: string implements EnumInterface
     public function iso3(): string { return $this->name; }
 
     public function label(?string $locale = null): ?string {
-        $locale = $locale ?? locale_get_default();
-        return \Locale::getDisplayRegion('-'.$this->iso2(), $locale);
+        return \Locale::getDisplayRegion('-'.$this->iso2(), $this->locale($locale));
+    }
+
+    public function aliases(?string $locale = null): array {
+        return $this->fields()['aliases'][$this->locale($locale)] ?? [];
     }
 
     public static function tryFromIso(?string $iso2orIso3): ?self
@@ -351,4 +361,7 @@ enum Country: string implements EnumInterface
         return self::from($iso2orIso3);
     }
 
+    private function locale(?string $locale = null): ?string {
+        return $locale ?? locale_get_default();
+    }
 }

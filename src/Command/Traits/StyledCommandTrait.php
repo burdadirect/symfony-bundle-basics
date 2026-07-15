@@ -10,6 +10,7 @@ trait StyledCommandTrait
     public function styleOutput(AbstractExtendableCommand $command, ?int &$exitCode): bool
     {
         // error, info, comment, questions are already defined by symfony.
+        // Allowed colors: black, red, green, yellow, blue, magenta, cyan, white, default, gray, bright-red, bright-green, bright-yellow, bright-blue, bright-magenta, bright-cyan, bright-white
 
         $output = $command->getExtendedOutput();
 
@@ -21,6 +22,9 @@ trait StyledCommandTrait
 
         $style = new OutputFormatterStyle('yellow', null, ['bold']);
         $output->getFormatter()->setStyle('highlight', $style);
+
+        $style = new OutputFormatterStyle('bright-white', 'gray');
+        $output->getFormatter()->setStyle('badge', $style);
 
         $style = new OutputFormatterStyle('green', null, ['bold']);
         $output->getFormatter()->setStyle('success', $style);
@@ -42,8 +46,8 @@ trait StyledCommandTrait
           '</section>'   => '</strong>',
           '<highlight>'  => '<strong style="color:#FF69B4">',
           '</highlight>' => '</strong>',
-          '<warning>'  => '<strong style="color:#FFAA00">',
-          '</warning>' => '</strong>',
+          '<warning>'    => '<strong style="color:#FFAA00">',
+          '</warning>'   => '</strong>',
           '<note>'       => '<strong style="color:#6699EE;">',
           '</note>'      => '</strong>',
         ];

@@ -14,7 +14,7 @@ class EntityWording
 
     protected ?string $function;
 
-    public function __construct(?string $type, string $name = null, ?string $nominative = 'der/die/das', string $function = null)
+    public function __construct(?string $type, ?string $name = null, ?string $nominative = 'der/die/das', ?string $function = null)
     {
         $this->type       = $type;
         $this->name       = $name;
@@ -25,7 +25,7 @@ class EntityWording
     /**
      * Set type.
      */
-    public function setType(string $type = null): self
+    public function setType(?string $type = null): self
     {
         $this->type = $type;
 
@@ -43,7 +43,7 @@ class EntityWording
     /**
      * Set nominative.
      */
-    public function setNominative(string $nominative = null): self
+    public function setNominative(?string $nominative = null): self
     {
         $this->nominative = $nominative;
 
@@ -53,7 +53,7 @@ class EntityWording
     /**
      * Get nominative.
      */
-    public function getNominative(bool $ucfirst = null): ?string
+    public function getNominative(?bool $ucfirst = null): ?string
     {
         if ($ucfirst === true) {
             return ucfirst($this->nominative ?? '');
@@ -69,7 +69,7 @@ class EntityWording
     /**
      * Set function.
      */
-    public function setFunction(string $function = null): self
+    public function setFunction(?string $function = null): self
     {
         $this->function = $function;
 
@@ -87,7 +87,7 @@ class EntityWording
     /**
      * Set id.
      */
-    public function setId(string $id = null): self
+    public function setId(?string $id = null): self
     {
         $this->id = $id;
 
@@ -105,7 +105,7 @@ class EntityWording
     /**
      * Set entityName.
      */
-    public function setName(string $name = null): self
+    public function setName(?string $name = null): self
     {
         $this->name = $name;
 

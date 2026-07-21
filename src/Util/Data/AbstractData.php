@@ -96,7 +96,7 @@ abstract class AbstractData implements DataInterface
         return $array;
     }
 
-    public static function get(string|int|bool $key = null): ?array
+    public static function get(string|int|bool|null $key = null): ?array
     {
         return static::_data()[$key] ?? null;
     }
@@ -190,7 +190,7 @@ abstract class AbstractData implements DataInterface
      *
      * @return null|mixed|string
      */
-    public static function fields(string|int|bool $key = null, array $fields = [], $default = null): mixed
+    public static function fields(string|int|bool|null $key = null, array $fields = [], $default = null): mixed
     {
         if (($key !== null) && (isset(static::_data()[$key]))) {
             $fieldsAll      = static::_data()[$key];

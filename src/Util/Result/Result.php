@@ -24,7 +24,7 @@ class Result
     /**
      * Result constructor.
      */
-    public function __construct(bool $return = null)
+    public function __construct(?bool $return = null)
     {
         $this->return = $return;
 

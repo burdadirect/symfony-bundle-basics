@@ -11,6 +11,10 @@ use HBM\BasicsBundle\Fixtures\Faker\Provider\EmailsProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\RandomArrayProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
 
+/**
+ * @template T of object
+ * @template S of object
+ */
 abstract class AbstractFixtures extends Fixture
 {
     protected Generator|CustomGenerator $faker;
@@ -34,7 +38,11 @@ abstract class AbstractFixtures extends Fixture
         $this->faker->addProvider(new EmailsProvider($this->faker));
     }
 
-    protected function getKeys($fixture): array
+    /**
+     * @param class-string<AbstractFixtures> $fixture
+     * @return array<string>
+     */
+    protected function getKeys(string $fixture): array
     {
         if (is_array($fixture::$keys)) {
             return static::$keys;
@@ -43,26 +51,38 @@ abstract class AbstractFixtures extends Fixture
         return range(1, $fixture::$num);
     }
 
-    protected function getRefId($fixture, $key): string
+    /**
+     * @param class-string<AbstractFixtures> $fixture
+     */
+    protected function getRefId(string $fixture, string|int|null $key): string
     {
         return $fixture::$ref . ':' . $key;
     }
 
-    public function getRef($fixture, $key, string $class): object
+    /**
+     * @param class-string<AbstractFixtures> $fixture
+     * @param string|int $key
+     * @param class-string<S> $class
+     * @return object<T>>
+     */
+    public function getRef(string $fixture, string|int|null $key, string $class): object
     {
         return $this->getReference($this->getRefId($fixture, $key), $class);
     }
 
     /* CREATE AND LOAD */
 
-    abstract protected function createObject(?ObjectManager $manager = null, ?string $key = null);
+    /**
+     * @return object<T>
+     */
+    abstract protected function createObject(?ObjectManager $manager = null, string|int|null $key = null): object;
 
     public function load(ObjectManager $manager): void
     {
         $keys = $this->getKeys(static::class);
 
         foreach ($keys as $key) {
-            $object = $this->createObject($manager, (string) $key);
+            $object = $this->createObject($manager, $key);
 
             $manager->persist($object);
 
@@ -72,7 +92,10 @@ abstract class AbstractFixtures extends Fixture
         $manager->flush();
     }
 
-    public function single(ObjectManager $manager, ?string $key = null, bool $flush = true)
+    /**
+     * @return object<T>
+     */
+    public function single(ObjectManager $manager, string|int|null $key = null, bool $flush = true): object
     {
         $object = $this->createObject($manager, $key);
         $manager->persist($object);
@@ -87,9 +110,12 @@ abstract class AbstractFixtures extends Fixture
     /* REFERENCES */
 
     /**
-     * Get references for keys.
+     * @param class-string<AbstractFixtures> $fixture
+     * @param array<string> $keys
+     * @param class-string<S> $class
+     * @return array<T>
      */
-    protected function getRefs($fixture, array $keys, string $class): array
+    protected function getRefs(string $fixture, array $keys, string $class): array
     {
         $refs = [];
         foreach ($keys as $key) {
@@ -101,32 +127,45 @@ abstract class AbstractFixtures extends Fixture
 
     /**
      * Get random number of references of a certain type of fixture.
+     *
+     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<S> $class
+     * @return array<T>
      */
-    protected function getRandomRefs($fixture, string $class, int $min = 1, ?int $max = null, bool $unique = true): array
+    protected function getRandomRefs(string $fixture, string $class, int $min = 1, ?int $max = null, bool $unique = true): array
     {
         return $this->getRefs($fixture, $this->getRandomRefKeys($fixture, $min, $max, $unique), $class);
     }
 
     /**
      * Get a random reference of a certain type of fixture.
+     *
+     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<S> $class
+     * @return object<T>
      */
-    protected function getRandomRef($fixture, string $class): object
+    protected function getRandomRef(string $fixture, string $class): object
     {
         return $this->getRef($fixture, $this->getRandomRefKey($fixture), $class);
     }
 
     /**
      * Get a random reference key of a certain type of fixture.
+     *
+     * @param class-string<AbstractFixtures> $fixture
      */
-    protected function getRandomRefKey($fixture): string
+    protected function getRandomRefKey(string $fixture): string
     {
         return $this->faker->randomElement($this->getKeys($fixture));
     }
 
     /**
      * Get random number of reference keys of a certain type of fixture.
+     *
+     * @param class-string<AbstractFixtures> $fixture
+     * @return array<string>
      */
-    protected function getRandomRefKeys($fixture, int $min = 1, ?int $max = null, bool $unique = true): array
+    protected function getRandomRefKeys(string $fixture, int $min = 1, ?int $max = null, bool $unique = true): array
     {
         if ($max === null) {
             $max = $min;

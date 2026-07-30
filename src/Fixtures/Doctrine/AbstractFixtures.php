@@ -12,8 +12,9 @@ use HBM\BasicsBundle\Fixtures\Faker\Provider\RandomArrayProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
 
 /**
- * @template T of object
- * @template S of object
+ * @template F of AbstractFixtures
+ * @template C of object
+ * @template E of object
  */
 abstract class AbstractFixtures extends Fixture
 {
@@ -39,7 +40,7 @@ abstract class AbstractFixtures extends Fixture
     }
 
     /**
-     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<F> $fixture
      * @return array<string>
      */
     protected function getKeys(string $fixture): array
@@ -52,7 +53,7 @@ abstract class AbstractFixtures extends Fixture
     }
 
     /**
-     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<F> $fixture
      */
     protected function getRefId(string $fixture, string|int|null $key): string
     {
@@ -60,10 +61,9 @@ abstract class AbstractFixtures extends Fixture
     }
 
     /**
-     * @param class-string<AbstractFixtures> $fixture
-     * @param string|int $key
-     * @param class-string<S> $class
-     * @return object<T>>
+     * @param class-string<F> $fixture
+     * @param class-string<C> $class
+     * @return C
      */
     public function getRef(string $fixture, string|int|null $key, string $class): object
     {
@@ -73,7 +73,7 @@ abstract class AbstractFixtures extends Fixture
     /* CREATE AND LOAD */
 
     /**
-     * @return object<T>
+     * @return E
      */
     abstract protected function createObject(?ObjectManager $manager = null, string|int|null $key = null): object;
 
@@ -93,7 +93,7 @@ abstract class AbstractFixtures extends Fixture
     }
 
     /**
-     * @return object<T>
+     * @return E
      */
     public function single(ObjectManager $manager, string|int|null $key = null, bool $flush = true): object
     {
@@ -110,10 +110,10 @@ abstract class AbstractFixtures extends Fixture
     /* REFERENCES */
 
     /**
-     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<F> $fixture
      * @param array<string> $keys
-     * @param class-string<S> $class
-     * @return array<T>
+     * @param class-string<C> $class
+     * @return array<C>
      */
     protected function getRefs(string $fixture, array $keys, string $class): array
     {
@@ -128,9 +128,9 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get random number of references of a certain type of fixture.
      *
-     * @param class-string<AbstractFixtures> $fixture
-     * @param class-string<S> $class
-     * @return array<T>
+     * @param class-string<F> $fixture
+     * @param class-string<C> $class
+     * @return array<C>
      */
     protected function getRandomRefs(string $fixture, string $class, int $min = 1, ?int $max = null, bool $unique = true): array
     {
@@ -140,19 +140,34 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get a random reference of a certain type of fixture.
      *
-     * @param class-string<AbstractFixtures> $fixture
-     * @param class-string<S> $class
-     * @return object<T>
+     * @param class-string<F> $fixture
+     * @param class-string<C> $class
+     * @return C
      */
     protected function getRandomRef(string $fixture, string $class): object
     {
         return $this->getRef($fixture, $this->getRandomRefKey($fixture), $class);
     }
 
+  /**
+   * @param class-string<AbstractFixtures> $fixture
+   * @param class-string<C> $class
+   * @return C|null
+   */
+  protected function getRandomRefOrNull(string $fixture, string $class): ?object
+  {
+    try {
+      return $this->getRandomRef($fixture, $class);
+    } catch (\OutOfBoundsException) {
+    }
+
+    return NULL;
+  }
+
     /**
      * Get a random reference key of a certain type of fixture.
      *
-     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<F> $fixture
      */
     protected function getRandomRefKey(string $fixture): string
     {
@@ -162,7 +177,7 @@ abstract class AbstractFixtures extends Fixture
     /**
      * Get random number of reference keys of a certain type of fixture.
      *
-     * @param class-string<AbstractFixtures> $fixture
+     * @param class-string<F> $fixture
      * @return array<string>
      */
     protected function getRandomRefKeys(string $fixture, int $min = 1, ?int $max = null, bool $unique = true): array

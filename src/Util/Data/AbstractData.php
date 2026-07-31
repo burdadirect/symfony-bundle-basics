@@ -86,11 +86,11 @@ abstract class AbstractData implements DataInterface
     {
         $array = [];
         foreach (static::filter($filter, $keys) as $key => $value) {
-          if ($method && method_exists(static::class, $method)) {
-            $array[$prefix.$key.$postfix] = static::{$method}($key) ?? $default;
-          } else {
-            $array[$prefix.$key.$postfix] = $value[$field ?: static::$label] ?? $default;
-          }
+            if ($method && method_exists(static::class, $method)) {
+                $array[$prefix . $key . $postfix] = static::{$method}($key) ?? $default;
+            } else {
+                $array[$prefix . $key . $postfix] = $value[$field ?: static::$label] ?? $default;
+            }
         }
 
         return $array;
@@ -98,29 +98,36 @@ abstract class AbstractData implements DataInterface
 
     public static function get(string|int|bool|null $key = null): ?array
     {
+        if ($key === null) {
+            return null;
+        }
+
         return static::_data()[$key] ?? null;
     }
 
     public static function getBy(array $criteria): ?array
     {
-        return array_filter(static::_data(), function ($value) use ($criteria) {
-          foreach ($criteria as $criteriaKey => $criteriaValue) {
-            if (!isset($value[$criteriaKey])) {
-              return false;
+        return array_filter(static::_data(), static function ($value) use ($criteria) {
+            foreach ($criteria as $criteriaKey => $criteriaValue) {
+                if (!isset($value[$criteriaKey])) {
+                    return false;
+                }
+
+                if ($value[$criteriaKey] !== $criteriaValue) {
+                    return false;
+                }
             }
-            if ($value[$criteriaKey] !== $criteriaValue) {
-              return false;
-            }
-          }
-          return true;
+
+            return true;
         });
     }
 
     public static function getOneBy(array $criteria): ?array
     {
         $dataFiltered = static::getBy($criteria);
+
         if (count($dataFiltered) !== 1) {
-          trigger_error('Expected exactly one result, got '.count($dataFiltered), E_USER_WARNING);
+            trigger_error('Expected exactly one result, got ' . count($dataFiltered), E_USER_WARNING);
         }
 
         return reset($dataFiltered) ?: null;

@@ -14,6 +14,9 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @template U of object
+ */
 abstract class AbstractWebTestCase extends WebTestCase
 {
     /** @var string */
@@ -76,6 +79,9 @@ abstract class AbstractWebTestCase extends WebTestCase
         return $user;
     }
 
+    /**
+     * @return null|U
+     */
     protected function randomUser(): ?object
     {
         $users = $this->getUserRepository()->findRandomBy([], 1);
@@ -83,6 +89,9 @@ abstract class AbstractWebTestCase extends WebTestCase
         return reset($users) ?: null;
     }
 
+    /**
+     * @return null|U
+     */
     protected function randomUserWithRoles(array $roles = []): ?object
     {
         $qb = $this->getUserRepository()->createQueryBuilderForAlias('u');

@@ -1,7 +1,7 @@
 {% if is_granted(role|default('ROLE_ADMIN_SUPER')) %}
   <span class="ml-auto mr-5 text-600">
     <span class="ml-3">PHP: <strong>{{ constant('PHP_VERSION') }}</strong></span>
-    <span class="ml-3">Umgebung: <strong>{{ environment_env|default('n/a') }}</strong></span>
+    <span class="ml-3">Umgebung: <strong>{{ app.environment|default('n/a') }}</strong></span>
     <span class="ml-3">Datum: <strong>{{ 'now'|date('Y-m-d H:i:s') }}</strong></span>
   </span>
 {% endif %}

@@ -132,4 +132,12 @@ trait EnumTrait
     {
         return count(self::casesFiltered($filter));
     }
+
+    public static function fromArray(array $cases): array {
+        return array_map(static fn(string $case) => self::from($case), $cases);
+    }
+
+    public static function tryFromArray(array $cases): array {
+        return array_map(static fn(string $case) => self::tryFrom($case), $cases);
+    }
 }

@@ -78,7 +78,8 @@ trait ExtendedEntityRepoTrait
     public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value'): QueryBuilder
     {
         if ($value !== null) {
-            $qb->andWhere($qb->expr()->eq($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $value);
+            $paramName = self::uniqueParam($prefix);
+            $qb->andWhere($qb->expr()->eq($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $value);
         }
 
         return $qb;
@@ -87,7 +88,8 @@ trait ExtendedEntityRepoTrait
     public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices'): QueryBuilder
     {
         if (count($choices) > 0) {
-            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $choices);
+            $paramName = self::uniqueParam($prefix);
+            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $choices);
         }
 
         return $qb;
@@ -97,7 +99,8 @@ trait ExtendedEntityRepoTrait
     {
         if (count($relations) > 0) {
             $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
-            $qb->andWhere($qb->expr()->in($joinAlias, ':' . $prefix))->setParameter($prefix, $relations);
+            $paramName = self::uniqueParam($prefix);
+            $qb->andWhere($qb->expr()->in($joinAlias, ':' . $paramName))->setParameter($paramName, $relations);
         }
 
         return $qb;
@@ -118,7 +121,8 @@ trait ExtendedEntityRepoTrait
     public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections'): QueryBuilder
     {
         if (count($selections) > 0) {
-            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $prefix))->setParameter($prefix, $selections);
+            $paramName = self::uniqueParam($prefix);
+            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $selections);
         } else {
             $qb->andWhere('1 = 0');
         }
@@ -174,17 +178,18 @@ trait ExtendedEntityRepoTrait
 
         $counter = 0;
         foreach ($words as $word) {
+            $paramName = self::uniqueParam($prefix . $counter);
             $condFields = $allFields ? $qb->expr()->andX() : $qb->expr()->orX();
 
             foreach ($fields as $field) {
                 if ($method === 'eq') {
-                    $condFields->add($qb->expr()->eq($field, ':' . $prefix . $counter));
+                    $condFields->add($qb->expr()->eq($field, ':' . $paramName));
                 } else {
-                    $condFields->add($qb->expr()->like($field, ':' . $prefix . $counter));
+                    $condFields->add($qb->expr()->like($field, ':' . $paramName));
                 }
             }
 
-            $qb->setParameter($prefix . $counter, sprintf($format, $word));
+            $qb->setParameter($paramName, sprintf($format, $word));
             ++$counter;
 
             $condWords->add($condFields);

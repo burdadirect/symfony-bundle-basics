@@ -74,7 +74,7 @@ trait EnumTrait
     /**
      * @return array<string, self>
      */
-    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null): array
+    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array
     {
         $result = [];
 
@@ -103,7 +103,7 @@ trait EnumTrait
             });
         }
 
-        return array_column($result, 'case', 'value');
+        return array_column($result, $arrayValue, $arrayKey);
     }
 
     public static function casesFlat(?string $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $prefix = null, ?string $postfix = null, ?string $method = null): array

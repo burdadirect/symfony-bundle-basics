@@ -120,12 +120,12 @@ trait EnumTrait
         return $array;
     }
 
-    public static function random(?string $filter = null): ?self
+    public static function random(?string $filter = null, ?array $cases = null): ?self
     {
-        $cases = self::casesFiltered($filter);
-        shuffle($cases);
+        $casesFiltered = self::casesFiltered($filter, $cases);
+        shuffle($casesFiltered);
 
-        return reset($cases) ?: null;
+        return reset($casesFiltered) ?: null;
     }
 
     public static function count(?string $filter = null): int

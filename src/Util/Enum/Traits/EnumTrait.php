@@ -106,14 +106,17 @@ trait EnumTrait
         return array_column($result, $arrayValue, $arrayKey);
     }
 
-    public static function casesFlat(?string $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $prefix = null, ?string $postfix = null, ?string $method = null): array
+    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $formatKey = '%1$s', ?string $method = null): array
     {
         $array = [];
         foreach (self::casesFiltered($filter, $cases, $sortByField) as $case) {
+            $key = sprintf($formatKey, $case->value, $case->name);
             if ($method && method_exists($case, $method)) {
-                $array[$prefix . $case->value . $postfix] = $case->{$method}() ?? $default;
+                $array[$key] = $case->{$method}() ?? $default;
+            } elseif (is_callable($field)) {
+                $array[$key] = $field($case);
             } else {
-                $array[$prefix . $case->value . $postfix] = $case->field($field, $default);
+                $array[$key] = $case->field($field, $default);
             }
         }
 
@@ -133,11 +136,4 @@ trait EnumTrait
         return count(self::casesFiltered($filter));
     }
 
-    public static function fromArray(array $cases): array {
-        return array_map(static fn(string $case) => self::from($case), $cases);
-    }
-
-    public static function tryFromArray(array $cases): array {
-        return array_map(static fn(string $case) => self::tryFrom($case), $cases);
-    }
 }

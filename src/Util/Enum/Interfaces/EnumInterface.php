@@ -27,11 +27,11 @@ interface EnumInterface
     /**
      * @return array<string, self>
      */
-    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null): array;
+    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array;
 
-    public static function casesFlat(?string $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $prefix = null, ?string $postfix = null): array;
+    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $formatKey = '%1$s',?string $method = null): array;
 
-    public static function random(?string $filter = null): ?self;
+    public static function random(?string $filter = null, ?array $cases = null): ?self;
 
     public static function count(?string $filter = null): int;
 }

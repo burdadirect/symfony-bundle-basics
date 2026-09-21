@@ -141,6 +141,23 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
+    public function searchJsonArray(QueryBuilder $qb, string $alias, string $field, array $values, bool $all = false): QueryBuilder
+    {
+        $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
+
+        foreach ($values as $index => $value) {
+            $paramName = self::uniqueParam('searchJson' . $index . '_');
+            $conds->add($qb->expr()->like($alias . '.' . $field, ':' . $paramName));
+            $qb->setParameter($paramName, '%"' . $value . '"%');
+        }
+
+        if ($conds->count() > 0) {
+            $qb->andWhere($conds);
+        }
+
+        return $qb;
+    }
+
     /**
      * @param array|Composite[] $condGroups
      */
@@ -178,7 +195,7 @@ trait ExtendedEntityRepoTrait
 
         $counter = 0;
         foreach ($words as $word) {
-            $paramName = self::uniqueParam($prefix . $counter);
+            $paramName  = self::uniqueParam($prefix . $counter);
             $condFields = $allFields ? $qb->expr()->andX() : $qb->expr()->orX();
 
             foreach ($fields as $field) {

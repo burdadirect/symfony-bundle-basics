@@ -20,8 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AbstractWebTestCase extends WebTestCase
 {
-    /** @var string */
-    public const REDIRECT_LOGIN = 'http://localhost/login';
+    public const string REDIRECT_LOGIN = 'http://localhost/login';
 
     abstract protected function getUserRepository(): ExtendedEntityRepo;
 
@@ -97,7 +96,8 @@ abstract class AbstractWebTestCase extends WebTestCase
     {
         $qb = $this->getUserRepository()->createQueryBuilderForAlias('u');
         foreach ($roles as $roleIndex => $roleName) {
-            $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . Expr::escapeLike($roleName) . '"%');
+            $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex));
+            $qb->setParameter('role' . $roleIndex, '%"' . Expr::escapeLike($roleName) . '"%');
         }
         $numOfUsers = 0;
 

@@ -22,6 +22,11 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return \addcslashes($literal, '%_');
     }
 
+    public static function escapeSequence(): string
+    {
+        return " ESCAPE '\' ";
+    }
+
     public static function uniqueIdentifier(string $prefix, ?string $postfix = null): string
     {
         return $prefix . \str_replace('.', '', \uniqid('', true)) . $postfix;

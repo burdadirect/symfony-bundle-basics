@@ -148,7 +148,7 @@ trait ExtendedEntityRepoTrait
 
         foreach ($values as $index => $value) {
             $paramName = self::uniqueParam('searchJson' . $index . '_');
-            $conds->add($qb->expr()->like($alias . '.' . $field, ':' . $paramName));
+            $conds->add($qb->expr()->like($alias . '.' . $field, ':' . $paramName).Expr::escapeSequence());
             $qb->setParameter($paramName, '%"' . Expr::escapeLike($value) . '"%');
         }
 
@@ -203,7 +203,7 @@ trait ExtendedEntityRepoTrait
                 if ($method === 'eq') {
                     $condFields->add($qb->expr()->eq($field, ':' . $paramName));
                 } else {
-                    $condFields->add($qb->expr()->like($field, ':' . $paramName));
+                    $condFields->add($qb->expr()->like($field, ':' . $paramName).Expr::escapeSequence());
                 }
             }
 

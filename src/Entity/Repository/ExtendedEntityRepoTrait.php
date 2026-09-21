@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\Expr\Composite;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use HBM\BasicsBundle\Entity\AbstractEntity;
+use HBM\BasicsBundle\ORM\Query\Expr;
 
 /**
  * @method QueryBuilder createQueryBuilder(string $alias, string|null $indexBy = null)
@@ -148,7 +149,7 @@ trait ExtendedEntityRepoTrait
         foreach ($values as $index => $value) {
             $paramName = self::uniqueParam('searchJson' . $index . '_');
             $conds->add($qb->expr()->like($alias . '.' . $field, ':' . $paramName));
-            $qb->setParameter($paramName, '%"' . $value . '"%');
+            $qb->setParameter($paramName, '%"' . Expr::escapeLike($value) . '"%');
         }
 
         if ($conds->count() > 0) {
@@ -206,7 +207,12 @@ trait ExtendedEntityRepoTrait
                 }
             }
 
-            $qb->setParameter($paramName, sprintf($format, $word));
+            if ($method === 'eq') {
+                $qb->setParameter($paramName, sprintf($format, $word));
+            } else {
+                $qb->setParameter($paramName, sprintf($format, Expr::escapeLike($word)));
+            }
+
             ++$counter;
 
             $condWords->add($condFields);

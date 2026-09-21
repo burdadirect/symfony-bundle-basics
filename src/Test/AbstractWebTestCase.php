@@ -6,6 +6,7 @@ use Doctrine\Common\DataFixtures\Executor\AbstractExecutor;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use HBM\BasicsBundle\Entity\Interfaces\ExtendedEntityRepo;
+use HBM\BasicsBundle\ORM\Query\Expr;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -96,7 +97,7 @@ abstract class AbstractWebTestCase extends WebTestCase
     {
         $qb = $this->getUserRepository()->createQueryBuilderForAlias('u');
         foreach ($roles as $roleIndex => $roleName) {
-            $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . $roleName . '"%');
+            $qb->andWhere($qb->expr()->like('u.roles', ':role' . $roleIndex))->setParameter('role' . $roleIndex, '%"' . Expr::escapeLike($roleName) . '"%');
         }
         $numOfUsers = 0;
 

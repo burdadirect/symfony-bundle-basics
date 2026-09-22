@@ -142,14 +142,22 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
+    public function searchJson(QueryBuilder $qb, string $alias, string $field, string $value, ?Composite $composite = null, string $paramPrefix = 'searchJson_'): QueryBuilder
+    {
+        $paramName = self::uniqueParam($paramPrefix);
+        $expr      = $qb->expr()->like($alias . '.' . $field, ':' . $paramName) . Expr::escapeSequence();
+        $composite ? $composite->add($expr) : $qb->andWhere($expr);
+        $qb->setParameter($paramName, '%"' . Expr::escapeLike($value) . '"%');
+
+        return $qb;
+    }
+
     public function searchJsonArray(QueryBuilder $qb, string $alias, string $field, array $values, bool $all = false): QueryBuilder
     {
         $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
 
         foreach ($values as $index => $value) {
-            $paramName = self::uniqueParam('searchJson' . $index . '_');
-            $conds->add($qb->expr()->like($alias . '.' . $field, ':' . $paramName).Expr::escapeSequence());
-            $qb->setParameter($paramName, '%"' . Expr::escapeLike($value) . '"%');
+            $this->searchJson($qb, $alias, $field, $value, $conds, 'searchJson' . $index . '_');
         }
 
         if ($conds->count() > 0) {
@@ -203,7 +211,7 @@ trait ExtendedEntityRepoTrait
                 if ($method === 'eq') {
                     $condFields->add($qb->expr()->eq($field, ':' . $paramName));
                 } else {
-                    $condFields->add($qb->expr()->like($field, ':' . $paramName).Expr::escapeSequence());
+                    $condFields->add($qb->expr()->like($field, ':' . $paramName) . Expr::escapeSequence());
                 }
             }
 

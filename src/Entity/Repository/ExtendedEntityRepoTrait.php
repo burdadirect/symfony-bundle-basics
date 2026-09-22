@@ -76,17 +76,20 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value'): QueryBuilder
+    public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value_', ?Composite $composite = null): QueryBuilder
     {
         if ($value !== null) {
             $paramName = self::uniqueParam($prefix);
-            $qb->andWhere($qb->expr()->eq($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $value);
+            $expr      = $qb->expr()->eq($alias . '.' . $field, ':' . $paramName);
+
+            $composite ? $composite->add($expr) : $qb->andWhere($expr);
+            $qb->setParameter($paramName, $value);
         }
 
         return $qb;
     }
 
-    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices'): QueryBuilder
+    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices_'): QueryBuilder
     {
         if (count($choices) > 0) {
             $paramName = self::uniqueParam($prefix);
@@ -96,7 +99,7 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, ?array $relations = null, string $prefix = 'relations'): QueryBuilder
+    public function searchManyToMany(QueryBuilder $qb, string $alias, string $field, string $joinAlias, ?array $relations = null, string $prefix = 'relations_'): QueryBuilder
     {
         if (count($relations) > 0) {
             $this->leftJoinOnce($qb, $alias, $field, $joinAlias);
@@ -119,7 +122,7 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections'): QueryBuilder
+    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections_'): QueryBuilder
     {
         if (count($selections) > 0) {
             $paramName = self::uniqueParam($prefix);
@@ -142,26 +145,42 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchJson(QueryBuilder $qb, string $alias, string $field, string $value, ?Composite $composite = null, string $paramPrefix = 'searchJson_'): QueryBuilder
+    private function searchLikeOrNot(callable $comparison, QueryBuilder $qb, string $alias, string $field, string $value, string $paramPrefix = 'searchLike_', ?Composite $composite = null, string $format = '%%%s%%'): QueryBuilder
     {
         $paramName = self::uniqueParam($paramPrefix);
-        $expr      = $qb->expr()->like($alias . '.' . $field, ':' . $paramName) . Expr::escapeSequence();
+        $expr      = $comparison($alias . '.' . $field, ':' . $paramName) . Expr::escapeSequence();
+
         $composite ? $composite->add($expr) : $qb->andWhere($expr);
-        $qb->setParameter($paramName, '%"' . Expr::escapeLike($value) . '"%');
+        $qb->setParameter($paramName, sprintf($format, Expr::escapeLike($value)));
 
         return $qb;
     }
 
+    public function searchNotLike(QueryBuilder $qb, string $alias, string $field, string $value, string $paramPrefix = 'searchNotLike_', ?Composite $composite = null, string $format = '%%%s%%'): QueryBuilder
+    {
+        return $this->searchLikeOrNot($qb->expr()->notLike(...), $qb, $alias, $field, $value, $paramPrefix, $composite, $format);
+    }
+
+    public function searchLike(QueryBuilder $qb, string $alias, string $field, string $value, string $paramPrefix = 'searchLike_', ?Composite $composite = null, string $format = '%%%s%%'): QueryBuilder
+    {
+        return $this->searchLikeOrNot($qb->expr()->like(...), $qb, $alias, $field, $value, $paramPrefix, $composite, $format);
+    }
+
+    public function searchJson(QueryBuilder $qb, string $alias, string $field, string $value, string $paramPrefix = 'searchJson_', ?Composite $composite = null): QueryBuilder
+    {
+        return $this->searchLike($qb, $alias, $field, $value, $paramPrefix, $composite, '%%"%s"%%');
+    }
+
     public function searchJsonArray(QueryBuilder $qb, string $alias, string $field, array $values, bool $all = false): QueryBuilder
     {
-        $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
+        $composite = $all ? $qb->expr()->andX() : $qb->expr()->orX();
 
         foreach ($values as $index => $value) {
-            $this->searchJson($qb, $alias, $field, $value, $conds, 'searchJson' . $index . '_');
+            $this->searchJson($qb, $alias, $field, $value, 'searchJson' . $index . '_', $composite);
         }
 
-        if ($conds->count() > 0) {
-            $qb->andWhere($conds);
+        if ($composite->count() > 0) {
+            $qb->andWhere($composite);
         }
 
         return $qb;
@@ -172,16 +191,16 @@ trait ExtendedEntityRepoTrait
      */
     public function addCondGroup(QueryBuilder $qb, array $condGroups, bool $all = false): QueryBuilder
     {
-        $conds = $all ? $qb->expr()->andX() : $qb->expr()->orX();
+        $composite = $all ? $qb->expr()->andX() : $qb->expr()->orX();
 
         foreach ($condGroups as $condGroup) {
             if ($condGroup->count() > 0) {
-                $conds->add($condGroup);
+                $composite->add($condGroup);
             }
         }
 
-        if ($conds->count() > 0) {
-            $qb->andWhere($conds);
+        if ($composite->count() > 0) {
+            $qb->andWhere($composite);
         }
 
         return $qb;
@@ -189,10 +208,10 @@ trait ExtendedEntityRepoTrait
 
     public function addSearchFields(QueryBuilder $qb, array $fields, array $words, string $prefix = 'search', string $format = '%%%s%%', string $method = 'like', bool $allWords = true, bool $allFields = false): QueryBuilder
     {
-        $condWords = $this->getSearchFieldsConditions($qb, $fields, $words, $prefix, $format, $method, $allWords, $allFields);
+        $composite = $this->getSearchFieldsConditions($qb, $fields, $words, $prefix, $format, $method, $allWords, $allFields);
 
-        if ($condWords->count() > 0) {
-            $qb->andWhere($condWords);
+        if ($composite->count() > 0) {
+            $qb->andWhere($composite);
         }
 
         return $qb;
@@ -235,10 +254,9 @@ trait ExtendedEntityRepoTrait
         $joins = $qb->getDQLPart('join')[$alias] ?? [];
 
         $joinColumn = $alias . '.' . $field;
-        foreach ($joins as $join) {
-            if (($join->getJoin() === $joinColumn) && ($join->getAlias() === $joinAlias)) {
-                return $qb;
-            }
+
+        if (array_any($joins, fn ($join) => ($join->getJoin() === $joinColumn) && ($join->getAlias() === $joinAlias))) {
+            return $qb;
         }
 
         $qb->leftJoin($joinColumn, $joinAlias, $conditionType, $condition, $indexBy);

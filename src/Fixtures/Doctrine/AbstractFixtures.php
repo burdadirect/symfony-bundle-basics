@@ -41,6 +41,7 @@ abstract class AbstractFixtures extends Fixture
 
     /**
      * @param class-string<F> $fixture
+     *
      * @return array<string>
      */
     protected function getKeys(string $fixture): array
@@ -63,6 +64,7 @@ abstract class AbstractFixtures extends Fixture
     /**
      * @param class-string<F> $fixture
      * @param class-string<C> $class
+     *
      * @return C
      */
     public function getRef(string $fixture, string|int|null $key, string $class): object
@@ -111,8 +113,9 @@ abstract class AbstractFixtures extends Fixture
 
     /**
      * @param class-string<F> $fixture
-     * @param array<string> $keys
+     * @param array<string>   $keys
      * @param class-string<C> $class
+     *
      * @return array<C>
      */
     protected function getRefs(string $fixture, array $keys, string $class): array
@@ -130,6 +133,7 @@ abstract class AbstractFixtures extends Fixture
      *
      * @param class-string<F> $fixture
      * @param class-string<C> $class
+     *
      * @return array<C>
      */
     protected function getRandomRefs(string $fixture, string $class, int $min = 1, ?int $max = null, bool $unique = true): array
@@ -142,35 +146,41 @@ abstract class AbstractFixtures extends Fixture
      *
      * @param class-string<F> $fixture
      * @param class-string<C> $class
+     *
      * @return C
      */
-    protected function getRandomRef(string $fixture, string $class): object
+    protected function getRandomRef(string $fixture, string $class, bool $unique = false): object
     {
-        return $this->getRef($fixture, $this->getRandomRefKey($fixture), $class);
+        return $this->getRef($fixture, $this->getRandomRefKey($fixture, $unique), $class);
     }
 
-  /**
-   * @param class-string<AbstractFixtures> $fixture
-   * @param class-string<C> $class
-   * @return C|null
-   */
-  protected function getRandomRefOrNull(string $fixture, string $class): ?object
-  {
-    try {
-      return $this->getRandomRef($fixture, $class);
-    } catch (\OutOfBoundsException) {
-    }
+    /**
+     * @param class-string<F> $fixture
+     * @param class-string<C> $class
+     *
+     * @return null|C
+     */
+    protected function getRandomRefOrNull(string $fixture, string $class): ?object
+    {
+        try {
+            return $this->getRandomRef($fixture, $class);
+        } catch (\OutOfBoundsException) {
+        }
 
-    return NULL;
-  }
+        return null;
+    }
 
     /**
      * Get a random reference key of a certain type of fixture.
      *
      * @param class-string<F> $fixture
      */
-    protected function getRandomRefKey(string $fixture): string
+    protected function getRandomRefKey(string $fixture, bool $unique = false): string
     {
+        if ($unique) {
+            return $this->faker->unique()->randomElement($this->getKeys($fixture));
+        }
+
         return $this->faker->randomElement($this->getKeys($fixture));
     }
 
@@ -178,6 +188,7 @@ abstract class AbstractFixtures extends Fixture
      * Get random number of reference keys of a certain type of fixture.
      *
      * @param class-string<F> $fixture
+     *
      * @return array<string>
      */
     protected function getRandomRefKeys(string $fixture, int $min = 1, ?int $max = null, bool $unique = true): array

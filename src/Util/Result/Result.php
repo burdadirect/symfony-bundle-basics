@@ -9,15 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Result
 {
+    use ResultReturnTrait;
+    use ResultPayloadTrait;
+
     /** @var ArrayCollection|Message[] */
     protected $messages;
 
     /** @var ArrayCollection|NoticeInterface[] */
     protected $notices;
-
-    protected ?bool $return;
-
-    protected ?array $payloads;
 
     public ?string $error = null;
 
@@ -30,43 +29,6 @@ class Result
 
         $this->messages = new ArrayCollection();
         $this->notices  = new ArrayCollection();
-        $this->payloads = [];
-    }
-
-    /**
-     * Set return.
-     */
-    public function setReturn(?bool $return): self
-    {
-        $this->return = $return;
-
-        return $this;
-    }
-
-    /**
-     * Get return.
-     */
-    public function getReturn(): ?bool
-    {
-        return $this->return;
-    }
-
-    /**
-     * Set payloads.
-     */
-    public function setPayloads(array $payloads): self
-    {
-        $this->payloads = $payloads;
-
-        return $this;
-    }
-
-    /**
-     * Get payloads.
-     */
-    public function getPayloads(): array
-    {
-        return $this->payloads;
     }
 
     /**
@@ -159,9 +121,9 @@ class Result
         $messages = [];
         foreach ($this->getMessages() as $message) {
             $messages[] = [
-              'text'  => $message->getMessage(),
-              'level' => $message->getLevel(),
-              'alert' => $message->getAlertLevel(),
+                'text'  => $message->getMessage(),
+                'level' => $message->getLevel(),
+                'alert' => $message->getAlertLevel(),
             ];
         }
 
@@ -189,7 +151,7 @@ class Result
     {
         $this->addMessages($result->getMessages());
         foreach ($result->getPayloads() as $payloadKey => $payloadValue) {
-          $this->setPayload($payloadKey, $payloadValue);
+            $this->setPayload($payloadKey, $payloadValue);
         }
 
         if (($this->getReturn() === false) || ($result->getReturn() === false)) {
@@ -197,24 +159,6 @@ class Result
         } elseif (($this->getReturn() === null) || ($result->getReturn() === null)) {
             $this->setReturn(null);
         }
-
-        return $this;
-    }
-
-    /**
-     * @return null|mixed
-     */
-    public function getPayload(string $key)
-    {
-        return $this->payloads[$key] ?? null;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setPayload(string $key, $payload): self
-    {
-        $this->payloads[$key] = $payload;
 
         return $this;
     }

@@ -2,8 +2,6 @@
 
 namespace HBM\BasicsBundle\ORM\Query;
 
-use SortDirection;
-
 class Expr extends \Doctrine\ORM\Query\Expr
 {
     /**
@@ -34,7 +32,11 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return $prefix . \str_replace('.', '', \uniqid('', true)) . $postfix;
     }
 
-    public static function sortDirection(string $sortDirection): \SortDirection {
+    public static function sortDirection(string|\SortDirection $sortDirection): \SortDirection {
+        if ($sortDirection instanceof \SortDirection) {
+            return $sortDirection;
+        }
+
         return match(strtoupper($sortDirection)) {
             'ASC' => \SortDirection::Ascending,
             'DESC' => \SortDirection::Descending,

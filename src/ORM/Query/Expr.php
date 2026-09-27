@@ -32,7 +32,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return $prefix . \str_replace('.', '', \uniqid('', true)) . $postfix;
     }
 
-    public static function sortDirection(string|\SortDirection $sortDirection): \SortDirection {
+    public static function sortDirection(\SortDirection|string|null $sortDirection, \SortDirection $default = \SortDirection::Ascending): \SortDirection {
         if ($sortDirection instanceof \SortDirection) {
             return $sortDirection;
         }
@@ -40,6 +40,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return match(strtoupper($sortDirection)) {
             'ASC' => \SortDirection::Ascending,
             'DESC' => \SortDirection::Descending,
+            default => $default,
         };
     }
 

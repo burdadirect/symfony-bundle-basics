@@ -34,7 +34,7 @@ class Expr extends \Doctrine\ORM\Query\Expr
         return $prefix . \str_replace('.', '', \uniqid('', true)) . $postfix;
     }
 
-    public function getSortEnum(string $sortDirection): \SortDirection {
+    public static function getSortEnum(string $sortDirection): \SortDirection {
         return match(strtoupper($sortDirection)) {
             'ASC' => \SortDirection::Ascending,
             'DESC' => \SortDirection::Descending,

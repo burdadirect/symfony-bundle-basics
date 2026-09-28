@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class TranslationConvertPhpToYaml extends Command
 {
-    public const NAME = 'hbm:translation:convert:phpToYaml';
+    public const string NAME = 'hbm:translation:convert:phpToYaml';
 
     protected function configure(): void
     {
@@ -27,7 +27,7 @@ class TranslationConvertPhpToYaml extends Command
     {
         $fileInput = $input->getArgument('file-input');
 
-        $translations = require_once $fileInput;
+        $translations = require $fileInput;
 
         $translationsRegrouped = [];
         foreach ($translations as $key => $value) {

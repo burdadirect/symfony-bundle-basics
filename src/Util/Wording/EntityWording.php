@@ -22,9 +22,6 @@ class EntityWording
         $this->function   = $function;
     }
 
-    /**
-     * Set type.
-     */
     public function setType(?string $type = null): self
     {
         $this->type = $type;
@@ -32,17 +29,11 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * Get type.
-     */
     public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * Set nominative.
-     */
     public function setNominative(?string $nominative = null): self
     {
         $this->nominative = $nominative;
@@ -50,9 +41,6 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * Get nominative.
-     */
     public function getNominative(?bool $ucfirst = null): ?string
     {
         if ($ucfirst === true) {
@@ -66,9 +54,6 @@ class EntityWording
         return $this->nominative;
     }
 
-    /**
-     * Set function.
-     */
     public function setFunction(?string $function = null): self
     {
         $this->function = $function;
@@ -76,17 +61,11 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * Get function.
-     */
     public function getFunction(): ?string
     {
         return $this->function;
     }
 
-    /**
-     * Set id.
-     */
     public function setId(?string $id = null): self
     {
         $this->id = $id;
@@ -94,9 +73,6 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * Get id.
-     */
     public function getId(): ?string
     {
         return $this->id;
@@ -112,17 +88,11 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * Get entityName.
-     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param null $object
-     */
     public function assignName($object = null): self
     {
         $this->setName($this->extractName($object));
@@ -130,9 +100,6 @@ class EntityWording
         return $this;
     }
 
-    /**
-     * @param null $object
-     */
     public function extractName($object = null): ?string
     {
         $name = null;
@@ -147,16 +114,11 @@ class EntityWording
         return $name;
     }
 
-    private function escapeTextForFormatString($text)
+    private function escapeTextForFormatString($text): string
     {
         return str_replace('%', '%%', $text);
     }
 
-    /**
-     * Creates an entity label.
-     *
-     * @param null|bool $ucfirst
-     */
     private function label(string $format, bool $ucfirst = false): string
     {
         $idPart = $this->getId() ? ' [#' . $this->getId() . ']' : '';
@@ -170,10 +132,7 @@ class EntityWording
         return sprintf($format, $nominativePart, $this->getType(), $idPart);
     }
 
-    /**
-     * @param null $class
-     */
-    public function labelHtml($class = null, bool $ucfirst = false, bool $htmlentities = true): string
+    public function labelHtml(?string $class = null, bool $ucfirst = false, bool $htmlentities = true): string
     {
         $classPart = $class ? ' class="' . $class . '"' : '';
         $namePart  = $this->getName() ? ' <em' . $classPart . '>' . ($htmlentities ? htmlentities($this->getName()) : $this->getName()) . '</em>' : '';

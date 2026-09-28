@@ -12,7 +12,7 @@ final class EmailsProvider extends BaseProvider
      * @param int  $chanceForEmptyArray the chance for a non empty array
      * @param bool $allowDuplicates     Allow duplicates. Defaults to false.
      */
-    public function emails(int $min = 0, int $max = 10, int $chanceForEmptyArray = 0, $allowDuplicates = true): array
+    public function emails(int $min = 0, int $max = 10, int $chanceForEmptyArray = 0, bool $allowDuplicates = true): array
     {
         $urls = [];
 

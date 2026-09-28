@@ -52,7 +52,7 @@ trait EnumTrait
      * @return array<array{
      *    case: self,
      *    name: string,
-     *    value: string|int,
+     *    value: int|string,
      *    data: array
      *  }>
      */
@@ -111,6 +111,7 @@ trait EnumTrait
         $array = [];
         foreach (self::casesFiltered($filter, $cases, $sortByField) as $case) {
             $key = sprintf($formatKey, $case->value, $case->name);
+
             if ($method && method_exists($case, $method)) {
                 $array[$key] = $case->{$method}() ?? $default;
             } elseif (is_callable($field)) {
@@ -135,5 +136,4 @@ trait EnumTrait
     {
         return count(self::casesFiltered($filter));
     }
-
 }

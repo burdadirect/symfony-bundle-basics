@@ -4,15 +4,12 @@ namespace HBM\BasicsBundle\Entity\Traits;
 
 trait UuidableTrait
 {
-    /** @var string */
-    protected $uuid;
+    protected ?string $uuid = null;
 
     /**
      * Set GUID (only alphanumeric, due to restrictions of third party apis).
-     *
-     * @return self
      */
-    public function setUuid()
+    public function setUuid(): self
     {
         if ($this->uuid === null) {
             $this->uuid = $this->generateUuid();
@@ -21,9 +18,6 @@ trait UuidableTrait
         return $this;
     }
 
-    /**
-     * Get UUID
-     */
     public function getUuid(): string
     {
         return $this->uuid;

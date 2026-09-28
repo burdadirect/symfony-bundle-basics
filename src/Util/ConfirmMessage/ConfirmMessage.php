@@ -8,10 +8,10 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ConfirmMessage
 {
-    public const MODE_DELETE   = 'delete';
-    public const MODE_NULLIFY  = 'nullify';
-    public const MODE_REASSIGN = 'reassign';
-    public const MODE_RESOLVE  = 'resolve';
+    public const string MODE_DELETE   = 'delete';
+    public const string MODE_NULLIFY  = 'nullify';
+    public const string MODE_REASSIGN = 'reassign';
+    public const string MODE_RESOLVE  = 'resolve';
 
     /** @var AbstractEntity[]|array|Collection */
     private $items;
@@ -281,7 +281,7 @@ class ConfirmMessage
 
         if ($this->text !== null) {
             if (method_exists($item, $this->text)) {
-                return call_user_func([$item, $this->text]);
+                return $item->{$this->text}();
             }
 
             return $this->text;
@@ -298,7 +298,7 @@ class ConfirmMessage
 
         if ($this->title !== null) {
             if (method_exists($item, $this->title)) {
-                return call_user_func([$item, $this->title]);
+                return $item->{$this->title}();
             }
 
             return $this->title;
@@ -313,11 +313,7 @@ class ConfirmMessage
             return call_user_func($this->icon, $item);
         }
 
-        if ($this->icon !== null) {
-            return $this->icon;
-        }
-
-        return null;
+        return $this->icon ?? null;
     }
 
     public function evalUrl(AbstractEntity $item, ?RouterInterface $router = null): ?string

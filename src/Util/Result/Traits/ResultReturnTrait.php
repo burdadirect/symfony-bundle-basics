@@ -1,6 +1,6 @@
 <?php
 
-namespace HBM\BasicsBundle\Util\Result;
+namespace HBM\BasicsBundle\Util\Result\Traits;
 
 trait ResultReturnTrait
 {

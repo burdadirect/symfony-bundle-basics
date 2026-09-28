@@ -2,15 +2,11 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
+use HBM\BasicsBundle\Util\Enum\SettingVarType;
+
 interface SettingInterface extends Addressable
 {
-    /**
-     * Get varType.
-     */
-    public function getVarType(): ?string;
+    public function getVarType(): ?SettingVarType;
 
-    /**
-     * Get varValueParsed.
-     */
     public function getVarValueParsed();
 }

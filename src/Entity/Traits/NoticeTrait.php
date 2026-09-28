@@ -2,110 +2,65 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-use HBM\BasicsBundle\Util\Data\Level;
+use HBM\BasicsBundle\Util\Enum\Interfaces\EnumInterface;
+use HBM\BasicsBundle\Util\Enum\Level;
 
 trait NoticeTrait
 {
     /* PROPERTIES */
 
-    /** @var string */
-    protected $level = Level::INFO;
-
-    /** @var string */
-    protected $mode;
-
-    /** @var string */
-    protected $title;
-
-    /** @var string */
-    protected $message;
+    protected Level $level = Level::INFO;
+    protected ?EnumInterface $mode = null;
+    protected ?string $title = null;
+    protected ?string $message = null;
 
     /* CONSTRUCTOR / GETTER / SETTER */
 
-    /**
-     * Set level.
-     *
-     * @param string $level
-     */
-    public function setLevel($level): self
+    public function getLevel(): Level
+    {
+        return $this->level;
+    }
+
+    public function setLevel(Level $level): self
     {
         $this->level = $level;
 
         return $this;
     }
 
-    /**
-     * Get level.
-     */
-    public function getLevel(): ?string
+    public function getMode(): ?EnumInterface
     {
-        return $this->level;
+        return $this->mode;
     }
 
-    /**
-     * Set mode.
-     *
-     * @param string $mode
-     */
-    public function setMode($mode): self
+    public function setMode(?EnumInterface $mode): self
     {
         $this->mode = $mode;
 
         return $this;
     }
 
-    /**
-     * Get mode.
-     */
-    public function getMode(): ?string
+    public function getTitle(): ?string
     {
-        return $this->mode;
+        return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     */
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set message.
-     *
-     * @param string $message
-     */
-    public function setMessage($message): self
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Get message.
-     */
     public function getMessage(): ?string
     {
         return $this->message;
     }
 
-    /* CUSTOM */
-
-    public function getAlertLevel(): string
+    public function setMessage(?string $message): self
     {
-        return Level::getAlertLevel($this->getLevel());
+        $this->message = $message;
+
+        return $this;
     }
 }

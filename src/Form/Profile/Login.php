@@ -14,9 +14,6 @@ class Login extends AbstractType
 {
     private bool|array $togglePassword = false;
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefined(['togglePassword']);
@@ -26,33 +23,32 @@ class Login extends AbstractType
     {
         $this->togglePassword = $options['togglePassword'] ?? false;
 
-        $builder
-          ->add($this->getSubFormDefault($builder));
+        $builder->add($this->getSubFormDefault($builder));
     }
 
     protected function getSubFormDefault(FormBuilderInterface $builder): FormBuilderInterface
     {
         $group_default = $builder->create('group_default', FormType::class, [
-          'inherit_data' => true,
+            'inherit_data' => true,
         ]);
 
         $attrPassword = [];
 
-        if (false !== $this->togglePassword) {
+        if ($this->togglePassword !== false) {
             $attrPassword['data-toggable-password'] = is_array($this->togglePassword) ? json_encode($this->togglePassword) : true;
         }
 
         $group_default
           ->add('email', EmailType::class, [
-            'label' => 'E-Mail-Adresse',
+              'label' => 'E-Mail-Adresse',
           ])
           ->add('password', PasswordType::class, [
-            'label' => 'Passwort',
-            'attr'  => $attrPassword,
+              'label' => 'Passwort',
+              'attr'  => $attrPassword,
           ])
           ->add('rememberMe', CheckboxType::class, [
-            'label'    => 'Eingeloggt bleiben?',
-            'required' => false,
+              'label'    => 'Eingeloggt bleiben?',
+              'required' => false,
           ]);
 
         return $group_default;

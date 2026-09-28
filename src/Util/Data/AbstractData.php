@@ -79,9 +79,6 @@ abstract class AbstractData implements DataInterface
         return $value;
     }
 
-    /**
-     * @param null|array|mixed|string $default
-     */
     public static function flatten(?string $field = null, mixed $default = null, ?string $filter = null, ?array $keys = null, ?string $prefix = null, ?string $postfix = null, ?string $method = null): array
     {
         $array = [];
@@ -166,10 +163,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    /**
-     * @param null|mixed $default
-     */
-    public static function label(string|int|bool|null $key = null, $default = null, ?string $field = null): ?string
+    public static function label(string|int|bool|null $key = null, mixed $default = null, ?string $field = null): ?string
     {
         if (($key !== null) && (isset(static::_data()[$key][$field ?: static::$label]))) {
             return static::_data()[$key][$field ?: static::$label];
@@ -178,12 +172,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    /**
-     * @param null|mixed $default
-     *
-     * @return null|mixed|string
-     */
-    public static function field(string|int|bool|null $key = null, ?string $field = null, $default = null): mixed
+    public static function field(string|int|bool|null $key = null, ?string $field = null, mixed $default = null): mixed
     {
         if (($key !== null) && (isset(static::_data()[$key][$field ?: static::$label]))) {
             return static::_data()[$key][$field ?: static::$label];
@@ -192,12 +181,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    /**
-     * @param null|mixed $default
-     *
-     * @return null|mixed|string
-     */
-    public static function fields(string|int|bool|null $key = null, array $fields = [], $default = null): mixed
+    public static function fields(string|int|bool|null $key = null, array $fields = [], mixed $default = null): mixed
     {
         if (($key !== null) && (isset(static::_data()[$key]))) {
             $fieldsAll      = static::_data()[$key];
@@ -212,10 +196,7 @@ abstract class AbstractData implements DataInterface
         return $default;
     }
 
-    /**
-     * @return false|int|string
-     */
-    public static function random()
+    public static function random(): false|int|string
     {
         $keys = array_keys(static::_data());
         shuffle($keys);

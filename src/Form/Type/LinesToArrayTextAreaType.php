@@ -10,9 +10,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LinesToArrayTextAreaType extends AbstractType
 {
-  public function configureOptions(OptionsResolver $resolver): void {
-    $resolver->setDefined(['discard_empty_values', 'discard_non_unique_values']);
-  }
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefined(['discard_empty_values', 'discard_non_unique_values']);
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

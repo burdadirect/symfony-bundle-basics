@@ -14,10 +14,7 @@ interface DataInterface
 
     public static function filter(?string $filter = null, ?array $keys = null, ?string $sort = null): array;
 
-    /**
-     * @param null|array|mixed|string $default
-     */
-    public static function flatten(?string $field = null, $default = null, ?string $filter = null, ?array $keys = null, ?string $prefix = null): array;
+    public static function flatten(?string $field = null, mixed $default = null, ?string $filter = null, ?array $keys = null, ?string $prefix = null): array;
 
     public static function get(?string $key = null): ?array;
 
@@ -27,30 +24,13 @@ interface DataInterface
 
     public static function formatCallback(string $key, callable $callback, ?string $default = null, ?array $fields = null): ?string;
 
-    /**
-     * @param null|mixed $default
-     */
-    public static function label(?string $key = null, $default = null, ?string $field = null): ?string;
+    public static function label(?string $key = null, mixed $default = null, ?string $field = null): ?string;
 
-    /**
-     * @param null|mixed $default
-     *
-     * @return null|mixed|string
-     */
-    public static function field(?string $key = null, ?string $field = null, $default = null);
+    public static function field(?string $key = null, ?string $field = null, mixed $default = null): mixed;
 
-    /**
-     * @param null|array $fields
-     * @param null|mixed $default
-     *
-     * @return null|mixed|string
-     */
-    public static function fields(?string $key = null, array $fields = [], $default = null);
+    public static function fields(?string $key = null, array $fields = [], mixed $default = null): mixed;
 
-    /**
-     * @return false|int|string
-     */
-    public static function random();
+    public static function random(): false|int|string;
 
     public static function count(?string $filter = null): int;
 }

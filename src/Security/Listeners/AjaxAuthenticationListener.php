@@ -15,7 +15,7 @@ class AjaxAuthenticationListener
      *
      * See: https://gist.github.com/xanf/1015146
      */
-    public function onCoreException(ExceptionEvent $event)
+    public function onCoreException(ExceptionEvent $event): void
     {
         $throwable = $event->getThrowable();
         $request   = $event->getRequest();

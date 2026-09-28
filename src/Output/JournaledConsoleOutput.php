@@ -63,11 +63,13 @@ class JournaledConsoleOutput extends ConsoleOutput
         $this->writeToFile = $flag;
     }
 
-    public function deleteJournal(): bool {
-      if (!is_file($this->getJournalPath())) {
-        return true;
-      }
-      return unlink($this->getJournalPath());
+    public function deleteJournal(): bool
+    {
+        if (!is_file($this->getJournalPath())) {
+            return true;
+        }
+
+        return unlink($this->getJournalPath());
     }
 
     public function isEmpty(): bool

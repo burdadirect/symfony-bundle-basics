@@ -10,7 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CsvToArrayTextType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver): void {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
         $resolver->setDefined(['discard_empty_values', 'discard_non_unique_values']);
     }
 

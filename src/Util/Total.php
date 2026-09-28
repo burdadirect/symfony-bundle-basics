@@ -2,34 +2,39 @@
 
 namespace HBM\BasicsBundle\Util;
 
-class Total {
+class Total
+{
+    private array $entries = [];
 
-  private array $entries = [];
+    public function note(mixed $value, string $key, ?string $row = null): mixed
+    {
+        if (!isset($this->entries[$key])) {
+            $this->entries[$key] = [];
+        }
 
-  public function note(mixed $value, string $key, ?string $row = null): mixed {
-    if (!isset($this->entries[$key])) {
-      $this->entries[$key] = [];
+        if ($row) {
+            $this->entries[$key][$row] = $value;
+        } else {
+            $this->entries[$key][] = $value;
+        }
+
+        return $value;
     }
-    if ($row) {
-      $this->entries[$key][$row] = $value;
-    } else {
-      $this->entries[$key][] = $value;
+
+    public function num(string $key): int
+    {
+        return count($this->entries[$key] ?? []);
     }
 
-    return $value;
-  }
+    public function sum(string $key): int|float
+    {
+        return array_sum($this->entries[$key] ?? []);
+    }
 
-  public function num(string $key): int {
-    return count($this->entries[$key] ?? []);
-  }
+    public function reset(): self
+    {
+        $this->entries = [];
 
-  public function sum(string $key): int|float {
-    return array_sum($this->entries[$key] ?? []);
-  }
-
-  public function reset(): self {
-    $this->entries = [];
-
-    return $this;
-  }
+        return $this;
+    }
 }

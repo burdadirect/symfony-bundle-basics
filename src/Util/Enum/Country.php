@@ -264,33 +264,33 @@ enum Country: string implements EnumInterface
     {
         $data = match ($this) {
             self::CIV => [
-              'aliases' => [
-                'de' => ['Elfenbeinküste'],
-                'en' => ['Ivory Coast'],
-              ],
+                'aliases' => [
+                    'de' => ['Elfenbeinküste'],
+                    'en' => ['Ivory Coast'],
+                ],
             ],
             self::PSE => [
-              'aliases' => [
-                'de' => ['Palästina', 'Westjordanland', 'Gazastreifen'],
-                'en' => ['Palestine', 'West Bank', 'Gaza Strip'],
-              ],
+                'aliases' => [
+                    'de' => ['Palästina', 'Westjordanland', 'Gazastreifen'],
+                    'en' => ['Palestine', 'West Bank', 'Gaza Strip'],
+                ],
             ],
             self::USA => [
-              'aliases' => [
-                'de' => ['USA'],
-                'en' => ['USA'],
-              ],
+                'aliases' => [
+                    'de' => ['USA'],
+                    'en' => ['USA'],
+                ],
             ],
             default => [
-              'aliases' => [
-                'de' => [],
-                'en' => [],
-              ],
+                'aliases' => [
+                    'de' => [],
+                    'en' => [],
+                ],
             ]
         };
 
-        $data['iso2'] = $this->value;
-        $data['iso3'] = $this->name;
+        $data['iso2']   = $this->value;
+        $data['iso3']   = $this->name;
         $data['filter'] = [];
 
         if (in_array($this, [self::AUT, self::CHE, self::DEU])) {
@@ -302,18 +302,18 @@ enum Country: string implements EnumInterface
         }
 
         if (in_array($this, [
-          self::AUT, self::BEL, self::BGR, self::CYP, self::CZE, self::DEU,
-          self::DNK, self::EST, self::ESP, self::FIN, self::FRA, self::GRC,
-          self::HRV, self::HUN, self::IRL, self::ITA, self::LTU, self::LUX,
-          self::LVA, self::MLT, self::NLD, self::POL, self::PRT, self::ROU,
-          self::SWE, self::SVN, self::SVK])) {
+            self::AUT, self::BEL, self::BGR, self::CYP, self::CZE, self::DEU,
+            self::DNK, self::EST, self::ESP, self::FIN, self::FRA, self::GRC,
+            self::HRV, self::HUN, self::IRL, self::ITA, self::LTU, self::LUX,
+            self::LVA, self::MLT, self::NLD, self::POL, self::PRT, self::ROU,
+            self::SWE, self::SVN, self::SVK])) {
             $data['filter'][] = 'EU';
         }
 
         $localeBackup = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, locale_get_default());
 
-        $value = str_replace(['Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß'], ['Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'], $this->label());
+        $value                  = str_replace(['Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß'], ['Ae', 'Oe', 'Ue', 'ae', 'oe', 'ue', 'ss'], $this->label());
         $data['transliterated'] = iconv('UTF-8', 'ASCII//TRANSLIT', $value);
 
         setlocale(LC_CTYPE, $localeBackup);
@@ -321,14 +321,23 @@ enum Country: string implements EnumInterface
         return $data;
     }
 
-    public function iso2(): string { return $this->value; }
-    public function iso3(): string { return $this->name; }
-
-    public function label(?string $locale = null): ?string {
-        return \Locale::getDisplayRegion('-'.$this->iso2(), $this->locale($locale));
+    public function iso2(): string
+    {
+        return $this->value;
     }
 
-    public function aliases(?string $locale = null): array {
+    public function iso3(): string
+    {
+        return $this->name;
+    }
+
+    public function label(?string $locale = null): ?string
+    {
+        return \Locale::getDisplayRegion('-' . $this->iso2(), $this->locale($locale));
+    }
+
+    public function aliases(?string $locale = null): array
+    {
         return $this->fields()['aliases'][$this->locale($locale)] ?? [];
     }
 
@@ -338,11 +347,11 @@ enum Country: string implements EnumInterface
             return null;
         }
         $iso2orIso3 = strtoupper(trim($iso2orIso3));
+
         if (strlen($iso2orIso3) === 3) {
             try {
-                //return self::{$iso2orIso3};
-                return constant('self::'.$iso2orIso3);
-            } catch(\Exception $e) {
+                return self::{$iso2orIso3};
+            } catch (\Exception $e) {
                 return null;
             }
         }
@@ -353,15 +362,16 @@ enum Country: string implements EnumInterface
     public function fromIso(string $iso2orIso3): self
     {
         $iso2orIso3 = strtoupper(trim($iso2orIso3));
+
         if (strlen($iso2orIso3) === 3) {
-            //return self::{$iso2orIso3};
-            return constant('self::'.$iso2orIso3);
+            return self::{$iso2orIso3};
         }
 
         return self::from($iso2orIso3);
     }
 
-    private function locale(?string $locale = null): ?string {
+    private function locale(?string $locale = null): ?string
+    {
         return $locale ?? locale_get_default();
     }
 }

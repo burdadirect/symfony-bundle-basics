@@ -20,9 +20,6 @@ class FormHelper
 
     private RouterInterface $routerInterface;
 
-    /**
-     * FormHelper constructor.
-     */
     public function __construct(FormFactoryInterface $formFactoryInterface, RouterInterface $routerInterface, array $config)
     {
         $this->formFactoryInterface = $formFactoryInterface;
@@ -30,21 +27,16 @@ class FormHelper
         $this->config               = $config;
     }
 
-    protected function getTranslationDomain(?string $formType = null): string|false {
-      return false;
+    protected function getTranslationDomain(?string $formType = null): string|false
+    {
+        return false;
     }
 
-    /**
-     * Create form.
-     */
     private function createForm(string $type, mixed $data = null, array $options = []): FormInterface
     {
         return $this->formFactoryInterface->create($type, $data, $options);
     }
 
-    /**
-     * Create form builder.
-     */
     private function createFormBuilder(mixed $data = null, array $options = []): FormBuilderInterface
     {
         return $this->formFactoryInterface->createBuilder(FormType::class, $data, $options);
@@ -56,8 +48,8 @@ class FormHelper
     public function initFormBuilder(?string $route, mixed $data = null, array $options = []): FormBuilderInterface
     {
         $optionsDefault = [
-          'method'             => 'POST',
-          'translation_domain' => $this->getTranslationDomain(),
+            'method'             => 'POST',
+            'translation_domain' => $this->getTranslationDomain(),
         ];
 
         if ($route) {
@@ -97,8 +89,8 @@ class FormHelper
     public function createFormBuilderDeletion(string|int|null $id, ?string $route, array $options = []): FormBuilderInterface
     {
         $formBuilder = $this->initFormBuilder(null, null, array_merge([
-          'action' => $this->generateOrReturnUrl($route, ['id' => $id]),
-          'method' => 'DELETE',
+            'action' => $this->generateOrReturnUrl($route, ['id' => $id]),
+            'method' => 'DELETE',
         ], $options));
 
         $this->addSubmitButton($formBuilder, 'Löschen');
@@ -112,9 +104,9 @@ class FormHelper
     public function createFormType(string $formType, mixed $data, ?string $route = null, array $options = [], ?string $button = 'Abschicken', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $data, array_merge([
-          'action'             => $this->generateOrReturnUrl($route),
-          'method'             => 'POST',
-          'translation_domain' => $this->getTranslationDomain($formType),
+            'action'             => $this->generateOrReturnUrl($route),
+            'method'             => 'POST',
+            'translation_domain' => $this->getTranslationDomain($formType),
         ], $options));
 
         if ($button) {
@@ -130,9 +122,9 @@ class FormHelper
     public function createFormTypeCreation(string $formType, ?Addressable $entity = null, ?string $route = null, array $options = [], ?string $button = 'Erzeugen', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $entity, array_merge([
-          'action'             => $this->generateOrReturnUrl($route),
-          'method'             => 'POST',
-          'translation_domain' => $this->getTranslationDomain($formType),
+            'action'             => $this->generateOrReturnUrl($route),
+            'method'             => 'POST',
+            'translation_domain' => $this->getTranslationDomain($formType),
         ], $options));
 
         if ($button) {
@@ -148,9 +140,9 @@ class FormHelper
     public function createFormTypeEditing(string $formType, ?Addressable $entity = null, ?string $route = null, array $options = [], ?string $button = 'Speichern', ?string $buttonClass = null): FormInterface
     {
         $form = $this->createForm($formType, $entity, array_merge([
-          'action'             => $this->generateOrReturnUrl($route, $entity ? ['id' => $entity->getId()] : []),
-          'method'             => 'PUT',
-          'translation_domain' => $this->getTranslationDomain($formType),
+            'action'             => $this->generateOrReturnUrl($route, $entity ? ['id' => $entity->getId()] : []),
+            'method'             => 'PUT',
+            'translation_domain' => $this->getTranslationDomain($formType),
         ], $options));
 
         if ($button) {
@@ -162,14 +154,11 @@ class FormHelper
 
     /* FormBuilderInterface */
 
-    /**
-     * Add a form group.
-     */
     public function addGroup(FormBuilderInterface $builder, array $options = [], string $name = 'group_generic'): FormBuilderInterface
     {
         $group = $builder->create($name, FormType::class, array_merge([
-          'inherit_data' => true,
-          'card'         => true,
+            'inherit_data' => true,
+            'card'         => true,
         ], $options));
 
         $builder->add($group);
@@ -183,27 +172,20 @@ class FormHelper
     {
         if (!$form->has('group_buttons')) {
             $form->add('group_buttons', FormType::class, array_merge([
-              'attr' => [
-                'class' => 'hbm-form-buttons',
-              ],
-              'inherit_data' => true,
-              'label'        => false,
+                'attr'         => ['class' => 'hbm-form-buttons'],
+                'inherit_data' => true,
+                'label'        => false,
             ], $optionsGroup));
         }
 
         $form->get('group_buttons')->add($name, SubmitType::class, array_merge([
-          'label'      => $label,
-          'label_html' => true,
-          'attr'       => ['class' => $class ?: $this->getButtonClasses('primary')],
+            'label'      => $label,
+            'label_html' => true,
+            'attr'       => ['class' => $class ?: $this->getButtonClasses('primary')],
         ], $optionsButton));
     }
 
-    /**
-     * Get a submit button from a form.
-     *
-     * @return FormInterface|SubmitButton
-     */
-    public function getSubmitButton(FormInterface $form, string $name)
+    public function getSubmitButton(FormInterface $form, string $name): FormInterface|SubmitButton|null
     {
         /** @var SubmitButton $button */
         $button = null;

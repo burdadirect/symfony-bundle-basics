@@ -9,6 +9,7 @@ use Faker\Generator;
 use HBM\BasicsBundle\Fixtures\Faker\Generator\CustomGenerator;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\EmailsProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\RandomArrayProvider;
+use HBM\BasicsBundle\Fixtures\Faker\Provider\SafeCanonicalEmailProvider;
 use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
 
 /**
@@ -18,7 +19,8 @@ use HBM\BasicsBundle\Fixtures\Faker\Provider\UrlsProvider;
  */
 abstract class AbstractFixtures extends Fixture
 {
-    protected Generator|CustomGenerator $faker;
+    /** @var CustomGenerator */
+    protected Generator $faker;
 
     public static string $ref;
 
@@ -28,15 +30,13 @@ abstract class AbstractFixtures extends Fixture
 
     protected array $combinations = [];
 
-    /**
-     * AbstractFixtures constructor.
-     */
     public function __construct()
     {
         $this->faker = Factory::create('de_DE');
         $this->faker->addProvider(new RandomArrayProvider($this->faker));
         $this->faker->addProvider(new UrlsProvider($this->faker));
         $this->faker->addProvider(new EmailsProvider($this->faker));
+        $this->faker->addProvider(new SafeCanonicalEmailProvider($this->faker));
     }
 
     /**
@@ -48,6 +48,10 @@ abstract class AbstractFixtures extends Fixture
     {
         if (is_array($fixture::$keys)) {
             return static::$keys;
+        }
+
+        if ($fixture::$num < 1) {
+            return [];
         }
 
         return range(1, $fixture::$num);

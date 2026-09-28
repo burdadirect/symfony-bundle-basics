@@ -14,26 +14,25 @@ class NoticeType extends AbstractType
     {
         parent::buildForm($builder, $options);
 
-        $builder
-          ->add($this->getSubFormDefault($builder));
+        $builder->add($this->getSubFormDefault($builder));
     }
 
     protected function getSubFormDefault(FormBuilderInterface $builder): FormBuilderInterface
     {
         $group = $builder->create('group_default', FormType::class, [
-          'inherit_data' => true,
-          'card'         => true,
-          'label'        => 'Allgemein',
+            'inherit_data' => true,
+            'card'         => true,
+            'label'        => 'Allgemein',
         ]);
 
         $group
           ->add('title', TextType::class, [
-            'label'    => 'Titel',
-            'required' => true,
+              'label'    => 'Titel',
+              'required' => true,
           ])
           ->add('message', TextareaType::class, [
-            'label'    => 'Notiz',
-            'required' => false,
+              'label'    => 'Notiz',
+              'required' => false,
           ]);
 
         return $group;

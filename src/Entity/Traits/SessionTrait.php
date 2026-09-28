@@ -6,96 +6,57 @@ trait SessionTrait
 {
     /* PROPERTIES */
 
-    /** @var string */
-    protected $sessionId;
-
-    /** @var string */
-    protected $sessionData;
-
-    /** @var int */
-    protected $sessionTime;
-
-    /** @var int */
-    protected $sessionLifetime;
+    protected ?string $sessionId = null;
+    protected ?string $sessionData = null;
+    protected ?int $sessionTime = null;
+    protected ?int $sessionLifetime = null;
 
     /* CONSTRUCTOR / GETTER / SETTER */
 
-    /**
-     * Set sessionId
-     *
-     * @param string $sessionId
-     */
-    public function setSessionId($sessionId): self
+    public function setSessionId(?string $sessionId): self
     {
         $this->sessionId = $sessionId;
 
         return $this;
     }
 
-    /**
-     * Get sessionId
-     */
-    public function getSessionId(): string
+    public function getSessionId(): ?string
     {
         return $this->sessionId;
     }
 
-    /**
-     * Set sessionData
-     *
-     * @param string $sessionData
-     */
-    public function setSessionData($sessionData): self
+    public function setSessionData(?string $sessionData): self
     {
         $this->sessionData = $sessionData;
 
         return $this;
     }
 
-    /**
-     * Get sessionData
-     */
-    public function getSessionData(): string
+    public function getSessionData(): ?string
     {
         return $this->sessionData;
     }
 
-    /**
-     * Set sessionTime
-     *
-     * @param int $sessionTime
-     */
-    public function setSessionTime($sessionTime): self
+    public function setSessionTime(?int $sessionTime): self
     {
         $this->sessionTime = $sessionTime;
 
         return $this;
     }
 
-    /**
-     * Get sessionTime
-     */
-    public function getSessionTime(): int
+    public function getSessionTime(): ?int
     {
         return $this->sessionTime;
     }
 
-    /**
-     * Set sessionLifetime
-     *
-     * @param int $sessionLifetime
-     */
-    public function setSessionLifetime($sessionLifetime): self
+    public function setSessionLifetime(?int $sessionLifetime): self
     {
         $this->sessionLifetime = $sessionLifetime;
 
         return $this;
     }
 
-    /**
-     * Get sessionLifetime
-     */
-    public function getSessionLifetime(): int
+    public function getSessionLifetime(): ?int
     {
         return $this->sessionLifetime;
     }

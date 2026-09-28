@@ -5,7 +5,9 @@ namespace HBM\BasicsBundle\Entity\Traits;
 use HBM\BasicsBundle\Util\Enum\Interfaces\EnumStateInterface;
 
 /**
- * @template TT
+ * @template TT of EnumStateInterface
+ *
+ * @property EnumStateInterface $state
  */
 trait StateableEnumTrait
 {
@@ -14,7 +16,7 @@ trait StateableEnumTrait
      *
      * @param TT $state
      */
-    public function setState(EnumStateInterface $state)
+    public function setState(EnumStateInterface $state): self
     {
         $this->state = $state;
 

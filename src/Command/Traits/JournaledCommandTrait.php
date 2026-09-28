@@ -57,7 +57,7 @@ trait JournaledCommandTrait
 
         // Clean up empty logs, if necessary.
         if (!$this->keepEmptyJournals() && $output->isEmpty()) {
-          $output->deleteJournal();
+            $output->deleteJournal();
         }
 
         // Disable journaling, if journaling file is empty.
@@ -66,6 +66,4 @@ trait JournaledCommandTrait
 
         return true;
     }
-
-
 }

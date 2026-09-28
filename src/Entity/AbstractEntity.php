@@ -13,8 +13,7 @@ abstract class AbstractEntity implements Addressable, Uuidable, Timestampable
     use UuidableTrait;
     use TimestampableTrait;
 
-    /** @var int */
-    protected $id;
+    protected ?int $id = null;
 
     /**
      * Construct entity and set UUID.
@@ -24,9 +23,6 @@ abstract class AbstractEntity implements Addressable, Uuidable, Timestampable
         $this->setUuid();
     }
 
-    /**
-     * Get id.
-     */
     public function getId(): ?int
     {
         return $this->id;

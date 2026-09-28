@@ -12,23 +12,21 @@ class PasswordReset extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-          ->add($this->getSubFormDefault($builder));
+        $builder->add($this->getSubFormDefault($builder));
     }
 
-    protected function getSubFormDefault(FormBuilderInterface $builder)
+    protected function getSubFormDefault(FormBuilderInterface $builder): FormBuilderInterface
     {
         $group_default = $builder->create('group_default', FormType::class, [
-          'inherit_data' => true,
+            'inherit_data' => true,
         ]);
 
-        $group_default
-          ->add('email', EmailType::class, [
+        $group_default->add('email', EmailType::class, [
             'label'       => 'E-Mail-Adresse',
             'constraints' => [
-              new NotBlank(),
+                new NotBlank(),
             ],
-          ]);
+        ]);
 
         return $group_default;
     }

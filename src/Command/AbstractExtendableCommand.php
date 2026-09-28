@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractExtendableCommand extends Command
 {
     private InputInterface $extendedInput;
+
     private OutputInterface $extendedOutput;
 
     public function getExtendedInput(): InputInterface
@@ -54,7 +55,7 @@ abstract class AbstractExtendableCommand extends Command
             }
         }
 
-        // Sort pre executing methods in decending order.
+        // Sort pre executing methods in descending order.
         if ($class === PreExecute::class) {
             arsort($methods, SORT_NUMERIC);
         }
@@ -67,7 +68,7 @@ abstract class AbstractExtendableCommand extends Command
         return array_keys($methods);
     }
 
-    protected function preExecute(AbstractExtendableCommand $command, ?int $exitCode): ?int
+    protected function preExecute(self $command, ?int $exitCode): ?int
     {
         foreach ($this->getAttributedMethods(PreExecute::class) as $method) {
             if (false === $this->{$method}($command, $exitCode)) {
@@ -78,7 +79,7 @@ abstract class AbstractExtendableCommand extends Command
         return $exitCode;
     }
 
-    protected function postExecute(AbstractExtendableCommand $command, int $exitCode): int
+    protected function postExecute(self $command, int $exitCode): int
     {
         foreach ($this->getAttributedMethods(PostExecute::class) as $method) {
             if (false === $this->{$method}($command, $exitCode)) {
@@ -90,7 +91,7 @@ abstract class AbstractExtendableCommand extends Command
     }
 
     /**
-     * @see \Symfony\Component\Console\Command\Command::execute()
+     * @see Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -107,5 +108,4 @@ abstract class AbstractExtendableCommand extends Command
 
         return $this->postExecute($this, $exitCode);
     }
-
 }

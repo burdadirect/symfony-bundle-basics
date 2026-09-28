@@ -4,23 +4,18 @@ namespace HBM\BasicsBundle\Entity\Traits;
 
 use HBM\BasicsBundle\Util\Data\State;
 
+/**
+ * @property int $state
+ */
 trait StateableTrait
 {
-    /**
-     * Set state.
-     *
-     * @return self
-     */
-    public function setState(int $state)
+    public function setState(int $state): self
     {
         $this->state = $state;
 
         return $this;
     }
 
-    /**
-     * Get state.
-     */
     public function getState(): int
     {
         return $this->state;

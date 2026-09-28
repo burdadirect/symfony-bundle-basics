@@ -1,10 +1,10 @@
 <?php
 
-namespace HBM\BasicsBundle\Util\Result;
+namespace HBM\BasicsBundle\Util\Result\Traits;
 
 trait ResultPayloadTrait
 {
-
+    /** @var array<string, mixed> */
     protected array $payloads = [];
 
     public function setPayloads(array $payloads): self
@@ -30,5 +30,4 @@ trait ResultPayloadTrait
 
         return $this;
     }
-
 }

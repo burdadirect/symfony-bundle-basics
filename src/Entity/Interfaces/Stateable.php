@@ -4,16 +4,8 @@ namespace HBM\BasicsBundle\Entity\Interfaces;
 
 interface Stateable extends Addressable
 {
-    /**
-     * Set state.
-     *
-     * @return self
-     */
-    public function setState(int $state);
+    public function setState(int $state): self;
 
-    /**
-     * Get state.
-     */
     public function getState(): int;
 
     /* CUSTOM */

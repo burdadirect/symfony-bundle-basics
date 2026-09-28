@@ -38,21 +38,20 @@ trait StyledCommandTrait
     public function htmlifyOutput(string $message): string
     {
         $replacements = [
-          '<failure>'    => '<strong style="color:#FF0000;">',
-          '</failure>'   => '</strong>',
-          '<success>'    => '<strong style="color:#008811;">',
-          '</success>'   => '</strong>',
-          '<section>'    => '<strong style="color:#8844AA;">',
-          '</section>'   => '</strong>',
-          '<highlight>'  => '<strong style="color:#FF69B4">',
-          '</highlight>' => '</strong>',
-          '<warning>'    => '<strong style="color:#FFAA00">',
-          '</warning>'   => '</strong>',
-          '<note>'       => '<strong style="color:#6699EE;">',
-          '</note>'      => '</strong>',
+            '<failure>'    => '<strong style="color:#FF0000;">',
+            '</failure>'   => '</strong>',
+            '<success>'    => '<strong style="color:#008811;">',
+            '</success>'   => '</strong>',
+            '<section>'    => '<strong style="color:#8844AA;">',
+            '</section>'   => '</strong>',
+            '<highlight>'  => '<strong style="color:#FF69B4">',
+            '</highlight>' => '</strong>',
+            '<warning>'    => '<strong style="color:#FFAA00">',
+            '</warning>'   => '</strong>',
+            '<note>'       => '<strong style="color:#6699EE;">',
+            '</note>'      => '</strong>',
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $message);
     }
-
 }

@@ -31,7 +31,7 @@ class Slugifier
         $slug = iconv('utf-8', 'ascii//TRANSLIT//IGNORE', $slug);
         // Replace spaces with dashes.
         $slug = str_replace([' '], ['-'], $slug);
-        // Replace everthings thats not allowed: https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html
+        // Replace everything thats not allowed: https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html
         $slug = preg_replace('/[^a-zA-Z0-9-_]/', '', $slug);
 
         // Remove multiple dashes.

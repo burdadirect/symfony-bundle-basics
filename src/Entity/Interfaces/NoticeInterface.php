@@ -2,20 +2,20 @@
 
 namespace HBM\BasicsBundle\Entity\Interfaces;
 
+use HBM\BasicsBundle\Util\Enum\Interfaces\EnumInterface;
+use HBM\BasicsBundle\Util\Enum\Level;
+
 interface NoticeInterface extends Addressable
 {
-    /**
-     * Get title.
-     */
     public function getTitle(): ?string;
+    public function setTitle(?string $title): self;
 
-    /**
-     * Get message.
-     */
     public function getMessage(): ?string;
+    public function setMessage(?string $message): self;
 
-    /**
-     * Get alert level.
-     */
-    public function getAlertLevel(): string;
+    public function getLevel(): Level;
+    public function setLevel(Level $level): self;
+
+    public function getMode(): ?EnumInterface;
+    public function setMode(?EnumInterface $mode): self;
 }

@@ -18,7 +18,7 @@ final class RandomArrayProvider extends BaseProvider
         if ($min === null) {
             $min = 0;
         } elseif ($min < 0) {
-            throw new \LogicException(sprintf('Minimum number of random array elements must be >= 0.'));
+            throw new \LogicException('Minimum number of random array elements must be >= 0.');
         }
 
         if ($max === null) {

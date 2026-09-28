@@ -4,27 +4,18 @@ namespace HBM\BasicsBundle\Entity\Traits;
 
 trait TimestampableTrait
 {
-    /** @var \DateTime */
-    protected $created;
-
-    /** @var \DateTime */
-    protected $modified;
+    protected ?\DateTime $created = null;
+    protected ?\DateTime $modified = null;
 
     public array $updateTimestamps = [
-      'created' => true,
-      'modified' => true,
+        'created'  => true,
+        'modified' => true,
     ];
 
     /**
-     * Set created
-     *
-     * @param \DateTime|string $created
-     *
-     * @throws \Exception
-     *
-     * @return self
+     * @throws \DateMalformedStringException
      */
-    public function setCreated($created)
+    public function setCreated(\DateTime|string|null $created): self
     {
         if (is_string($created)) {
             $created = new \DateTime($created);
@@ -35,24 +26,15 @@ trait TimestampableTrait
         return $this;
     }
 
-    /**
-     * Get created
-     */
     public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
     /**
-     * Set modified
-     *
-     * @param \DateTime|string $modified
-     *
-     * @throws \Exception
-     *
-     * @return self
+     * @throws \DateMalformedStringException
      */
-    public function setModified($modified)
+    public function setModified(\DateTime|string|null $modified): self
     {
         if (is_string($modified)) {
             $modified = new \DateTime($modified);
@@ -63,9 +45,6 @@ trait TimestampableTrait
         return $this;
     }
 
-    /**
-     * Get modified
-     */
     public function getModified(): ?\DateTime
     {
         return $this->modified;
@@ -74,7 +53,7 @@ trait TimestampableTrait
     /**
      * Lifecycle callback
      *
-     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     public function updateTimestamps(): void
     {

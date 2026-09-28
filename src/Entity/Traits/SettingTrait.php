@@ -2,185 +2,117 @@
 
 namespace HBM\BasicsBundle\Entity\Traits;
 
-use HBM\BasicsBundle\Util\Data\SettingVarType;
+use HBM\BasicsBundle\Util\Enum\SettingVarType;
 
 trait SettingTrait
 {
     /* PROPERTIES */
 
-    /** @var string */
-    protected $varType;
+    protected ?SettingVarType $varType = null;
 
-    /** @var string */
-    protected $varNature;
+    protected ?string $varNature = null;
+    protected ?string $varKey = null;
+    protected mixed $varValue = null;
 
-    /** @var string */
-    protected $varKey;
+    protected bool $editable = false;
+    protected bool $previewable = true;
 
-    protected $varValue;
-
-    /** @var bool */
-    protected $editable = false;
-
-    /** @var bool */
-    private $previewable = true;
-
-    /** @var string */
-    protected $notice;
+    protected ?string $notice = null;
 
     /* CONSTRUCTOR / GETTER / SETTER */
 
-    /**
-     * Set varType
-     *
-     * @param string $varType
-     */
-    public function setVarType($varType): self
+    public function getVarType(): ?SettingVarType
+    {
+        return $this->varType;
+    }
+
+    public function setVarType(?SettingVarType $varType): self
     {
         $this->varType = $varType;
 
         return $this;
     }
 
-    /**
-     * Get varType
-     */
-    public function getVarType(): ?string
+    public function getVarNature(): ?string
     {
-        return $this->varType;
+        return $this->varNature;
     }
 
-    /**
-     * Set varNature
-     *
-     * @param string $varNature
-     */
-    public function setVarNature($varNature): self
+    public function setVarNature(?string $varNature): self
     {
         $this->varNature = $varNature;
 
         return $this;
     }
 
-    /**
-     * Get varNature
-     */
-    public function getVarNature(): ?string
+    public function getVarKey(): ?string
     {
-        return $this->varNature;
+        return $this->varKey;
     }
 
-    /**
-     * Set varKey
-     *
-     * @param string $varKey
-     */
-    public function setVarKey($varKey): self
+    public function setVarKey(?string $varKey): self
     {
         $this->varKey = $varKey;
 
         return $this;
     }
 
-    /**
-     * Get varKey
-     */
-    public function getVarKey(): ?string
+    public function getVarValue(): mixed
     {
-        return $this->varKey;
+        return $this->varValue;
     }
 
-    /**
-     * Set varValue
-     */
-    public function setVarValue($varValue): self
+    public function setVarValue(mixed $varValue): self
     {
         $this->varValue = $varValue;
 
         return $this;
     }
 
-    /**
-     * Get varValue
-     *
-     * @return bool|float|int|mixed|string
-     */
-    public function getVarValue()
+    public function getEditable(): bool
     {
-        return $this->varValue;
+        return $this->editable;
     }
 
-    /**
-     * Set editable.
-     *
-     * @param bool $editable
-     */
-    public function setEditable($editable): self
+    public function setEditable(bool $editable): self
     {
         $this->editable = $editable;
 
         return $this;
     }
 
-    /**
-     * Get editable
-     */
-    public function getEditable(): ?bool
+    public function getPreviewable(): bool
     {
-        return $this->editable;
+        return $this->previewable;
     }
 
-    /**
-     * Set previewable.
-     */
-    public function setPreviewable(?bool $previewable = null): self
+    public function setPreviewable(bool $previewable): self
     {
         $this->previewable = $previewable;
 
         return $this;
     }
 
-    /**
-     * Get previewable.
-     */
-    public function getPreviewable(): ?bool
+    public function getNotice(): ?string
     {
-        return $this->previewable;
+        return $this->notice;
     }
 
-    /**
-     * Set notice
-     *
-     * @param string $notice
-     */
-    public function setNotice($notice): self
+    public function setNotice(?string $notice): self
     {
         $this->notice = $notice;
 
         return $this;
     }
 
-    /**
-     * Get notice
-     */
-    public function getNotice(): ?string
-    {
-        return $this->notice;
-    }
-
     /* CUSTOM */
-
-    public function getVarTypeLabel(?string $default = null): ?string
-    {
-        return SettingVarType::label($this->getVarType(), $default);
-    }
 
     public function getVarValueParsed()
     {
         return $this->getVarValueParsedInternal($this->getVarType(), $this->getVarValue());
     }
 
-    protected function getVarValueParsedInternal(?string $varType, ?string $varValue): mixed
+    protected function getVarValueParsedInternal(SettingVarType $varType, ?string $varValue): mixed
     {
         if ($varType === SettingVarType::INT) {
             return (int) $varValue;

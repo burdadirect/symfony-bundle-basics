@@ -9,7 +9,8 @@ use HBM\BasicsBundle\Service\FormHelper;
 use HBM\BasicsBundle\Traits\ServiceDependencies\ParameterBagDependencyTrait;
 use HBM\BasicsBundle\Traits\ServiceDependencies\RequestStackDependencyTrait;
 use HBM\BasicsBundle\Util\AttributeMessage\AttributeMessage;
-use HBM\BasicsBundle\Util\Result\Result;
+use HBM\BasicsBundle\Util\Result\Interfaces\ResultMessagesInterface;
+use HBM\BasicsBundle\Util\Result\Interfaces\ResultNoticesInterface;
 use HBM\BasicsBundle\Util\Wording\EntityWording;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as BaseController;
 use Symfony\Component\Form\ClickableInterface;
@@ -80,7 +81,7 @@ abstract class AbstractController extends BaseController
 
     protected function checkForAttribute(Request $request, ?object $object, EntityWording $wording, AttributeMessage|string|null $attribute, string $redirect): JsonResponse|RedirectResponse|null
     {
-        if (!($attribute instanceof AttributeMessage)) {
+        if (!$attribute instanceof AttributeMessage) {
             $attribute = new AttributeMessage($attribute);
         }
 
@@ -138,9 +139,9 @@ abstract class AbstractController extends BaseController
     }
 
     /**
-     * @param array|NoticeInterface[] $notices
+     * @param iterable<NoticeInterface> $notices
      */
-    protected function addFlashMessagesFromNotices(array $notices, ?string $prefix = null, ?string $postfix = null): void
+    protected function addFlashMessagesFromNotices(iterable $notices, ?string $prefix = null, ?string $postfix = null): void
     {
         foreach ($notices as $notice) {
             $string = $notice->getTitle();
@@ -148,18 +149,18 @@ abstract class AbstractController extends BaseController
             if ($notice->getMessage()) {
                 $string = '<div class="normal"><strong>' . $string . '</strong><br />' . $notice->getMessage() . '</div>';
             }
-            $this->addFlashMessage($notice->getAlertLevel(), $prefix . $string . $postfix);
+            $this->addFlashMessage($notice->getLevel()->alert(), $prefix . $string . $postfix);
         }
     }
 
-    protected function addFlashMessagesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
+    protected function addFlashMessagesFromResult(ResultMessagesInterface $result, ?string $prefix = null, ?string $postfix = null): void
     {
         foreach ($result->getMessages() as $message) {
             $this->addFlashMessage($message->getLevel(), $prefix . $message->getMessage() . $postfix);
         }
     }
 
-    protected function addFlashMessageFromResult(string $type, string $message, Result $result): void
+    protected function addFlashMessageFromResult(string $type, string $message, ResultMessagesInterface $result): void
     {
         $this->addFlashMessage($type, $this->renderView('@HBMBasics/flash-messages/result-messages.html.twig', [
             'message' => $message,
@@ -172,7 +173,7 @@ abstract class AbstractController extends BaseController
         $this->getSession()->getFlashBag()->add($type, $this->renderView($template, $data));
     }
 
-    protected function addFlashNoticesFromResult(Result $result, ?string $prefix = null, ?string $postfix = null): void
+    protected function addFlashNoticesFromResult(ResultNoticesInterface $result, ?string $prefix = null, ?string $postfix = null): void
     {
         $this->addFlashMessagesFromNotices($result->getNotices(), $prefix, $postfix);
     }

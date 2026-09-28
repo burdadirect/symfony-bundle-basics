@@ -18,7 +18,7 @@ interface EnumInterface
      * @return array<array{
      *    case: self,
      *    name: string,
-     *    value: string|int,
+     *    value: int|string,
      *    data: array
      *  }>
      */
@@ -29,7 +29,7 @@ interface EnumInterface
      */
     public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array;
 
-    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $formatKey = '%1$s',?string $method = null): array;
+    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $formatKey = '%1$s', ?string $method = null): array;
 
     public static function random(?string $filter = null, ?array $cases = null): ?self;
 

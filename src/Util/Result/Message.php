@@ -2,26 +2,19 @@
 
 namespace HBM\BasicsBundle\Util\Result;
 
-use HBM\BasicsBundle\Util\Data\Level;
+use HBM\BasicsBundle\Util\Enum\Level;
 
 class Message
 {
-    private ?string $level;
-
+    private ?Level $level;
     private ?string $message;
 
-    /**
-     * Message constructor.
-     */
-    public function __construct(string $message, string $level = Level::INFO)
+    public function __construct(string $message, Level $level = Level::INFO)
     {
         $this->message = $message;
         $this->level   = $level;
     }
 
-    /**
-     * Set level.
-     */
     public function setLevel(?string $level): self
     {
         $this->level = $level;
@@ -29,17 +22,11 @@ class Message
         return $this;
     }
 
-    /**
-     * Get level.
-     */
-    public function getLevel(): ?string
+    public function getLevel(): ?Level
     {
         return $this->level;
     }
 
-    /**
-     * Set message.
-     */
     public function setMessage(?string $message): self
     {
         $this->message = $message;
@@ -47,9 +34,6 @@ class Message
         return $this;
     }
 
-    /**
-     * Get message.
-     */
     public function getMessage(): ?string
     {
         return $this->message;
@@ -70,15 +54,11 @@ class Message
     public function formatMessageConsole(): ?string
     {
         $format = '%s';
-        if ($console = Level::field($this->getLevel(), 'console')) {
+        if ($console = $this->getLevel()->console()) {
             $format = '<' . $console . '>%s</' . $console . '>';
         }
 
         return sprintf($format, $this->formatMessage(...func_get_args()));
     }
 
-    public function getAlertLevel(): string
-    {
-        return Level::getAlertLevel($this->getLevel());
-    }
 }

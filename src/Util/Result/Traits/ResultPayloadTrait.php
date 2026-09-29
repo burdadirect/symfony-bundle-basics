@@ -7,7 +7,7 @@ trait ResultPayloadTrait
     /** @var array<string, mixed> */
     protected array $payloads = [];
 
-    public function setPayloads(array $payloads): self
+    public function setPayloads(array $payloads): static
     {
         $this->payloads = $payloads;
 
@@ -24,7 +24,7 @@ trait ResultPayloadTrait
         return $this->payloads[$key] ?? $default;
     }
 
-    public function setPayload(string $key, mixed $payload): self
+    public function setPayload(string $key, mixed $payload): static
     {
         $this->payloads[$key] = $payload;
 

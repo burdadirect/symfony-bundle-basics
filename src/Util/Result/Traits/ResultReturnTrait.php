@@ -7,7 +7,7 @@ trait ResultReturnTrait
 
     protected ?bool $return = null;
 
-    public function setReturn(?bool $return): self
+    public function setReturn(?bool $return): static
     {
         $this->return = $return;
 

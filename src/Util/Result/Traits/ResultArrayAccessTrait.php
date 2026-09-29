@@ -11,7 +11,7 @@ trait ResultArrayAccessTrait
         return $this->data;
     }
 
-    public function setData(array $data): self
+    public function setData(array $data): static
     {
         $this->data = $data;
 

@@ -12,7 +12,7 @@ trait ResultErrorTrait
         return $this->error;
     }
 
-    public function setError(?string $error): self
+    public function setError(?string $error): static
     {
         $this->error = $error;
 

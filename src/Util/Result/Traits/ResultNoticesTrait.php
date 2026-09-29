@@ -16,7 +16,7 @@ trait ResultNoticesTrait
         $this->notices = new ArrayCollection();
     }
 
-    public function addNotice(NoticeInterface $notice): self
+    public function addNotice(NoticeInterface $notice): static
     {
         if (!$this->notices->contains($notice)) {
             $this->notices->add($notice);
@@ -25,7 +25,7 @@ trait ResultNoticesTrait
         return $this;
     }
 
-    public function removeNotice(NoticeInterface $notice): self
+    public function removeNotice(NoticeInterface $notice): static
     {
         if ($this->notices->contains($notice)) {
             $this->notices->removeElement($notice);

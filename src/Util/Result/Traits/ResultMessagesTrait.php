@@ -22,7 +22,7 @@ trait ResultMessagesTrait
         $this->messages = new ArrayCollection();
     }
 
-    public function addMessage(Message $message): self
+    public function addMessage(Message $message): static
     {
         if (!$this->messages->contains($message)) {
             $this->messages->add($message);
@@ -31,12 +31,12 @@ trait ResultMessagesTrait
         return $this;
     }
 
-    public function addMessageByString(Level $level, string $message): self
+    public function addMessageByString(Level $level, string $message): static
     {
         return $this->addMessage(new Message($message, $level));
     }
 
-    public function removeMessage(Message $message): self
+    public function removeMessage(Message $message): static
     {
         if ($this->messages->contains($message)) {
             $this->messages->removeElement($message);
@@ -87,7 +87,7 @@ trait ResultMessagesTrait
     /**
      * @param Message[] $messages
      */
-    public function addMessages(iterable $messages): self
+    public function addMessages(iterable $messages): static
     {
         foreach ($messages as $message) {
             $this->addMessage($message);

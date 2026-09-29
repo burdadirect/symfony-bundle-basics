@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait ResultMethodsTrait
 {
-    public function merge(self $result): self
+    public function merge(self $result): static
     {
         if (method_exists($this, 'addMessages') && method_exists($result, 'getMessages')) {
             $this->addMessages($result->getMessages());

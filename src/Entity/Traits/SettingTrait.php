@@ -112,7 +112,7 @@ trait SettingTrait
         return $this->getVarValueParsedInternal($this->getVarType(), $this->getVarValue());
     }
 
-    protected function getVarValueParsedInternal(SettingVarType $varType, ?string $varValue): mixed
+    protected function getVarValueParsedInternal(?SettingVarType $varType, ?string $varValue): mixed
     {
         if ($varType === SettingVarType::INT) {
             return (int) $varValue;

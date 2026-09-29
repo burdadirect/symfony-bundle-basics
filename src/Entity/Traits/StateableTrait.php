@@ -9,7 +9,7 @@ use HBM\BasicsBundle\Util\Data\State;
  */
 trait StateableTrait
 {
-    public function setState(int $state): self
+    public function setState(int $state): static
     {
         $this->state = $state;
 

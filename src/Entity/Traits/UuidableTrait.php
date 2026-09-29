@@ -9,7 +9,7 @@ trait UuidableTrait
     /**
      * Set GUID (only alphanumeric, due to restrictions of third party apis).
      */
-    public function setUuid(): self
+    public function setUuid(): static
     {
         if ($this->uuid === null) {
             $this->uuid = $this->generateUuid();

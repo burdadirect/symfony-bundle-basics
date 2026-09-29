@@ -4,7 +4,7 @@ namespace HBM\BasicsBundle\Entity\Interfaces;
 
 interface Stateable extends Addressable
 {
-    public function setState(int $state): self;
+    public function setState(int $state): static;
 
     public function getState(): int;
 

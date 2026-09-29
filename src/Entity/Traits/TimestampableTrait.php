@@ -15,7 +15,7 @@ trait TimestampableTrait
     /**
      * @throws \DateMalformedStringException
      */
-    public function setCreated(\DateTime|string|null $created): self
+    public function setCreated(\DateTime|string|null $created): static
     {
         if (is_string($created)) {
             $created = new \DateTime($created);
@@ -34,7 +34,7 @@ trait TimestampableTrait
     /**
      * @throws \DateMalformedStringException
      */
-    public function setModified(\DateTime|string|null $modified): self
+    public function setModified(\DateTime|string|null $modified): static
     {
         if (is_string($modified)) {
             $modified = new \DateTime($modified);

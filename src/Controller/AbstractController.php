@@ -93,7 +93,7 @@ abstract class AbstractController extends BaseController
             $entityString = $wording->assignName($object)->labelHtml();
 
             if ($message = $attribute->getMessage()) {
-                $this->addFlashMessage($message->getLevel(), $message->formatMessage($entityString));
+                $this->addFlashMessage($message->getLevel()->flash(), $message->formatMessage($entityString));
             } else {
                 $this->addFlashMessage('error', 'Sie können die Aktion für ' . $entityString . ' aufgrund fehlender Rechte nicht durchführen.');
             }
@@ -149,14 +149,14 @@ abstract class AbstractController extends BaseController
             if ($notice->getMessage()) {
                 $string = '<div class="normal"><strong>' . $string . '</strong><br />' . $notice->getMessage() . '</div>';
             }
-            $this->addFlashMessage($notice->getLevel()->alert(), $prefix . $string . $postfix);
+            $this->addFlashMessage($notice->getLevel()->flash(), $prefix . $string . $postfix);
         }
     }
 
     protected function addFlashMessagesFromResult(ResultMessagesInterface $result, ?string $prefix = null, ?string $postfix = null): void
     {
         foreach ($result->getMessages() as $message) {
-            $this->addFlashMessage($message->getLevel(), $prefix . $message->getMessage() . $postfix);
+            $this->addFlashMessage($message->getLevel()->flash(), $prefix . $message->getMessage() . $postfix);
         }
     }
 

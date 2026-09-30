@@ -47,7 +47,7 @@ abstract class AbstractFixtures extends Fixture
     protected function getKeys(string $fixture): array
     {
         if (is_array($fixture::$keys)) {
-            return static::$keys;
+            return $fixture::$keys;
         }
 
         if ($fixture::$num < 1) {

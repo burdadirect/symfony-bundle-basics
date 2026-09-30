@@ -37,7 +37,7 @@ trait ExtendedEntityRepoTrait
         return $qb->getQuery()->execute();
     }
 
-    public function findRandomBy(array $criteria, ?int $limit = null): array
+    public function findRandomBy(array $criteria = [], ?int $limit = null): array
     {
         try {
             $limitCap     = $limit ?? 0;
@@ -47,6 +47,11 @@ trait ExtendedEntityRepoTrait
         }
 
         return $this->findBy($criteria, [], $limit, $randomOffset);
+    }
+
+    public function findOneRandomBy(array $criteria = [])
+    {
+        return $this->findRandomBy($criteria, 1)[0] ?? null;
     }
 
     public function addSortations(QueryBuilder $qb, array $sortations, array $default = [], bool $forceDefaults = true): QueryBuilder

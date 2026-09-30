@@ -9,7 +9,9 @@ interface ExtendedEntityRepo extends ObjectRepository
 {
     public function createQueryBuilderForAlias(string $alias): QueryBuilder;
 
-    public function findRandomBy(array $criteria, ?int $limit = null): array;
+    public function findRandomBy(array $criteria = [], ?int $limit = null): array;
+
+    public function findOneRandomBy(array $criteria = []);
 
     public function addSortations(QueryBuilder $qb, array $sortations, array $default = []): QueryBuilder;
 

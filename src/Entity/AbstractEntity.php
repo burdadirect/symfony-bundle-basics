@@ -33,7 +33,7 @@ abstract class AbstractEntity implements Addressable, Uuidable, Timestampable
      */
     public function getIdPadded(): string
     {
-        return str_pad($this->getId(), 11, '0', STR_PAD_LEFT);
+        return str_pad((string) $this->getId(), 11, '0', STR_PAD_LEFT);
     }
 
     /**

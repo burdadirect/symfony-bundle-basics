@@ -4,14 +4,24 @@ namespace HBM\BasicsBundle\Entity\Interfaces;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
+use HBM\BasicsBundle\Entity\AbstractEntity;
 
+/**
+ * @template T of AbstractEntity
+ */
 interface ExtendedEntityRepo extends ObjectRepository
 {
     public function createQueryBuilderForAlias(string $alias): QueryBuilder;
 
+    /**
+     * @return T[]
+     */
     public function findRandomBy(array $criteria = [], ?int $limit = null): array;
 
-    public function findOneRandomBy(array $criteria = []);
+    /**
+     * @return null|T
+     */
+    public function findOneRandomBy(array $criteria = []): ?AbstractEntity;
 
     public function addSortations(QueryBuilder $qb, array $sortations, array $default = []): QueryBuilder;
 

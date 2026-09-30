@@ -10,8 +10,8 @@ use HBM\BasicsBundle\ORM\Query\Expr;
 
 /**
  * @method QueryBuilder createQueryBuilder(string $alias, string|null $indexBy = null)
- * @method int          count(array $criteria = [])
- * @method array        findBy(array $criteria, array|null $orderBy = null, int|null $limit = null, int|null $offset = null)
+ * @method \int         count(array $criteria = [])
+ * @method \array       findBy(array $criteria, array|null $orderBy = null, int|null $limit = null, int|null $offset = null)
  */
 trait ExtendedEntityRepoTrait
 {
@@ -49,7 +49,7 @@ trait ExtendedEntityRepoTrait
         return $this->findBy($criteria, [], $limit, $randomOffset);
     }
 
-    public function findOneRandomBy(array $criteria = [])
+    public function findOneRandomBy(array $criteria = []): ?AbstractEntity
     {
         return $this->findRandomBy($criteria, 1)[0] ?? null;
     }

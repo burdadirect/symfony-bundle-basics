@@ -26,6 +26,9 @@ trait StyledCommandTrait
         $style = new OutputFormatterStyle('bright-white', 'gray');
         $output->getFormatter()->setStyle('badge', $style);
 
+        $style = new OutputFormatterStyle('#bbbbbb', null);
+        $output->getFormatter()->setStyle('muted', $style);
+
         $style = new OutputFormatterStyle('green', null, ['bold']);
         $output->getFormatter()->setStyle('success', $style);
 
@@ -38,18 +41,29 @@ trait StyledCommandTrait
     public function htmlifyOutput(string $message): string
     {
         $replacements = [
-            '<failure>'    => '<strong style="color:#FF0000;">',
-            '</failure>'   => '</strong>',
-            '<success>'    => '<strong style="color:#008811;">',
-            '</success>'   => '</strong>',
-            '<section>'    => '<strong style="color:#8844AA;">',
-            '</section>'   => '</strong>',
+            '<note>'  => '<strong style="color:#6699EE;">',
+            '</note>' => '</strong>',
+
+            '<section>'  => '<strong style="color:#8844AA;">',
+            '</section>' => '</strong>',
+
             '<highlight>'  => '<strong style="color:#FF69B4">',
             '</highlight>' => '</strong>',
-            '<warning>'    => '<strong style="color:#FFAA00">',
-            '</warning>'   => '</strong>',
-            '<note>'       => '<strong style="color:#6699EE;">',
-            '</note>'      => '</strong>',
+
+            '<badge>'  => '<span style="color:#fff; background-color:#999;">',
+            '</badge>' => '</em>',
+
+            '<muted>'  => '<em style="color:#bbbbbb;">',
+            '</muted>' => '</em>',
+
+            '<warning>'  => '<strong style="color:#FFAA00">',
+            '</warning>' => '</strong>',
+
+            '<success>'  => '<strong style="color:#008811;">',
+            '</success>' => '</strong>',
+
+            '<failure>'  => '<strong style="color:#FF0000;">',
+            '</failure>' => '</strong>',
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $message);

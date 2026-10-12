@@ -94,11 +94,13 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices_'): QueryBuilder
+    public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices_', ?Composite $composite = null): QueryBuilder
     {
         if (count($choices) > 0) {
             $paramName = self::uniqueParam($prefix);
-            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $choices);
+            $expr = $qb->expr()->in($alias . '.' . $field, ':' . $paramName);
+            $composite ? $composite->add($expr) : $qb->andWhere($expr);
+            $qb->setParameter($paramName, $choices);
         }
 
         return $qb;
@@ -127,24 +129,32 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections_'): QueryBuilder
+    public function searchSelection(QueryBuilder $qb, string $alias, string $field, ?array $selections = null, string $prefix = 'selections_', ?Composite $composite = null): QueryBuilder
     {
         if (count($selections) > 0) {
             $paramName = self::uniqueParam($prefix);
-            $qb->andWhere($qb->expr()->in($alias . '.' . $field, ':' . $paramName))->setParameter($paramName, $selections);
+            $expr = $qb->expr()->in($alias . '.' . $field, ':' . $paramName);
+            $qb->setParameter($paramName, $selections);
         } else {
-            $qb->andWhere('1 = 0');
+            $expr = '1 = 0';
         }
+
+        $composite ? $composite->add($expr) : $qb->andWhere($expr);
 
         return $qb;
     }
 
-    public function searchNull(QueryBuilder $qb, string $alias, string $field, ?bool $isNull = null): QueryBuilder
+    public function searchNull(QueryBuilder $qb, string $alias, string $field, ?bool $isNull = null, ?Composite $composite = null): QueryBuilder
     {
+        $expr = null;
         if ($isNull === true) {
-            $qb->andWhere($qb->expr()->isNull($alias . '.' . $field));
+            $expr = $qb->expr()->isNull($alias . '.' . $field);
         } elseif ($isNull === false) {
-            $qb->andWhere($qb->expr()->isNotNull($alias . '.' . $field));
+            $expr = $qb->expr()->isNotNull($alias . '.' . $field);
+        }
+
+        if ($expr) {
+            $composite ? $composite->add($expr) : $qb->andWhere($expr);
         }
 
         return $qb;

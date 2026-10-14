@@ -69,39 +69,51 @@ trait ExtendedEntityRepoTrait
         return $qb;
     }
 
-    public function searchFromThru(QueryBuilder $qb, string $field, \DateTime $from, \DateTime $thru): QueryBuilder
+    protected function searchInternal(QueryBuilder $qb, callable $expr, string $alias, string $field,  mixed $paramValue, string $prefix = '', ?Composite $composite = null): QueryBuilder
     {
-        $paramNameFrom = self::uniqueParam('from');
-        $paramNameThru = self::uniqueParam('thru');
+        if (($paramValue === null) || (is_array($paramValue) && (count($paramValue) === 0))) {
+            return $qb;
+        }
 
-        $qb->andWhere($qb->expr()->between($field, ':' . $paramNameFrom, ':' . $paramNameThru));
-        $qb->setParameter($paramNameFrom, $from);
-        $qb->setParameter($paramNameThru, $thru);
+        $paramName = self::uniqueParam($prefix);
+        $comparison = $expr($alias . '.' . $field, ':' . $paramName);
+
+        $composite ? $composite->add($comparison) : $qb->andWhere($comparison);
+        $qb->setParameter($paramName, $paramValue);
 
         return $qb;
     }
 
     public function searchValue(QueryBuilder $qb, string $alias, string $field, mixed $value = null, string $prefix = 'value_', ?Composite $composite = null): QueryBuilder
     {
-        if ($value !== null) {
-            $paramName = self::uniqueParam($prefix);
-            $expr      = $qb->expr()->eq($alias . '.' . $field, ':' . $paramName);
-
-            $composite ? $composite->add($expr) : $qb->andWhere($expr);
-            $qb->setParameter($paramName, $value);
-        }
-
-        return $qb;
+        return $this->searchInternal($qb, $qb->expr()->eq(...), $alias, $field, $value, $prefix, $composite);
     }
 
     public function searchChoices(QueryBuilder $qb, string $alias, string $field, ?array $choices = null, string $prefix = 'choices_', ?Composite $composite = null): QueryBuilder
     {
-        if (count($choices) > 0) {
-            $paramName = self::uniqueParam($prefix);
-            $expr = $qb->expr()->in($alias . '.' . $field, ':' . $paramName);
-            $composite ? $composite->add($expr) : $qb->andWhere($expr);
-            $qb->setParameter($paramName, $choices);
-        }
+        return $this->searchInternal($qb, $qb->expr()->in(...), $alias, $field, $choices, $prefix, $composite);
+    }
+
+    public function searchDateFrom(QueryBuilder $qb, string $alias, string $field, ?\DateTime $from, string $prefix = 'from_', ?Composite $composite = null): QueryBuilder
+    {
+        return $this->searchInternal($qb, $qb->expr()->gte(...), $alias, $field, $from, $prefix, $composite);
+    }
+
+    public function searchDateThru(QueryBuilder $qb, string $alias, string $field, ?\DateTime $thru, string $prefix = 'thru_', ?Composite $composite = null): QueryBuilder
+    {
+        return $this->searchInternal($qb, $qb->expr()->lte(...), $alias, $field, $thru, $prefix, $composite);
+    }
+
+    public function searchDateFromThru(QueryBuilder $qb, string $alias, string $field, \DateTime $from, \DateTime $thru, ?Composite $composite = null): QueryBuilder
+    {
+        $paramNameFrom = self::uniqueParam('from');
+        $paramNameThru = self::uniqueParam('thru');
+        $expr = $qb->expr()->between($alias . '.' . $field, ':' . $paramNameFrom, ':' . $paramNameThru);
+
+        $composite ? $composite->add($expr) : $qb->andWhere($expr);
+
+        $qb->setParameter($paramNameFrom, $from);
+        $qb->setParameter($paramNameThru, $thru);
 
         return $qb;
     }

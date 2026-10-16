@@ -4,7 +4,7 @@ namespace HBM\BasicsBundle\Util;
 
 class Slugifier
 {
-    public static function slugify(?string $string): string
+    public static function slugify(?string $string, string $char = '-'): string
     {
         if ($string === null) {
             return '';
@@ -18,23 +18,28 @@ class Slugifier
             'ü' => 'ue',
             'Ü' => 'ue',
             'ß' => 'ss',
+            '`' => '',
+            '´' => '',
+            "'" => '',
+            ' ' => $char,
+            '_' => $char,
+            '/' => $char,
         ];
 
-        $slug = $string;
         // Replace german umlaute
-        $slug = str_replace(
-            array_keys($replacements),
-            array_values($replacements),
-            $slug
-        );
-        // Convert remaining letters to closest ascii match.
-        $slug = iconv('utf-8', 'ascii//TRANSLIT//IGNORE', $slug);
-        // Replace spaces with dashes.
-        $slug = str_replace([' '], ['-'], $slug);
-        // Replace everything thats not allowed: https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html
-        $slug = preg_replace('/[^a-zA-Z0-9-_]/', '', $slug);
+        $slug = str_replace(array_keys($replacements), array_values($replacements), $string);
 
-        // Remove multiple dashes.
-        return preg_replace('/-+/', '-', $slug);
+        // Convert remaining letters to closest ascii match (transliteration).
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', $slug);
+
+        // Remove all chars that are not alphanumeric or a dash (or the defined replacement char).
+        // See: https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html
+        $slug = preg_replace('/[^a-zA-Z0-9-' . $char . ']/', '', $slug);
+
+        // Trim starting and trailing dashes.
+        $slug = trim($slug, $char);
+
+        // Remove multiple adjacent replacement characters.
+        return preg_replace('/' . $char . '{2,}/', $char, $slug);
     }
 }

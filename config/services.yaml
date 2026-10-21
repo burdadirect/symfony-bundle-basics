@@ -5,10 +5,10 @@ services:
         autoconfigure: false
 
     HBM\BasicsBundle\Service\FormHelper:
-        public: true
         arguments: ['@form.factory', '@router', '%hbm.basics.form%']
 
     HBM\BasicsBundle\Command\:
+        autowire: true
         resource: '../src/Command'
         exclude:
             - '../src/Command/Attributes'

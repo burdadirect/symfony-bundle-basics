@@ -25,7 +25,7 @@ class Tokenizer
 
     protected static function trimValuesInArray(array $array, string $characters = " \n\r\t\v\x00"): array
     {
-        return array_map(['trim', [$characters]], $array);
+        return array_map(static fn (string $element) => trim($element, $characters), $array);
     }
 
     protected static function trimEmptyValuesFromArray(array $array, array $emptyValues = ['', null], bool $trimEntries = true): array

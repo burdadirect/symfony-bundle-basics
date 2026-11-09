@@ -74,7 +74,7 @@ trait EnumTrait
     /**
      * @return array<string, self>
      */
-    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array
+    public static function casesFiltered(?string $filter = null, ?array $cases = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array
     {
         $result = [];
 
@@ -91,25 +91,25 @@ trait EnumTrait
         }
 
         if ($sortByField) {
-            uasort($result, static function ($a, $b) use ($sortByField) {
+            uasort($result, static function ($a, $b) use ($sortByField, $sortDirection) {
                 $valA = $a['fields'][$sortByField] ?? null;
                 $valB = $b['fields'][$sortByField] ?? null;
 
-                if ($valA === $valB) {
-                    return 0;
+                if ($sortDirection === \SortDirection::Descending) {
+                    return $valB <=> $valA;
                 }
 
-                return ($valA < $valB) ? -1 : 1;
+                return $valA <=> $valB;
             });
         }
 
         return array_column($result, $arrayValue, $arrayKey);
     }
 
-    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, ?string $formatKey = '%1$s', ?string $method = null): array
+    public static function casesFlat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?array $cases = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending, ?string $formatKey = '%1$s', ?string $method = null): array
     {
         $array = [];
-        foreach (self::casesFiltered($filter, $cases, $sortByField) as $case) {
+        foreach (self::casesFiltered($filter, $cases, $sortByField, $sortDirection) as $case) {
             $key = sprintf($formatKey, $case->value, $case->name);
 
             if ($method && method_exists($case, $method)) {

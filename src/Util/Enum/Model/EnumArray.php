@@ -34,17 +34,17 @@ class EnumArray
     /**
      * @return list<int|string>
      */
-    public function values(?string $filter = null, ?string $sortByField = null): array
+    public function values(?string $filter = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending): array
     {
-        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, null, 'value');
+        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, $sortDirection, null, 'value');
     }
 
     /**
      * @return list<string>
      */
-    public function names(?string $filter = null, ?string $sortByField = null): array
+    public function names(?string $filter = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending): array
     {
-        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, null, 'name');
+        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, $sortDirection, null, 'name');
     }
 
     /**
@@ -55,14 +55,14 @@ class EnumArray
         return in_array($case, $this->enumCases, true);
     }
 
-    public function filter(?string $filter = null, ?string $sortByField = null, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array
+    public function filter(?string $filter = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending, ?string $arrayKey = 'value', ?string $arrayValue = 'case'): array
     {
-        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, $arrayKey, $arrayValue);
+        return $this->enumClass::casesFiltered($filter, $this->enumCases, $sortByField, $sortDirection, $arrayKey, $arrayValue);
     }
 
-    public function flat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?string $sortByField = null, ?string $formatKey = '%1$s', ?string $method = null): array
+    public function flat(string|callable|null $field = null, mixed $default = null, ?string $filter = null, ?string $sortByField = null, \SortDirection $sortDirection = \SortDirection::Ascending, ?string $formatKey = '%1$s', ?string $method = null): array
     {
-        return $this->enumClass::casesFlat($field, $default, $filter, $this->enumCases, $sortByField, $formatKey, $method);
+        return $this->enumClass::casesFlat($field, $default, $filter, $this->enumCases, $sortByField, $sortDirection, $formatKey, $method);
     }
 
     public function count(): int

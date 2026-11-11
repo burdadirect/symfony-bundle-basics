@@ -12,7 +12,7 @@ class Pinpoint
     ) {
     }
 
-    public function locate(string $format = '%s::%s[%s]'): string
+    public function locate(string $format = '%2$s[%3$s]'): string
     {
         return $this->custom ?? sprintf($format, $this->class, $this->method, $this->line);
     }

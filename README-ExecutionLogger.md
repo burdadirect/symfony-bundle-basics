@@ -1,0 +1,192 @@
+# HBM Basics - Execution Logger
+
+Provides a generic way to log and throttle/debounce console commands.
+
+## Minimal setup
+
+### Command
+Your command class must implement interface `ExecutionLoggerCommandInterface`.  
+Use the trait `ExecutionLoggerCommandTrait` to provide default/basic functionality.  
+
+Override the abstract methods `getCommandExecution` and `getCommandExecutionRepository`
+to provide the entity and entity repository.
+
+### Entity
+
+Create an entity to store the execution that will implement `CommandExecutionInterface`.
+You can use the `CommandExecutionTrait` to provide default/basic functionality.
+
+```php
+<?php
+
+use HBM\BasicsBundle\Entity\Interfaces\CommandExecutionInterface;
+use HBM\BasicsBundle\Entity\Traits\CommandExecutionTrait;
+
+class CommandExecution implements CommandExecutionInterface {
+
+  use CommandExecutionTrait;
+
+  public function __construct(string $commandId, array $contexts = [], ?string $executionId = null, ?int $exitCode = null) {
+    $this->init($commandId, $contexts, $executionId, $exitCode);
+  }
+}
+```
+
+With the minimal setup, the command execution is only logged, but not throttled/debounced.
+
+## Options
+Override `isExecutionLogged` to generally enable/disable the logging.  
+Override `getExecutionLimits` to define the execution limits.
+
+### Output/messages
+Feel free to override the following properties to adjust the output message **text**...
+- `$commandExecutionMessageLimitReached`
+- `$commandExecutionMessageLimitReachedInterval`
+- `$commandExecutionMessageExecuted`  
+
+... and **verbosity**:
+- `$commandExecutionVerbosityLimitReached` (default: `OutputInterface::VERBOSITY_NORMAL`)
+- `$commandExecutionVerbosityExecuted` (default: `OutputInterface::VERBOSITY_VERBOSE`)
+
+### Examples:
+```txt
+WARNING: Command execution limit reached: 2/2 (Interval: PT15M)
+1 command execution(s) marked as executed.
+```
+
+## Execution limits
+You can provide execution limits as an integer or as an array of `CommandExecutionLimit`s.  
+A `CommandExecutionLimit` can be restricted by:
+- a maximum number
+- a time interval and/or
+- an exit code _(int for specific exit code, true for any exit code, false for no exit code)_.
+
+### Examples
+#### Most basic limit
+The command should only be executed once.
+```php
+protected function getExecutionLimits(): array|int
+{
+    return 1;
+}
+```
+
+#### Simple (interval based) execution limit
+The command should only be executed once every 15 minutes.
+```php
+protected function getExecutionLimits(): array|int
+{
+    return [new CommandExecutionLimit(1, new DateInterval('PT15M'))];
+}
+```
+
+#### Complex (interval and exit code based) execution limit
+The command should only be executed:
+- **once every 15 minutes** and 
+- a maximum of **four times per day**
+- and only **twice with no exit code** (interrupted command)
+- and only **once with a failure exit code**.
+
+```php
+protected function getExecutionLimits(): array|int
+{
+    return [
+        new CommandExecutionLimit(1, new DateInterval('PT15M')),
+        new CommandExecutionLimit(4, new DateInterval('P1D')),
+        new CommandExecutionLimit(2, exitCode: false),
+        new CommandExecutionLimit(1, exitCode: Symfony\Component\Console\Command\Command::FAILURE),
+    ];
+}
+```
+
+
+## Contexted execution
+In addition to the general execution limits, you can log contexted executions.
+For example if your console command runs a for loop in which you handle a certain item (e.g. an entity),
+you can log the execution of is with the entity context (or any other context).
+
+Start your loop with the following code to 
+```php
+$commandExecutionLimits = 3;
+// or
+$commandExecutionLimits = [
+    new CommandExecutionLimit(2, new \DateInterval('PT15M')),
+    new CommandExecutionLimit(5, new \DateInterval('PT2H')),
+    new CommandExecutionLimit(15, new \DateInterval('P1D'))
+];
+
+foreach ($items as $item) {
+    foreach ($someOtherOptions as $option) {
+        if (!$commandExecution = $this->checkAndLogExecution([$item, $option], $commandExecutionLimits) {
+            continue;
+        }
+        
+        // Do your code.
+        
+        if ($someThingIsWrong) {
+            $this->commitExecution($commandExecution, Command::INVALID);
+            continue;
+        }
+        
+        // Exit code will default to Command::SUCCESS.
+        $this->commitExecution($commandExecution);
+    }
+}
+
+```
+
+### Commiting a contexted execution
+Commiting a contexted execution is done by calling the `commitExecution` method
+with the `$commandExecution` object and an optional exit code.
+
+If no exit code is provided, the default exit code is `Command::SUCCESS`.
+
+All non-commited contexted executions will be commited with the non-erroneous exiting
+of the command itself with the same exit timestamp and the exit code returned from the command.
+
+## Process flow
+
+```mermaid
+---
+config:
+  look: neo
+  layout: elk
+---
+flowchart TB;
+    GeneralBegin["<b>begin <u>general</u> execution</b>
+----------------------------------
+<small><i>(generate unique uuid<br />for this run)</i></small>"]
+    GeneralCommit["<b>commit <u>general</u> and open <u>contexted</u> execution(s)</b>
+----------------------------------
+<small><i>(set an exit code and exit timestamp for all not properly commited executions in this run)</i></small>"]
+    
+    GeneralBegin --> ExecuteLogic --> GeneralCommit
+    StartInternalExecuteLogic --> DoInternalExecuteLogic --> EndInternalExecuteLogic
+    ContextedBegin -.-> ContextedCommit
+
+    subgraph ExecuteLogic
+        direction TB
+
+        ExecuteLogicStart
+        DoInternalExecuteLogic["<b>do</b> some partial internal logic"]
+        ExecuteLogicEnd
+    end
+
+    subgraph ExecuteLogicStart
+        direction LR
+        StartInternalExecuteLogic["<b>start</b> some partial internal logic"]
+        ContextedBegin["<b>begin <u>contexed</u> execution</b>
+----------------------------------
+<small><i>(generate unique uuid<br />for this run)</i></small>"]
+    end
+    style ExecuteLogicStart fill:#ffffad
+
+    subgraph ExecuteLogicEnd
+        direction LR
+        EndInternalExecuteLogic["<b>end</b> some partial internal logic"]
+        ContextedCommit["<b>commit <u>contexted</u> execution <i style="color:#FF0000;">(optional)</i></b>
+----------------------------------
+<small><i>(set an exit code and exit timestamp for a specific execution in this run)</i></small>"]    
+    end
+    style ExecuteLogicEnd fill:#ffffad
+```

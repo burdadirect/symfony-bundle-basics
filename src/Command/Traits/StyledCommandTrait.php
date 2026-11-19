@@ -29,6 +29,9 @@ trait StyledCommandTrait
         $style = new OutputFormatterStyle('#bbbbbb', null);
         $output->getFormatter()->setStyle('muted', $style);
 
+        $style = new OutputFormatterStyle('#ffaa00', null, ['bold']);
+        $output->getFormatter()->setStyle('warning', $style);
+
         $style = new OutputFormatterStyle('green', null, ['bold']);
         $output->getFormatter()->setStyle('success', $style);
 

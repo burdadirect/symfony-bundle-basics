@@ -204,9 +204,6 @@ The command should only be executed:
 - if fewer than **two unfinished executions exist in the last two hours**; and
 - if fewer than **one failure execution exists**.
 
-All four conditions apply together. Add the imports shown here to the command file;
-`CommandExecutionLimit` is `HBM\BasicsBundle\Util\CommandExecutionLimit`.
-
 ```php
 use HBM\BasicsBundle\Util\CommandExecutionLimit;
 use Symfony\Component\Console\Command\Command;

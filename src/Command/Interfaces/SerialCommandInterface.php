@@ -5,6 +5,8 @@ namespace HBM\BasicsBundle\Command\Interfaces;
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
 use HBM\BasicsBundle\Command\Attributes\Extendable\PostExecute;
 use HBM\BasicsBundle\Command\Attributes\Extendable\PreExecute;
+use HBM\BasicsBundle\Command\Enum\PostExecutionResult;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 
 interface SerialCommandInterface
 {
@@ -13,8 +15,8 @@ interface SerialCommandInterface
     public const string STATE_INTERRUPTED = 'interrupted';
 
     #[PreExecute(500)]
-    public function markAsBusy(AbstractExtendableCommand $command, ?int &$exitCode): bool;
+    public function markAsBusy(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult;
 
     #[PostExecute(500)]
-    public function markAsIdle(AbstractExtendableCommand $command, int &$exitCode): bool;
+    public function markAsIdle(AbstractExtendableCommand $command, int &$exitCode): PostExecutionResult;
 }

@@ -3,13 +3,14 @@
 namespace HBM\BasicsBundle\Command\Traits;
 
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
+use HBM\BasicsBundle\Command\Enum\PostExecutionResult;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use HBM\BasicsBundle\Command\Interfaces\SerialCommandInterface;
 use HBM\BasicsBundle\Entity\Interfaces\SettingInterface;
 use Symfony\Component\Console\Command\Command;
 
 trait SerialCommandTrait
 {
-
     /* ABSTRACT FUNCTIONS */
 
     abstract protected function getStateSetting(bool $create = false): ?SettingInterface;
@@ -23,12 +24,12 @@ trait SerialCommandTrait
         return true;
     }
 
-    /* INTERFACE IMPLEMENTATIONS */
+    /* PRE- AND POST-EXECUTIONS */
 
-    public function markAsBusy(AbstractExtendableCommand $command, ?int &$exitCode): bool
+    public function markAsBusy(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
     {
         if (!$this->isSerial()) {
-            return true;
+            return PreExecutionResult::SKIPPED;
         }
 
         // Find or create setting.
@@ -39,34 +40,32 @@ trait SerialCommandTrait
             // Set setting value to "busy"
             $this->updateStateSetting($setting, date('Y-m-d H:i:s'));
 
-            return true;
+            return PreExecutionResult::SUCCEEDED;
         }
 
         $command->getExtendedOutput()->writeln('<failure>Command is busy!</failure>');
 
         $exitCode = Command::INVALID;
-
-        return false;
+        return PreExecutionResult::ABORTED;
     }
 
-    public function markAsIdle(AbstractExtendableCommand $command, int &$exitCode): bool
+    public function markAsIdle(AbstractExtendableCommand $command, ?int &$exitCode): PostExecutionResult
     {
         if (!$this->isSerial()) {
-            return true;
+            return PostExecutionResult::SKIPPED;
         }
 
         // Try setting value to "idle".
         if ($setting = $this->getStateSetting()) {
             $this->updateStateSetting($setting, SerialCommandInterface::STATE_IDLE);
 
-            return true;
+            return PostExecutionResult::SUCCEEDED;
         }
 
         $command->getExtendedOutput()->writeln('<failure>Command cannot be set to idle!</failure>');
 
         $exitCode = Command::INVALID;
-
-        return false;
+        return PostExecutionResult::FAILED;
     }
 
 }

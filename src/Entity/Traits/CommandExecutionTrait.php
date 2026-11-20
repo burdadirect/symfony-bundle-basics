@@ -70,12 +70,12 @@ trait CommandExecutionTrait
         return $this;
     }
 
-    public function getExitCode(): int|bool
+    public function getExitCode(): ?int
     {
         return $this->exitCode;
     }
 
-    public function setExitCode(int|bool $exitCode): self
+    public function setExitCode(int $exitCode): self
     {
         $this->exitCode = $exitCode;
 

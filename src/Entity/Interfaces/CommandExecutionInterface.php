@@ -16,8 +16,8 @@ interface CommandExecutionInterface extends Addressable
     public function setContexts(array $contexts): self;
     public function addContext(mixed $context): self;
 
-    public function getExitCode(): int|bool;
-    public function setExitCode(int|bool $exitCode): self;
+    public function getExitCode(): ?int;
+    public function setExitCode(int $exitCode): self;
 
     public function getExited(): ?\DateTime;
     public function setExited(?\DateTime $exited): self;

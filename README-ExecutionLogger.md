@@ -20,17 +20,18 @@ use HBM\BasicsBundle\Command\Traits\ExecutionLoggerCommandTrait;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\CommandExecutionInterface;
 use HBM\BasicsBundle\Entity\Repository\AbstractServiceEntityRepo;
+use Symfony\Component\Console\Command\Command;
 
-class SomeCommand extends AbstractExtendableCommand implements ExecutionLoggerCommandInterface {
+abstract class SomeCommand extends AbstractExtendableCommand implements ExecutionLoggerCommandInterface {
 
   use ExecutionLoggerCommandTrait;
-
+  
   protected function getCommandExecution(): AbstractEntity&CommandExecutionInterface {
     return new CommandExecution($this->getName());
   }
 
   protected function getCommandExecutionRepository(): ?AbstractServiceEntityRepo {
-    // return CommandExecution repository here.
+    // TODO: return CommandExecution repository here.
   }
 }
 ```
@@ -126,32 +127,27 @@ protected function getExecutionLimits(): array|int
 ```
 
 
-## Contexted execution
-In addition to the general execution limits, you can log contexted executions.
-For example if your console command runs a for loop in which you handle a certain item (e.g. an entity),
-you can log the execution of is with the entity context (or any other context).
+## Contextualized execution
+In addition to the general execution limits, you can log contextualized executions.
+For example if your console command runs a for-loop, in which you handle a certain
+item (e.g. an entity), you can log the execution with the entity context (or any other context).
 
 Start your loop with the following code to 
 ```php
 $commandExecutionLimits = 3;
 // or
 $commandExecutionLimits = [
-    new CommandExecutionLimit(2, new \DateInterval('PT15M')),
-    new CommandExecutionLimit(5, new \DateInterval('PT2H')),
-    new CommandExecutionLimit(15, new \DateInterval('P1D'))
+    // Consider all commited executions, no matter what exit codes. 
+    new CommandExecutionLimit(2, new \DateInterval('PT15M'), true),
+    // Consider only unfinished executions with no exit code.
+    new CommandExecutionLimit(5, new \DateInterval('PT2H'), false),
+    // Consider only executions from a successful run.
+    new CommandExecutionLimit(15, new \DateInterval('P1D'), Command::SUCCESS)
 ];
-
-// Consider all commited executions, no matter what exit codes.
-$exitCode = true;
-// Consider only unfinished executions with no exit code.
-$exitCode = false;
-// Consider only executions from an successful run.
-$exitCode = Command::SUCCESS;
-
 
 foreach ($items as $item) {
     foreach ($someOtherOptions as $option) {
-        if (!$commandExecution = $this->checkAndLogExecution([$item, $option], $commandExecutionLimits, $exitCode)) {
+        if (!$commandExecution = $this->checkAndLogExecution([$item, $option], $commandExecutionLimits)) {
             continue;
         }
         
@@ -169,13 +165,13 @@ foreach ($items as $item) {
 
 ```
 
-### Commiting a contexted execution
-Commiting a contexted execution is done by calling the `commitExecution` method
+### Commiting a contextualized execution
+Commiting a contextualized execution is done by calling the `commitExecution` method
 with the `$commandExecution` object and an optional exit code.
 
 If no exit code is provided, the default exit code is `Command::SUCCESS`.
 
-All non-commited contexted executions will be commited with the non-erroneous exiting
+All non-commited contextualized executions will be commited with the non-erroneous exiting
 of the command itself with the same exit timestamp and the exit code returned from the command.
 
 ## Process flow
@@ -190,13 +186,13 @@ flowchart TB;
     GeneralBegin["<b>begin <u>general</u> execution</b>
 ----------------------------------
 <small><i>(generate unique uuid<br />for this run)</i></small>"]
-    GeneralCommit["<b>commit <u>general</u> and open <u>contexted</u> execution(s)</b>
+    GeneralCommit["<b>commit <u>general</u> and open <u>contextualized</u> execution(s)</b>
 ----------------------------------
 <small><i>(set an exit code and exit timestamp for all not properly commited executions in this run)</i></small>"]
     
     GeneralBegin --> ExecuteLogic --> GeneralCommit
     StartInternalExecuteLogic --> DoInternalExecuteLogic --> EndInternalExecuteLogic
-    ContextedBegin -.-> ContextedCommit
+    ContextualizedBegin -.-> ContextualizedCommit
 
     subgraph ExecuteLogic
         direction TB
@@ -209,7 +205,7 @@ flowchart TB;
     subgraph ExecuteLogicStart
         direction LR
         StartInternalExecuteLogic["<b>start</b> some partial internal logic"]
-        ContextedBegin["<b>begin <u>contexed</u> execution</b>
+        ContextualizedBegin["<b>begin <u>contextualized</u> execution</b>
 ----------------------------------
 <small><i>(generate unique uuid<br />for this run)</i></small>"]
     end
@@ -218,7 +214,7 @@ flowchart TB;
     subgraph ExecuteLogicEnd
         direction LR
         EndInternalExecuteLogic["<b>end</b> some partial internal logic"]
-        ContextedCommit["<b>commit <u>contexted</u> execution <i style="color:#FF0000;">(optional)</i></b>
+        ContextualizedCommit["<b>commit <u>contextualized</u> execution <i style="color:#FF0000;">(optional)</i></b>
 ----------------------------------
 <small><i>(set an exit code and exit timestamp for a specific execution in this run)</i></small>"]    
     end

@@ -2,7 +2,6 @@
 
 namespace HBM\BasicsBundle\Command\Traits;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
 use HBM\BasicsBundle\Command\Enum\PostExecutionResult;
@@ -139,7 +138,7 @@ trait ExecutionLoggerCommandTrait
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    protected function getExecutions(array $contexts = [], ?\DateInterval $interval = null, int|bool $exitCode = true): Collection
+    protected function getExecutions(array $contexts = [], ?\DateInterval $interval = null, int|bool $exitCode = true): array
     {
         return $this->queryExecutions($contexts, $interval, $exitCode)->getQuery()->getResult();
     }

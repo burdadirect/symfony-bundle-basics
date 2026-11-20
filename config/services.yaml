@@ -12,6 +12,7 @@ services:
         resource: '../src/Command'
         exclude:
             - '../src/Command/Attributes'
+            - '../src/Command/Enum'
             - '../src/Command/Interfaces'
             - '../src/Command/Traits'
         tags:

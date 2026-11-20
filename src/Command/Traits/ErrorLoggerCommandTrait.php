@@ -4,6 +4,7 @@ namespace HBM\BasicsBundle\Command\Traits;
 
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
 use HBM\BasicsBundle\Command\Attributes\Loggable\LogContext;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use HBM\BasicsBundle\Util\LogObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,13 +20,6 @@ trait ErrorLoggerCommandTrait
     abstract protected function getLogger(): LoggerInterface;
 
     /* INTERFACE IMPLEMENTATIONS */
-
-    public function prepareErrorLogger(AbstractExtendableCommand $command, ?int &$exitCode): bool
-    {
-        $this->loggerOutput = $command->getExtendedOutput();
-
-        return true;
-    }
 
     public function logError(string $error, array $context = []): void
     {
@@ -112,5 +106,14 @@ trait ErrorLoggerCommandTrait
         }
 
         return $context;
+    }
+
+    /* PRE- AND POST-EXECUTIONS */
+
+    public function prepareErrorLogger(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
+    {
+        $this->loggerOutput = $command->getExtendedOutput();
+
+        return PreExecutionResult::SUCCEEDED;
     }
 }

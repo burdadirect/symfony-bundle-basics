@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractExtendableCommand extends Command
 {
     private InputInterface $extendedInput;
-
     private OutputInterface $extendedOutput;
 
     public function getExtendedInput(): InputInterface
@@ -68,26 +67,20 @@ abstract class AbstractExtendableCommand extends Command
         return array_keys($methods);
     }
 
-    protected function preExecute(self $command, ?int $exitCode): ?int
+    protected function preExecute(self $command, ?int &$exitCode): bool
     {
-        foreach ($this->getAttributedMethods(PreExecute::class) as $method) {
-            if (false === $this->{$method}($command, $exitCode)) {
-                return $exitCode;
-            }
-        }
-
-        return $exitCode;
+        return array_any(
+            $this->getAttributedMethods(PreExecute::class),
+            fn ($preExecuteCallback) => $this->{$preExecuteCallback}($command, $exitCode)->isAborted()
+        );
     }
 
-    protected function postExecute(self $command, int $exitCode): int
+    protected function postExecute(self $command, ?int &$exitCodes): bool
     {
-        foreach ($this->getAttributedMethods(PostExecute::class) as $method) {
-            if (false === $this->{$method}($command, $exitCode)) {
-                return $exitCode;
-            }
-        }
-
-        return $exitCode;
+        return array_any(
+            $this->getAttributedMethods(PostExecute::class),
+            fn ($postExecuteCallback) => $this->{$postExecuteCallback}($command, $exitCodes)->isAborted()
+        );
     }
 
     /**
@@ -98,14 +91,15 @@ abstract class AbstractExtendableCommand extends Command
         $this->setExtendedInput($input);
         $this->setExtendedOutput($output);
 
-        $exitCode = $this->preExecute($this, null);
+        $aborted = $this->preExecute($this, $exitCode);
 
-        if ($exitCode !== null) {
-            return $exitCode;
+        // Only execute logic if all pre executes run and no exit code has already been set.
+        if (!$aborted) {
+            $exitCode = $this->executeLogic($this->getExtendedInput(), $this->getExtendedOutput());
         }
 
-        $exitCode = $this->executeLogic($this->getExtendedInput(), $this->getExtendedOutput());
+        $this->postExecute($this, $exitCode);
 
-        return $this->postExecute($this, $exitCode);
+        return $exitCode ?? Command::INVALID;
     }
 }

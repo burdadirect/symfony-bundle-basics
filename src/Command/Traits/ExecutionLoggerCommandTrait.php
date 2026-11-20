@@ -5,8 +5,8 @@ namespace HBM\BasicsBundle\Command\Traits;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
-use HBM\BasicsBundle\Command\Attributes\Extendable\PostExecute;
-use HBM\BasicsBundle\Command\Attributes\Extendable\PreExecute;
+use HBM\BasicsBundle\Command\Enum\PostExecutionResult;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\CommandExecutionInterface;
 use HBM\BasicsBundle\Entity\Repository\AbstractServiceEntityRepo;
@@ -70,14 +70,17 @@ trait ExecutionLoggerCommandTrait
 
         foreach ($limits as $limitIndex => $limit) {
             $numOfExecutions = $this->countExecutions($contexts, $limit->getInterval(), $limit->getExitCode());
+
             if ($numOfExecutions >= $limit->getMax()) {
                 $messageFormat = $this->commandExecutionMessageLimitReached;
                 $messageParams = [$limitIndex + 1, $numOfExecutions, $limit->getMax()];
+
                 if ($limit->getInterval()) {
                     $messageFormat .= $this->commandExecutionMessageLimitReachedInterval;
                     $messageParams[] = $this->formatExecutionLimitDateInterval($limit->getInterval());
                 }
                 $this->getExtendedOutput()->writeln(sprintf($messageFormat, ...$messageParams), $this->commandExecutionVerbosityLimitReached);
+
                 return null;
             }
         }
@@ -106,6 +109,7 @@ trait ExecutionLoggerCommandTrait
 
         foreach ($contexts as $context) {
             $contextToUse = $context;
+
             if (is_object($context) && method_exists($context, 'getIdFQCN')) {
                 $contextToUse = $context->getIdFQCN();
                 $contextToUse = json_encode($contextToUse);
@@ -131,6 +135,7 @@ trait ExecutionLoggerCommandTrait
     {
         $qb = $this->queryExecutions($contexts, $interval, $exitCode);
         $qb->select($qb->expr()->count($this->commandExecutionAlias));
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 
@@ -163,27 +168,28 @@ trait ExecutionLoggerCommandTrait
         return $qb->getQuery()->execute();
     }
 
-    #[PreExecute(100)]
-    public function beginExecutionLogger(AbstractExtendableCommand $command, ?int &$exitCode): bool
+    /* PRE- AND POST-EXECUTIONS */
+
+    public function beginExecutionLogger(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
     {
         if (!$this->isExecutionLogged()) {
-            return true;
+            return PreExecutionResult::SKIPPED;
         }
 
         $this->commandExecutionId = Uuid::uuid4()->toString();
 
         if (!$this->checkAndLogExecution(limits: $this->getExecutionLimits())) {
-            return false;
+            $exitCode = Command::INVALID;
+            return PreExecutionResult::ABORTED;
         }
 
-        return true;
+        return PreExecutionResult::SUCCEEDED;
     }
 
-    #[PostExecute(100)]
-    public function commitExecutionLogger(AbstractExtendableCommand $command, ?int &$exitCode): bool
+    public function commitExecutionLogger(AbstractExtendableCommand $command, ?int &$exitCode): PostExecutionResult
     {
         if (!$this->isExecutionLogged()) {
-            return true;
+            return PostExecutionResult::SKIPPED;
         }
 
         if ($this->commandExecutionId) {
@@ -204,6 +210,6 @@ trait ExecutionLoggerCommandTrait
             $this->getExtendedOutput()->writeln(sprintf($this->commandExecutionMessageExecuted, $updated), $this->commandExecutionVerbosityExecuted);
         }
 
-        return true;
+        return PostExecutionResult::SUCCEEDED;
     }
 }

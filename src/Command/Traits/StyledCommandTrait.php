@@ -3,11 +3,12 @@
 namespace HBM\BasicsBundle\Command\Traits;
 
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 trait StyledCommandTrait
 {
-    public function styleOutput(AbstractExtendableCommand $command, ?int &$exitCode): bool
+    public function styleOutput(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
     {
         // error, info, comment, questions are already defined by symfony.
         // Allowed colors: black, red, green, yellow, blue, magenta, cyan, white, default, gray, bright-red, bright-green, bright-yellow, bright-blue, bright-magenta, bright-cyan, bright-white
@@ -38,7 +39,7 @@ trait StyledCommandTrait
         $style = new OutputFormatterStyle('red', null, ['bold']);
         $output->getFormatter()->setStyle('failure', $style);
 
-        return true;
+        return PreExecutionResult::SUCCEEDED;
     }
 
     public function htmlifyOutput(string $message): string

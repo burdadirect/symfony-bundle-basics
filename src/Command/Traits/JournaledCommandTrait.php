@@ -3,6 +3,8 @@
 namespace HBM\BasicsBundle\Command\Traits;
 
 use HBM\BasicsBundle\Command\AbstractExtendableCommand;
+use HBM\BasicsBundle\Command\Enum\PostExecutionResult;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use HBM\BasicsBundle\Output\JournaledConsoleOutput;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -26,12 +28,12 @@ trait JournaledCommandTrait
         return false;
     }
 
-    /* INTERFACE IMPLEMENTATIONS */
+    /* PRE- AND POST-EXECUTIONS */
 
-    public function startJournaledConsoleOutput(AbstractExtendableCommand $command, ?int &$exitCode): bool
+    public function startJournaledConsoleOutput(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
     {
         if (!$this->isJournaled()) {
-            return true;
+            return PreExecutionResult::SKIPPED;
         }
 
         $journaledOutput = new JournaledConsoleOutput($command->getExtendedOutput(), $this->getJournalPath());
@@ -40,19 +42,19 @@ trait JournaledCommandTrait
         $this->journalStopwatch = new Stopwatch();
         $this->journalStopwatch->start($command->getName(), 'Command execution');
 
-        return true;
+        return PreExecutionResult::SUCCEEDED;
     }
 
-    public function stopJournaledConsoleOutput(AbstractExtendableCommand $command, int &$exitCode): bool
+    public function stopJournaledConsoleOutput(AbstractExtendableCommand $command, ?int &$exitCode): PostExecutionResult
     {
         if (!$this->isJournaled()) {
-            return true;
+            return PostExecutionResult::SKIPPED;
         }
 
         $output = $command->getExtendedOutput();
 
         if (!$output instanceof JournaledConsoleOutput) {
-            return true;
+            return PostExecutionResult::FAILED;
         }
 
         // Clean up empty logs, if necessary.
@@ -64,6 +66,6 @@ trait JournaledCommandTrait
         $output->writeToFile($this->keepEmptyJournals() || !$output->isEmpty());
         $output->writeln($this->journalStopwatch->stop($command->getName()));
 
-        return true;
+        return PostExecutionResult::SUCCEEDED;
     }
 }

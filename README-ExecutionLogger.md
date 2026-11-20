@@ -11,6 +11,30 @@ Use the trait `ExecutionLoggerCommandTrait` to provide default/basic functionali
 Override the abstract methods `getCommandExecution` and `getCommandExecutionRepository`
 to provide the entity and entity repository.
 
+```php
+<?php
+
+use HBM\BasicsBundle\Command\AbstractExtendableCommand;
+use HBM\BasicsBundle\Command\Interfaces\ExecutionLoggerCommandInterface;
+use HBM\BasicsBundle\Command\Traits\ExecutionLoggerCommandTrait;
+use HBM\BasicsBundle\Entity\AbstractEntity;
+use HBM\BasicsBundle\Entity\Interfaces\CommandExecutionInterface;
+use HBM\BasicsBundle\Entity\Repository\AbstractServiceEntityRepo;
+
+class SomeCommand extends AbstractExtendableCommand implements ExecutionLoggerCommandInterface {
+
+  use ExecutionLoggerCommandTrait;
+
+  protected function getCommandExecution(): AbstractEntity&CommandExecutionInterface {
+    return new CommandExecution($this->getName());
+  }
+
+  protected function getCommandExecutionRepository(): ?AbstractServiceEntityRepo {
+    // return CommandExecution repository here.
+  }
+}
+```
+
 ### Entity
 
 Create an entity to store the execution that will implement `CommandExecutionInterface`.
@@ -19,14 +43,16 @@ You can use the `CommandExecutionTrait` to provide default/basic functionality.
 ```php
 <?php
 
+use HBM\BasicsBundle\Entity\AbstractEntity;
 use HBM\BasicsBundle\Entity\Interfaces\CommandExecutionInterface;
 use HBM\BasicsBundle\Entity\Traits\CommandExecutionTrait;
 
-class CommandExecution implements CommandExecutionInterface {
+class CommandExecution extends AbstractEntity implements CommandExecutionInterface {
 
   use CommandExecutionTrait;
 
   public function __construct(string $commandId, array $contexts = [], ?string $executionId = null, ?int $exitCode = null) {
+    parent::__construct();
     $this->init($commandId, $contexts, $executionId, $exitCode);
   }
 }
@@ -115,9 +141,17 @@ $commandExecutionLimits = [
     new CommandExecutionLimit(15, new \DateInterval('P1D'))
 ];
 
+// Consider all commited executions, no matter what exit codes.
+$exitCode = true;
+// Consider only unfinished executions with no exit code.
+$exitCode = false;
+// Consider only executions from an successful run.
+$exitCode = Command::SUCCESS;
+
+
 foreach ($items as $item) {
     foreach ($someOtherOptions as $option) {
-        if (!$commandExecution = $this->checkAndLogExecution([$item, $option], $commandExecutionLimits) {
+        if (!$commandExecution = $this->checkAndLogExecution([$item, $option], $commandExecutionLimits, $exitCode)) {
             continue;
         }
         

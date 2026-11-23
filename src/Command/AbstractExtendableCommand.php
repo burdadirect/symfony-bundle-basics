@@ -69,18 +69,28 @@ abstract class AbstractExtendableCommand extends Command
 
     protected function preExecute(self $command, ?int &$exitCode): bool
     {
-        return array_any(
-            $this->getAttributedMethods(PreExecute::class),
-            fn ($preExecuteCallback) => $this->{$preExecuteCallback}($command, $exitCode)->isAborted()
-        );
+        // array_any(...) in combination with fn (arrow-function) can not be used here.
+        // Reason: The callback receives $exitCode by reference, but the arrow function captures $exitCode by value.
+        foreach ($this->getAttributedMethods(PreExecute::class) as $method) {
+            if ($this->{$method}($command, $exitCode)->isAborted()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    protected function postExecute(self $command, ?int &$exitCodes): bool
+    protected function postExecute(self $command, ?int &$exitCode): bool
     {
-        return array_any(
-            $this->getAttributedMethods(PostExecute::class),
-            fn ($postExecuteCallback) => $this->{$postExecuteCallback}($command, $exitCodes)->isAborted()
-        );
+        // array_any(...) in combination with fn (arrow-function) can not be used here.
+        // Reason: The callback receives $exitCode by reference, but the arrow function captures $exitCode by value.
+        foreach ($this->getAttributedMethods(PostExecute::class) as $method) {
+            if ($this->{$method}($command, $exitCode)->isAborted()) {
+                return true;
+            }
+        }
+
+        return $exitCode;
     }
 
     /**

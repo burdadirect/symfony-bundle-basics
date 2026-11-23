@@ -11,6 +11,6 @@ enum PostExecutionResult
 
     public function isAborted(): bool
     {
-        return self::ABORTED === $this;
+        return $this === self::ABORTED;
     }
 }

@@ -9,6 +9,9 @@ use HBM\BasicsBundle\Command\Interfaces\SerialCommandInterface;
 use HBM\BasicsBundle\Entity\Interfaces\SettingInterface;
 use Symfony\Component\Console\Command\Command;
 
+/**
+ * @method PreExecutionResult|null getPreExecutionResult(string $methodName)
+ */
 trait SerialCommandTrait
 {
     /* ABSTRACT FUNCTIONS */
@@ -52,6 +55,10 @@ trait SerialCommandTrait
     public function markAsIdle(AbstractExtendableCommand $command, ?int &$exitCode): PostExecutionResult
     {
         if (!$this->isSerial()) {
+            return PostExecutionResult::SKIPPED;
+        }
+
+        if ($this->getPreExecutionResult('markAsBusy')?->isAborted()) {
             return PostExecutionResult::SKIPPED;
         }
 

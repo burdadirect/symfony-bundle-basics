@@ -4,14 +4,35 @@ namespace HBM\BasicsBundle\Command;
 
 use HBM\BasicsBundle\Command\Attributes\Extendable\PostExecute;
 use HBM\BasicsBundle\Command\Attributes\Extendable\PreExecute;
+use HBM\BasicsBundle\Command\Enum\PreExecutionResult;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractExtendableCommand extends Command
 {
+    /** @var array<string, PreExecutionResult> */
+    private array $preExecutionResults = [];
+
     private InputInterface $extendedInput;
     private OutputInterface $extendedOutput;
+
+    public function getPreExecutionResults(): array
+    {
+        return $this->preExecutionResults;
+    }
+
+    public function getPreExecutionResult(string $methodName): ?PreExecutionResult
+    {
+        return $this->preExecutionResults[$methodName] ?? null;
+    }
+
+    public function setPreExecutionResult(string $methodName, PreExecutionResult $preExecutionResult): self
+    {
+        $this->preExecutionResults[$methodName] = $preExecutionResult;
+
+        return $this;
+    }
 
     public function getExtendedInput(): InputInterface
     {
@@ -72,7 +93,10 @@ abstract class AbstractExtendableCommand extends Command
         // array_any(...) in combination with fn (arrow-function) can not be used here.
         // Reason: The callback receives $exitCode by reference, but the arrow function captures $exitCode by value.
         foreach ($this->getAttributedMethods(PreExecute::class) as $method) {
-            if ($this->{$method}($command, $exitCode)->isAborted()) {
+            $preExecutionResult = $this->{$method}($command, $exitCode)->isAborted();
+
+            $this->setPreExecutionResult($method, $preExecutionResult);
+            if ($preExecutionResult->isAborted()) {
                 return true;
             }
         }

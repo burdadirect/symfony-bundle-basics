@@ -203,23 +203,21 @@ trait ExecutionLoggerCommandTrait
             return PostExecutionResult::SKIPPED;
         }
 
-        if ($this->commandExecutionId) {
-            $qb = $this->updateExecutions($exitCode, new \DateTime());
+        $qb = $this->updateExecutions($exitCode, new \DateTime());
 
-            // No proper exit code or exit timestamp.
-            $noExitCodeOrExitTimestamp = $qb->expr()->orX();
-            $noExitCodeOrExitTimestamp->add($qb->expr()->isNull($this->commandExecutionAlias . '.exitCode'));
-            $noExitCodeOrExitTimestamp->add($qb->expr()->isNull($this->commandExecutionAlias . '.exited'));
+        // No proper exit code or exit timestamp.
+        $noExitCodeOrExitTimestamp = $qb->expr()->orX();
+        $noExitCodeOrExitTimestamp->add($qb->expr()->isNull($this->commandExecutionAlias . '.exitCode'));
+        $noExitCodeOrExitTimestamp->add($qb->expr()->isNull($this->commandExecutionAlias . '.exited'));
 
-            // All of this command execution, that not already have been commited.
-            $qb->andWhere($noExitCodeOrExitTimestamp);
-            $qb->andWhere($qb->expr()->eq($this->commandExecutionAlias . '.executionId', ':executionId'));
-            $qb->setParameter('executionId', $this->commandExecutionId);
+        // All of this command execution, that not already have been commited.
+        $qb->andWhere($noExitCodeOrExitTimestamp);
+        $qb->andWhere($qb->expr()->eq($this->commandExecutionAlias . '.executionId', ':executionId'));
+        $qb->setParameter('executionId', $this->commandExecutionId);
 
-            $updated = $qb->getQuery()->execute();
+        $updated = $qb->getQuery()->execute();
 
-            $this->getExtendedOutput()->writeln(sprintf($this->commandExecutionMessageExecuted, $updated), $this->commandExecutionVerbosityExecuted);
-        }
+        $this->getExtendedOutput()->writeln(sprintf($this->commandExecutionMessageExecuted, $updated), $this->commandExecutionVerbosityExecuted);
 
         return PostExecutionResult::SUCCEEDED;
     }

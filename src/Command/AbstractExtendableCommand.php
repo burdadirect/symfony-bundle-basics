@@ -93,7 +93,7 @@ abstract class AbstractExtendableCommand extends Command
         // array_any(...) in combination with fn (arrow-function) can not be used here.
         // Reason: The callback receives $exitCode by reference, but the arrow function captures $exitCode by value.
         foreach ($this->getAttributedMethods(PreExecute::class) as $method) {
-            $preExecutionResult = $this->{$method}($command, $exitCode)->isAborted();
+            $preExecutionResult = $this->{$method}($command, $exitCode);
 
             $this->setPreExecutionResult($method, $preExecutionResult);
             if ($preExecutionResult->isAborted()) {

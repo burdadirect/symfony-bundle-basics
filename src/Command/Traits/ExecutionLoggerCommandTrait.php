@@ -21,6 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 trait ExecutionLoggerCommandTrait
 {
+    protected ?bool $commandExecutionLogged = null;
+    protected ?bool $commandExecutionChecked = null;
+
     protected string $commandExecutionId;
     protected string $commandExecutionAlias = 'ce';
 
@@ -61,10 +64,17 @@ trait ExecutionLoggerCommandTrait
     /**
      * @param list<CommandExecutionLimit> $limits
      */
-    protected function checkAndLogExecution(array $contexts = [], array|int $limits = []): ?CommandExecutionInterface
+    protected function checkAndLogExecution(array $contexts = [], array|int $limits = [], ?bool $check = null, ?bool $log = null): ?CommandExecutionInterface
     {
+        $check ??= $this->commandExecutionChecked ?? $this->isExecutionLogged();
+        $log ??= $this->commandExecutionLogged ?? $this->isExecutionLogged();
+
         if (is_int($limits)) {
             $limits = [new CommandExecutionLimit($limits)];
+        }
+
+        if ($check !== true) {
+            $limits = [];
         }
 
         foreach ($limits as $limitIndex => $limit) {
@@ -84,7 +94,7 @@ trait ExecutionLoggerCommandTrait
             }
         }
 
-        return $this->logExecution($contexts);
+        return $this->logExecution($contexts, $log);
     }
 
     protected function updateExecutions(int $exitCode, \DateTime $exited): QueryBuilder
@@ -143,13 +153,15 @@ trait ExecutionLoggerCommandTrait
         return $this->queryExecutions($contexts, $interval, $exitCode)->getQuery()->getResult();
     }
 
-    protected function logExecution(array $contexts = []): CommandExecutionInterface
+    protected function logExecution(array $contexts = [], bool $persistAndFlush = true): CommandExecutionInterface
     {
         $execution = $this->getCommandExecution();
         $execution->setContexts($contexts);
         $execution->setExecutionId($this->commandExecutionId);
 
-        $this->getCommandExecutionRepository()->save($execution);
+        if ($persistAndFlush) {
+            $this->getCommandExecutionRepository()->save($execution);
+        }
 
         return $execution;
     }
@@ -171,11 +183,11 @@ trait ExecutionLoggerCommandTrait
 
     public function beginExecutionLogger(AbstractExtendableCommand $command, ?int &$exitCode): PreExecutionResult
     {
+        $this->commandExecutionId = Uuid::uuid4()->toString();
+
         if (!$this->isExecutionLogged()) {
             return PreExecutionResult::SKIPPED;
         }
-
-        $this->commandExecutionId = Uuid::uuid4()->toString();
 
         if (!$this->checkAndLogExecution(limits: $this->getExecutionLimits())) {
             $exitCode = Command::INVALID;

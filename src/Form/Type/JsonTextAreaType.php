@@ -12,12 +12,12 @@ class JsonTextAreaType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefined(['json_flags']);
+        $resolver->setDefined(['json_flags_encode', 'json_flags_decode']);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addModelTransformer(new JsonTransformer($options['json_flags'] ?? 0));
+        $builder->addModelTransformer(new JsonTransformer($options['json_flags_encode'] ?? 0, $options['json_flags_decode'] ?? 0));
     }
 
     public function getParent(): string

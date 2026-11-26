@@ -6,7 +6,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 
 class JsonTransformer implements DataTransformerInterface
 {
-    public function __construct(protected int $flags = 0)
+    public function __construct(protected int $flagsEncode = 0, protected int $flagsDecode = 0)
     {
     }
 
@@ -19,7 +19,7 @@ class JsonTransformer implements DataTransformerInterface
             return null;
         }
 
-        return json_encode($value, JSON_THROW_ON_ERROR | $this->flags);
+        return json_encode($value, JSON_THROW_ON_ERROR | $this->flagsEncode);
     }
 
     /**
@@ -31,6 +31,6 @@ class JsonTransformer implements DataTransformerInterface
             return null;
         }
 
-        return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        return json_decode($value, true, 512, JSON_THROW_ON_ERROR | $this->flagsDecode);
     }
 }
